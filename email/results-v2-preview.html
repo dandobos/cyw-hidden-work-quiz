@@ -126,51 +126,94 @@ var VS={
  "The Grounded Seeker":{key:'LLH',rarity:21,accent:'#557C9E',claim:"I'm at peace with who I am. Now I need to define where I'm going."},
  "The Late Bloomer":{key:'LLL',rarity:33,accent:'#6B6B6B',claim:"Everything looks fine on paper, but I know something's off, and I'm done ignoring it."}
 };
-function shareCardDim(name,color,lo,hi,score){
-  var v=score>50?hi:lo;
-  return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 14px;"><tr><td>'
-    + '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>'
-      + '<td style="font-family:Inter,Arial,sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:bold;color:#0F0F0F;">'+name+'</td>'
-      + '<td align="right" style="font-family:&#39;Source Serif Pro&#39;,Georgia,serif;font-size:16px;color:'+color+';">'+v+'</td>'
-    + '</tr></table>'
-    + '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:9px 0 0;"><tr>'
-      + '<td width="'+score+'%" valign="middle"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>'
-        + '<td valign="middle"><div style="height:3px;background:'+color+';font-size:0;line-height:0;border-radius:2px;">&#160;</div></td>'
-        + '<td width="34" valign="middle" align="right"><div style="width:32px;height:32px;border:2px solid '+color+';border-radius:50%;text-align:center;mso-line-height-rule:exactly;line-height:29px;"><span style="font-family:&#39;Source Serif Pro&#39;,Georgia,serif;font-size:13px;font-weight:bold;color:'+color+';">'+score+'</span></div></td>'
-      + '</tr></table></td>'
-      + '<td valign="middle"><div style="height:3px;background:#E7E4DE;font-size:0;line-height:0;border-radius:2px;">&#160;</div></td>'
-    + '</tr></table>'
-  + '</td></tr></table>';
-}
 function shareBtn(href,label){ return '<a href="'+href+'" target="_blank" style="display:inline-block;background:#FFFFFF;color:#0F0F0F;border:1px solid #D8D5CE;font-family:Inter,Arial,sans-serif;font-size:13px;font-weight:600;text-decoration:none;padding:9px 14px;border-radius:6px;margin:0 5px 8px 0;">'+label+'</a>'; }
-function shareBlock(p){
-  var v=VS[p.arch], e=encodeURIComponent;
-  var link='https://dandobos.com/hidden-work/?type='+v.key;
-  var txt='On The Hidden Work I came out as '+p.arch+'. '+v.claim+' Which of the 8 work patterns are you?';
-  return sectionTitle('Share Your Result')
-  + '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">'
-  + '<table role="presentation" width="400" cellpadding="0" cellspacing="0" style="width:400px;max-width:400px;background:#FFFFFF;border:1px solid #D8D5CE;border-radius:14px;">'
-    + '<tr><td style="background:'+v.accent+';height:6px;font-size:0;line-height:0;border-radius:14px 14px 0 0;">&#160;</td></tr>'
-    + '<tr><td style="padding:26px 28px 22px;text-align:center;">'
-      + '<p style="font-family:Inter,Arial,sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;font-weight:bold;color:#6B6B6B;margin:0 0 14px;">The Hidden Work</p>'
-      + '<p style="font-family:Inter,Arial,sans-serif;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:#9A9A9A;margin:0 0 6px;">My work pattern</p>'
-      + '<h3 style="font-family:&#39;Source Serif Pro&#39;,Georgia,serif;font-size:26px;font-weight:bold;color:'+v.accent+';margin:0 0 10px;line-height:1.1;">'+p.arch+'</h3>'
-      + '<p style="font-family:&#39;Source Serif Pro&#39;,Georgia,serif;font-style:italic;font-size:15px;color:#3A3A3A;line-height:1.45;margin:0 0 20px;">&#8220;'+v.claim+'&#8221;</p>'
-      + '<div style="text-align:left;">'+shareCardDim('Clarity',C.clarity,'Searching','Focused',p.C)+shareCardDim('Agency',C.agency,'Stuck','Building',p.AG)+shareCardDim('Alignment',C.alignment,'Expected','Chosen',p.AL)+'</div>'
-      + '<p style="font-family:Inter,Arial,sans-serif;font-size:10.5px;letter-spacing:.5px;color:#9A9A9A;border-top:1px solid #D8D5CE;padding:12px 0 0;margin:16px 0 0;">dandobos.com/hidden-work</p>'
-    + '</td></tr>'
-  + '</table>'
-  + '</td></tr></table>'
-  + '<p style="font-family:&#39;Source Serif Pro&#39;,Georgia,serif;font-size:18px;font-weight:600;color:#0F0F0F;text-align:center;margin:24px 0 14px;">Want to compare patterns with someone?</p>'
-  + '<div style="text-align:center;">'
-    + shareBtn('https://twitter.com/intent/tweet?text='+e(txt)+'&url='+e(link),'Post on X')
-    + shareBtn('https://www.linkedin.com/sharing/share-offsite/?url='+e(link),'LinkedIn')
-    + shareBtn('https://wa.me/?text='+e(txt+' '+link),'WhatsApp')
-    + shareBtn('https://www.facebook.com/sharer/sharer.php?u='+e(link),'Facebook')
-    + shareBtn('mailto:?subject='+e('My Hidden Work pattern')+'&body='+e(txt+' '+link),'Email a friend')
-  + '</div>';
+var PAT_NUM={LLL:1,LLH:2,HLL:3,LHL:4,HHL:5,HLH:6,LHH:7,HHH:8};
+var SHARE_CLAIM={
+  HHH:"My work matters to me, and now I’m making it world-class.",
+  HHL:"I’m very good at what I do, and about to discover something important.",
+  HLH:"I can see my real work clearly. Now I’m choosing one hour a day to build it.",
+  HLL:"I can see the life I want. Now I’m building the road to it.",
+  LHH:"I’m moving fast and true to myself, and am ready to let the work choose me.",
+  LHL:"I get things done. I’m about to discover what I really want to build.",
+  LLH:"I’m at peace with who I am, and ready to find the shape of my work.",
+  LLL:"On paper it all works, and I’m honest enough to want more."
+};
+var SHARE_STRENGTHS={
+  HHH:[["Work that’s truly their own","Found their real work and gives it everything."],["Clarity and action aligned","Knows where they’re going and moves there daily."],["Raising the bar","Not content with good; building toward world-class."]],
+  HHL:[["Relentless execution","Sets a target and delivers it, every time."],["Visible, proven skill","The talent and the results speak for themselves."],["Brave enough to choose again","Willing to question a win and aim for something even more important."]],
+  HLH:[["Deep self-knowledge","Has done the inner work and knows who they are."],["A clear inner compass","Decides from their own truth, not the noise."],["The honest read","The person others come to for clarity."]],
+  HLL:[["Crystal-clear vision","Already knows the work and life worth building."],["Refuses the default path","Will not settle for a life chosen by other people."],["Ready to move","Standing at the edge, about to start building."]],
+  LHH:[["Momentum that doesn’t wait","Starts, moves, and keeps going."],["True to themselves","Acts from who they really are, not appearances."],["Open to what’s next","Curious enough to find the right direction."]],
+  LHL:[["Serious horsepower","Pushes through resistance that stops other people."],["Always delivers","Hand them something hard and it gets done."],["Ready for something new","All that power is about to find its real target."]],
+  LLH:[["Genuinely themselves","No performance, no pretending; what you see is real."],["A calm, grounding presence","The steady one others feel safe around."],["Secure enough to explore","Comfortable wandering until the right path appears."]],
+  LLL:[["Steady and dependable","Shows up, holds things together, keeps everything running."],["Honest with themselves","Will name the quiet thing most people talk themselves out of."],["Open to the real question","Done with settling and ready to choose."]]
+};
+var SHARE_GRID=['Restless Visionary','Aligned Maker','High Achiever','Awakened Observer','Restless Explorer','Tireless Driver','Grounded Seeker','Late Bloomer'];
+var SHARE_HEADLINE={
+  HHH:"Who else in your circle is a Maker?",
+  HHL:"Who else in your circle is a High Achiever?",
+  HLH:"Who else in your circle sees what many others miss?",
+  HLL:"Who else in your circle is a Visionary?",
+  LHH:"Who else in your circle is an Explorer?",
+  LHL:"Who else in your circle is a Tireless Driver?",
+  LLH:"Who else in your circle is a Grounded Seeker?",
+  LLL:"Who else in your circle is a Late Bloomer?"
+};
+function wcStrengths(key,accent){
+  return SHARE_STRENGTHS[key].map(function(s){
+    return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F7F5F1;border:1px solid #D8D5CE;border-radius:11px;margin:0 0 12px;"><tr>'
+      + '<td width="40" valign="top" style="padding:14px 0 14px 16px;"><div style="width:24px;height:24px;border-radius:50%;background:'+accent+';text-align:center;mso-line-height-rule:exactly;line-height:24px;"><span style="font-family:Inter,Arial,sans-serif;font-size:13px;font-weight:bold;color:#FFFFFF;">&#10003;</span></div></td>'
+      + '<td valign="top" style="padding:13px 16px 14px 13px;"><p style="font-family:&#39;Source Serif Pro&#39;,Georgia,serif;font-weight:700;font-size:16px;line-height:1.2;margin:0 0 2px;color:#0F0F0F;">'+s[0]+'</p><p style="font-family:&#39;Source Serif Pro&#39;,Georgia,serif;font-size:13.5px;color:#6B6B6B;line-height:1.45;margin:0;">'+s[1]+'</p></td>'
+    + '</tr></table>';
+  }).join('');
 }
-
+function wcGrid(short,accent){
+  var rows='';
+  for(var i=0;i<SHARE_GRID.length;i+=2){
+    var c='';
+    for(var j=i;j<i+2;j++){
+      var name=SHARE_GRID[j], me=(name===short);
+      var bg=me?accent:'#FFFFFF', bd=me?accent:'#D8D5CE', tx=me?'#FFFFFF':'#6B6B6B', dot=me?'#FFFFFF':'#D8D5CE', fw=me?'700':'400';
+      var pad=(j===i)?'padding:0 4px 8px 0;':'padding:0 0 8px 4px;';
+      c+='<td width="50%" valign="top" style="'+pad+'"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:'+bg+';border:1px solid '+bd+';border-radius:8px;"><tr><td style="padding:11px 13px;"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td width="16" valign="middle"><div style="width:7px;height:7px;border-radius:50%;background:'+dot+';font-size:0;line-height:0;">&#160;</div></td><td valign="middle" style="font-family:&#39;Source Serif Pro&#39;,Georgia,serif;font-size:14px;color:'+tx+';font-weight:'+fw+';">'+name+'</td></tr></table></td></tr></table></td>';
+    }
+    rows+='<tr>'+c+'</tr>';
+  }
+  return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0">'+rows+'</table>';
+}
+function shareBlock(p){
+  var v=VS[p.arch], key=v.key, accent=v.accent, e=encodeURIComponent;
+  var short=p.arch.replace(/^The\s+/,'');
+  var art=/^[AEIOU]/.test(short)?'an':'a';
+  var link='https://dandobos.com/hidden-work/?type='+key;
+  var fMsg='I did the Hidden Work quiz and came out as the '+short+'. I thought you might find it useful.';
+  return sectionTitle('Share your result with a friend or colleague')
+   + '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">'
+   + '<table role="presentation" width="440" cellpadding="0" cellspacing="0" style="width:440px;max-width:440px;background:#FFFFFF;border:1px solid #D8D5CE;border-radius:16px;">'
+     + '<tr><td style="background:'+accent+';height:6px;font-size:0;line-height:0;border-radius:16px 16px 0 0;">&#160;</td></tr>'
+     + '<tr><td style="padding:30px 32px 30px;">'
+       + '<p style="font-family:Inter,Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:'+accent+';text-align:center;margin:0 0 12px;">The Hidden Work &#183; Pattern '+PAT_NUM[key]+' of 8</p>'
+       + '<p style="font-family:&#39;Source Serif Pro&#39;,Georgia,serif;font-weight:700;font-size:30px;line-height:1.1;text-align:center;margin:0 0 14px;color:#0F0F0F;">I am '+art+' <span style="color:'+accent+';">'+short+'</span></p>'
+       + '<p style="font-family:&#39;Source Serif Pro&#39;,Georgia,serif;font-style:italic;font-size:17.5px;line-height:1.45;color:#3A3A3A;text-align:center;margin:0 auto 18px;">&#8220;'+SHARE_CLAIM[key]+'&#8221;</p>'
+       + '<p style="font-family:Inter,Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#0F0F0F;text-align:center;margin:0 0 18px;">What people can count on me for</p>'
+       + wcStrengths(key,accent)
+       + '<p style="font-family:&#39;Source Serif Pro&#39;,Georgia,serif;font-weight:700;font-size:19px;text-align:center;margin:28px 0 18px;color:#0F0F0F;">Which of the 8 are you?</p>'
+       + wcGrid(short,accent)
+       + '<a href="'+link+'" target="_blank" style="display:block;text-align:center;margin-top:26px;font-family:Inter,Arial,sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FFFFFF;background:#0F0F0F;padding:16px;border-radius:10px;text-decoration:none;">Discover your hidden work</a>'
+       + '<p style="font-family:Inter,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:.5px;color:#0F0F0F;text-align:center;margin:14px 0 0;">Find yours at dandobos.com/hidden-work</p>'
+     + '</td></tr>'
+   + '</table>'
+   + '</td></tr></table>'
+   + '<p style="font-family:&#39;Source Serif Pro&#39;,Georgia,serif;font-size:19px;font-weight:600;color:#0F0F0F;text-align:center;margin:26px 0 10px;">'+SHARE_HEADLINE[key]+'</p>'
+   + '<p style="font-family:&#39;Source Serif Pro&#39;,Georgia,serif;font-size:15px;color:#3A3A3A;line-height:1.55;text-align:center;margin:0 0 16px;">Send the card above to a friend or colleague, then compare where your patterns match and where they differ.</p>'
+   + '<div style="text-align:center;">'
+     + shareBtn('https://twitter.com/intent/tweet?text='+e(fMsg)+'&url='+e(link),'Post on X')
+     + shareBtn('https://www.linkedin.com/sharing/share-offsite/?url='+e(link),'LinkedIn')
+     + shareBtn('https://wa.me/?text='+e(fMsg+' '+link),'WhatsApp')
+     + shareBtn('https://www.facebook.com/sharer/sharer.php?u='+e(link),'Facebook')
+     + shareBtn('mailto:?subject='+e('My Hidden Work pattern')+'&body='+e(fMsg+' '+link),'Email a friend')
+   + '</div>';
+}
 function emailCard(p){
   var reg=REG[p.reg];
   return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#EFEDE8;"><tr><td align="center" style="padding:24px 12px;">'
