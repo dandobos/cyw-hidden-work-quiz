@@ -46,7 +46,7 @@ var P=[
   chap:"Chapter 9: You Don't Really Want to Lie on the Beach All Day", why:"Your scores are high across all dimensions, so this chapter is about scale, not repair.", dl:"Download Chapter 9 Free",
   narr:["You are one of the rare ones. You know what your real work is, you are actually doing it, and it is truly yours. Your clarity and your actions point the same direction, and your work energizes you rather than drains you.","This is not luck. It is the result of choices most people never manage to make. The question is whether you can get the cathedral you are building to a world-class standard."] },
 
-{ arch:"The Trophy Winner", share:"I've been winning at the wrong game.", reg:"High", C:78,AG:100,AL:18,V:24,
+{ arch:"The High Achiever", share:"I've been winning at the wrong game.", reg:"High", C:78,AG:100,AL:18,V:24,
   cs:"You appear to be clear on the work that's truly yours.", as:"You seem to be actively building toward what matters.", als:"Your life appears to be shaped more by others than by you.",
   chap:"Chapter 5: How to Think Independently in a World Obsessed with Conformity", why:"Your clarity and drive are high. The next step is to choose the work that aligns with your true self, so it stops draining you.", dl:"Download Chapter 5 Free",
   narr:["You are very good at what you do, and you know exactly what you are aiming at. People can see the skill, the drive, the results. The trouble is the summit you are climbing was never really yours.","The more you have achieved, the more you have invested, which is exactly what makes turning so hard. But winning the wrong game feels hollow after a while. The clarity and drive you already have will serve you once they are pointed at work that is actually yours."] },
@@ -66,17 +66,17 @@ var P=[
   chap:"Chapter 7: Let the Work Choose You", why:"You're true to yourself and taking action. This chapter helps you move toward a clear target.", dl:"Download Chapter 7 Free",
   narr:["You have energy and momentum. You are true to yourself, you take action and do not wait around. The one thing missing is a target. Much of your motion may be away from what you do not want rather than toward something you do.","The good news is that you have mastered the hardest parts. Now you need to let the work choose you. Loosen your grip and notice what quietly draws you in. Direction, not more effort, is the missing piece."] },
 
-{ arch:"The Restless Workhorse", share:"Grit without direction is just force applied to a dead end.", reg:"Elevated", C:36,AG:94,AL:31,V:31,
+{ arch:"The Tireless Driver", share:"Grit without direction is just force applied to a dead end.", reg:"Elevated", C:36,AG:94,AL:31,V:31,
   cs:"You appear to have a faint sense of direction, but not yet a clear picture.", as:"You seem to be actively building toward what matters.", als:"Your work appears to be based on half your truth, half what is expected of you.",
   chap:"Chapter 8: How to Overcome the Curse of Competence", why:"You're driving hard at work that drains instead of energizes you. This is the curse of competence.", dl:"Download Chapter 8 Free",
   narr:["You have serious horsepower. You move fast, you push hard, and you are used to powering through resistance. The problem is the engine is running on grit, with no clear target and no sense that the work is even your own.","You are grinding hard at something chosen by your ambition and your training rather than by your true self. This is why you sometimes feel drained. Your challenge is to channel your talent into work that matters to you."] },
 
-{ arch:"The Drifting Soul", share:"I'm at peace with who I am. I'm just not sure where I'm going.", reg:"Elevated", C:41,AG:29,AL:73,V:37,
+{ arch:"The Grounded Seeker", share:"I'm at peace with who I am. I'm just not sure where I'm going.", reg:"Elevated", C:41,AG:29,AL:73,V:37,
   cs:"You appear to have a faint sense of direction, but not yet a clear picture.", as:"You seem to begin things, but then they appear to slip.", als:"Your work appears to be based mainly on your truth and less of what is expected of you.",
   chap:"Chapters 2 and 6", why:"Start with Chapter 2 to release what the past is still holding, then Chapter 6 to find your direction through exploration.", dl:"Download Chapters 2 and 6 Free",
   narr:["You know who you are. You are not performing for anyone, nor living someone else's life. But you are not moving forward either, because you are not yet clear on the shape of your real work.","The challenge is that being at peace can quietly become an excuse to stay put. What you are missing is not character. It is taking more action, even if you don't exactly know where it will lead."] },
 
-{ arch:"The Comfortable Drifter", share:"On paper everything seems fine. But something feels amiss.", reg:"High", C:22,AG:19,AL:21,V:18,
+{ arch:"The Late Bloomer", share:"On paper everything seems fine. But something feels amiss.", reg:"High", C:22,AG:19,AL:21,V:18,
   cs:"Your picture of your real work doesn't appear to have come into focus yet.", as:"You seem to keep meaning to begin, without having taken action yet.", als:"Your life appears to be shaped more by others than by you.",
   chap:"Chapters 1 and 2", why:"Start with Chapter 1 to face the pattern, then Chapter 2 to release what has been holding you in it.", dl:"Download Chapters 1 and 2 Free",
   narr:["From the outside, your life looks fine. Maybe even good. There is a paycheck, a routine, people who would call you successful. And yet there is a small, persistent pebble in your emotional shoe that you have been trying to ignore.","You do not know what your real work is, you are unsure what to do next, and the life you are living does not feel like your own. You already know something is off. The question is whether you are willing to look directly at it and start to make changes."] }
@@ -118,13 +118,13 @@ function regretMeter(level){
 function rule(){ return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:28px 0 0;"><tr><td style="border-top:1px solid #D8D5CE;font-size:0;line-height:0;">&#160;</td></tr></table>'; }
 var VS={
  "The Aligned Maker":{key:'HHH',rarity:4,accent:'#3D7A6E',claim:"My work is fully mine. Now it's time to make it world-class."},
- "The Trophy Winner":{key:'HHL',rarity:29,accent:'#B8902F',claim:"Turns out I've been winning the wrong game."},
+ "The High Achiever":{key:'HHL',rarity:29,accent:'#B8902F',claim:"Turns out I've been winning the wrong game."},
  "The Awakened Observer":{key:'HLH',rarity:27,accent:'#1E5F8C',claim:"I can see my real work clearly. Now it's time to take more action."},
  "The Restless Visionary":{key:'HLL',rarity:31,accent:'#A85A3D',claim:"I can see the life I want. Time to start moving toward it."},
  "The Restless Explorer":{key:'LHH',rarity:27,accent:'#C2722F',claim:"I'm moving fast but need to better define my direction."},
- "The Restless Workhorse":{key:'LHL',rarity:23,accent:'#B23A2E',claim:"My engine is firing. I now need to point it in the right direction."},
- "The Drifting Soul":{key:'LLH',rarity:21,accent:'#557C9E',claim:"I'm at peace with who I am. Now I need to define where I'm going."},
- "The Comfortable Drifter":{key:'LLL',rarity:33,accent:'#6B6B6B',claim:"Everything looks fine on paper, but I know something's off, and I'm done ignoring it."}
+ "The Tireless Driver":{key:'LHL',rarity:23,accent:'#B23A2E',claim:"My engine is firing. I now need to point it in the right direction."},
+ "The Grounded Seeker":{key:'LLH',rarity:21,accent:'#557C9E',claim:"I'm at peace with who I am. Now I need to define where I'm going."},
+ "The Late Bloomer":{key:'LLL',rarity:33,accent:'#6B6B6B',claim:"Everything looks fine on paper, but I know something's off, and I'm done ignoring it."}
 };
 function shareCardDim(name,color,lo,hi,score){
   var v=score>50?hi:lo;
