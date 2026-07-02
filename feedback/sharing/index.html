@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Hidden Work Quiz: The Sharing Test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+  :root {
+    --heading: 'Source Serif Pro', Georgia, serif;
+    --sans: 'Inter', -apple-system, sans-serif;
+    --bg: #ffffff;
+    --card: #ffffff;
+    --border: #cfccc4;
+    --border-soft: #e3e0d9;
+    --text-primary: #0f0f0f;
+    --text-body: #1a1a1a;
+    --text-muted: #333333;
+    --text-subtle: #3d3d3d;
+    --accent: #3d7a6e;
+    --accent-clay: #a85a3d;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text-primary);
+    font-family: var(--heading); -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 56px 24px 96px; }
+
+  .eyebrow {
+    font-family: var(--sans); font-size: 11px; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--accent); font-weight: 600;
+    text-align: center; margin: 0 0 18px;
+  }
+  h1 {
+    font-family: var(--heading); font-weight: 400; font-size: 34px;
+    line-height: 1.22; letter-spacing: -0.3px; text-align: center; margin: 0 0 18px;
+  }
+  .lede {
+    font-family: var(--heading); font-size: 17px; color: var(--text-body);
+    text-align: center; max-width: 560px; margin: 0 auto 8px; line-height: 1.6;
+  }
+  .lede.small { font-size: 15px; color: var(--text-muted); margin-bottom: 0; }
+
+  .rule { height: 1px; background: var(--border-soft); border: 0; margin: 44px 0; }
+
+  fieldset { border: 0; padding: 0; margin: 0 0 38px; }
+  legend {
+    font-family: var(--sans); font-size: 25px; letter-spacing: -0.3px;
+    color: var(--text-primary); font-weight: 700;
+    padding: 0; margin: 0 0 10px;
+  }
+  .section-note {
+    font-family: var(--heading); font-style: italic; font-size: 15px;
+    color: var(--text-muted); margin: 0 0 26px;
+  }
+  .callout {
+    font-family: var(--heading); font-size: 15.5px; color: var(--text-body);
+    background: #f7f5f1; border-left: 3px solid var(--accent);
+    padding: 16px 18px; margin: 0 0 26px; line-height: 1.6;
+  }
+  .callout strong { font-family: var(--sans); font-weight: 600; font-size: 14px; }
+
+  .field { margin: 0 0 26px; }
+  label.q {
+    display: block; font-family: var(--heading); font-size: 18px; font-weight: 600;
+    color: var(--text-primary); margin: 0 0 12px; line-height: 1.4;
+  }
+  .req { color: var(--accent-clay); font-family: var(--sans); font-size: 13px; }
+  .optional { color: var(--text-subtle); font-family: var(--sans); font-size: 13px; font-weight: 400; }
+  .hint {
+    display: block; font-family: var(--heading); font-style: italic;
+    font-size: 14px; color: var(--text-subtle); margin: -6px 0 12px;
+  }
+
+  input[type="text"], input[type="email"], select, textarea {
+    width: 100%; font-family: var(--heading); font-size: 16px;
+    color: var(--text-primary); background: var(--card);
+    border: 1px solid var(--border); padding: 12px 14px; outline: none;
+    transition: border-color 0.15s; border-radius: 0;
+  }
+  textarea { min-height: 96px; resize: vertical; line-height: 1.55; }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+
+  .pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+  .pills label {
+    font-family: var(--sans); font-size: 15px; color: var(--text-muted);
+    border: 1px solid var(--border); background: var(--card);
+    padding: 10px 16px; cursor: pointer; transition: all 0.15s;
+  }
+  .pills label:hover { border-color: var(--accent); color: var(--accent); }
+  .pills input { position: absolute; opacity: 0; pointer-events: none; }
+  .pills label:has(input:checked) { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .submit-btn {
+    display: block; width: 100%; font-family: var(--sans); font-size: 14px;
+    font-weight: 600; letter-spacing: 0.5px; color: #fff; background: var(--text-primary);
+    border: 1px solid var(--text-primary); padding: 18px; cursor: pointer;
+    transition: opacity 0.15s; margin-top: 10px;
+  }
+  .submit-btn:hover { opacity: 0.85; }
+  .submit-btn[disabled] { opacity: 0.5; cursor: default; }
+
+  .status {
+    font-family: var(--sans); font-size: 14px; text-align: center;
+    margin-top: 18px; min-height: 20px;
+  }
+  .status.err { color: var(--accent-clay); }
+  .status.ok { color: var(--accent); }
+
+  #thanks { display: none; text-align: center; padding: 24px 0; }
+  #thanks h2 { font-family: var(--heading); font-weight: 400; font-size: 28px; margin: 0 0 14px; }
+  #thanks p { font-family: var(--heading); font-size: 17px; color: var(--text-body); line-height: 1.6; }
+
+  #answers-dump { text-align: left; max-width: 560px; margin: 32px auto 0; border-top: 1px solid var(--border-soft); padding-top: 24px; }
+  #answers-dump h3 { font-family: var(--sans); font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin: 0 0 18px; font-weight: 700; }
+  .ans-row { margin: 0 0 14px; }
+  .ans-row .k { font-family: var(--sans); font-size: 12px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 3px; }
+  .ans-row .v { font-family: var(--heading); font-size: 16px; color: var(--text-primary); white-space: pre-wrap; }
+
+  @media (max-width: 520px) { h1 { font-size: 28px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="eyebrow">Beta Tester Feedback</p>
+  <h1>The Sharing Test</h1>
+  <p class="lede">A quiz like this only works if people pass it on, so we need to see what happens when it actually gets shared.</p>
+  <p class="lede small">Please do this <em>after</em> you have finished the quiz and the main feedback form.</p>
+
+  <hr class="rule">
+
+  <form id="fb-form">
+
+    <!-- CONTEXT -->
+    <fieldset>
+      <legend>Who you are</legend>
+      <div class="field">
+        <label class="q" for="name">Your name</label>
+        <span class="hint">Use the same name as on the main feedback form, so we can match them up.</span>
+        <input type="text" id="name" name="name" autocomplete="name" required>
+      </div>
+      <div class="field">
+        <label class="q" for="email">Email</label>
+        <input type="email" id="email" name="email" autocomplete="email" required>
+      </div>
+    </fieldset>
+
+    <hr class="rule">
+
+    <!-- THE REAL SHARE -->
+    <fieldset>
+      <legend>Sending it for real</legend>
+      <p class="section-note">Please actually send the quiz to one person it made you think of.</p>
+
+      <div class="field">
+        <label class="q">Did you send the quiz to a real person?</label>
+        <div class="pills" role="radiogroup" aria-label="Did you send it">
+          <label><input type="radio" name="share_sent" value="Yes" required><span>Yes, I sent it</span></label>
+          <label><input type="radio" name="share_sent" value="No" required><span>I can't think of anyone</span></label>
+        </div>
+      </div>
+
+      <div class="field" id="who-field">
+        <label class="q" for="share_who">Who did you send it to, and why them?</label>
+        <span class="hint">No names needed. For example: "A colleague who just quit and is figuring out what is next."</span>
+        <textarea id="share_who" name="share_who"></textarea>
+      </div>
+
+      <div class="field" id="message-field">
+        <label class="q" for="share_message">Paste or paraphrase what you actually wrote when you sent it.</label>
+        <span class="hint">The exact words help us a lot. Write it the way you really sent it.</span>
+        <textarea id="share_message" name="share_message"></textarea>
+      </div>
+
+      <div class="field" id="notsent-field" hidden>
+        <label class="q" for="not_sent_why">What stopped you? Be blunt.</label>
+        <span class="hint">This is genuinely one of the most useful answers, so please do not soften it.</span>
+        <textarea id="not_sent_why" name="not_sent_why"></textarea>
+      </div>
+    </fieldset>
+
+    <hr class="rule">
+
+    <!-- AS THE RECIPIENT -->
+    <fieldset>
+      <legend>Now play the person who received it</legend>
+      <div class="callout">
+        <strong>QUICK STEP:</strong><br>
+        To see exactly what your friend sees, send the quiz to <em>yourself</em> as well (text, WhatsApp, or email), or just open the link you shared on your phone. Then answer the questions below as if you were receiving it for the very first time, knowing nothing about it.
+      </div>
+
+      <div class="field">
+        <label class="q" for="preview_look">When the message and link arrived, how did the preview look?</label>
+        <span class="hint">The little image, title, and text that show up under a shared link. Did it make you want to tap it? Did anything look off, plain, or broken?</span>
+        <textarea id="preview_look" name="preview_look" required></textarea>
+      </div>
+
+      <div class="field">
+        <label class="q" for="clarity_cold">Opening it cold, was it instantly clear what it was and why you would do it?</label>
+        <span class="hint">Imagine you had never heard of it. What was clear, what was confusing?</span>
+        <textarea id="clarity_cold" name="clarity_cold" required></textarea>
+      </div>
+
+      <div class="field">
+        <label class="q" for="mobile_issues">On your phone, did anything look broken, slow, or awkward when it arrived?</label>
+        <span class="hint">Layout, text cut off, slow to load, buttons hard to tap. If it all looked good, say so.</span>
+        <textarea id="mobile_issues" name="mobile_issues" required></textarea>
+      </div>
+
+      <div class="field">
+        <label class="q">As the friend receiving this, would you actually have taken it?</label>
+        <div class="pills" role="radiogroup" aria-label="Would you have taken it">
+          <label><input type="radio" name="would_take" value="Yes" required><span>Yes</span></label>
+          <label><input type="radio" name="would_take" value="Maybe" required><span>Maybe</span></label>
+          <label><input type="radio" name="would_take" value="No" required><span>No</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="q" for="would_take_why">Why, or why not?</label>
+        <textarea id="would_take_why" name="would_take_why" required></textarea>
+      </div>
+
+      <div class="field">
+        <label class="q" for="one_change">What one change would make someone who receives it cold more likely to take it?</label>
+        <span class="hint">The single highest-impact thing, if you can name it.</span>
+        <textarea id="one_change" name="one_change" required></textarea>
+      </div>
+    </fieldset>
+
+    <hr class="rule">
+
+    <!-- OPTIONAL: REAL REACTION -->
+    <fieldset>
+      <legend>If they reacted <span class="optional">(optional)</span></legend>
+      <div class="field">
+        <label class="q" for="real_reply">If the person you sent it to replied or took it, what did they say?</label>
+        <span class="hint">Only if it happened. Their reaction, in their words if you have it.</span>
+        <textarea id="real_reply" name="real_reply"></textarea>
+      </div>
+    </fieldset>
+
+    <button type="submit" class="submit-btn" id="submit-btn">Send my sharing feedback</button>
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+  </form>
+
+  <div id="thanks">
+    <h2>Thank you, that is the whole picture.</h2>
+    <p>This sharing feedback is the piece we could never get any other way. Thank you for actually putting it in front of someone and telling us how it landed.</p>
+    <div id="answers-dump"></div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  // --- Submission endpoint -------------------------------------------------
+  // Paste a Formspree (or compatible) endpoint here to collect responses, e.g.
+  //   "https://formspree.io/f/xxxxxxx"
+  // Leave blank to fall back to email so nothing is ever lost.
+  var ENDPOINT = "";
+  var FALLBACK_EMAIL = "dan@dandobos.com";
+
+  var form = document.getElementById('fb-form');
+  var statusEl = document.getElementById('status');
+  var submitBtn = document.getElementById('submit-btn');
+  var thanks = document.getElementById('thanks');
+
+  var sentRadios = document.querySelectorAll('input[name="share_sent"]');
+  var whoField = document.getElementById('who-field');
+  var msgField = document.getElementById('message-field');
+  var notSentField = document.getElementById('notsent-field');
+  var shareWho = document.getElementById('share_who');
+  var shareMsg = document.getElementById('share_message');
+  var notSentWhy = document.getElementById('not_sent_why');
+
+  function syncSent() {
+    var val = '';
+    for (var i = 0; i < sentRadios.length; i++) { if (sentRadios[i].checked) { val = sentRadios[i].value; break; } }
+    var sent = val === 'Yes';
+    var notYet = val === 'No';
+    whoField.hidden = !sent;
+    msgField.hidden = !sent;
+    notSentField.hidden = !notYet;
+    shareWho.required = sent;
+    shareMsg.required = sent;
+    notSentWhy.required = notYet;
+    if (!sent) { shareWho.value = ''; shareMsg.value = ''; }
+    if (!notYet) { notSentWhy.value = ''; }
+  }
+  for (var s = 0; s < sentRadios.length; s++) { sentRadios[s].addEventListener('change', syncSent); }
+  syncSent();
+
+  function collect() {
+    var data = {};
+    var fd = new FormData(form);
+    fd.forEach(function (v, k) { data[k] = v; });
+    return data;
+  }
+
+  var LABELS = {
+    name: 'Name', email: 'Email',
+    share_sent: 'Sent it for real?',
+    share_who: 'Who, and why them',
+    share_message: 'What they actually wrote',
+    not_sent_why: 'What stopped them sending it',
+    preview_look: 'How the link preview looked',
+    clarity_cold: 'Clear when opened cold?',
+    mobile_issues: 'Problems on arrival (mobile)',
+    would_take: 'Would the recipient have taken it?',
+    would_take_why: 'Why / why not',
+    one_change: 'One change for cold recipients',
+    real_reply: 'Real recipient reaction (optional)'
+  };
+
+  function asText(data) {
+    var lines = ['Hidden Work Quiz: The Sharing Test', ''];
+    Object.keys(LABELS).forEach(function (k) {
+      var val = (data[k] || '').toString().trim();
+      lines.push(LABELS[k] + ': ' + (val || '(blank)'));
+    });
+    return lines.join('\n');
+  }
+
+  function setStatus(msg, cls) {
+    statusEl.textContent = msg;
+    statusEl.className = 'status' + (cls ? ' ' + cls : '');
+  }
+
+  function showThanks(data) {
+    var dump = document.getElementById('answers-dump');
+    if (dump && data) {
+      dump.innerHTML = '';
+      var h = document.createElement('h3');
+      h.textContent = 'Your answers';
+      dump.appendChild(h);
+      Object.keys(LABELS).forEach(function (k) {
+        var val = (data[k] || '').toString().trim();
+        if (!val) return;
+        var row = document.createElement('div');
+        row.className = 'ans-row';
+        var ks = document.createElement('span');
+        ks.className = 'k';
+        ks.textContent = LABELS[k];
+        var vs = document.createElement('span');
+        vs.className = 'v';
+        vs.textContent = val;
+        row.appendChild(ks);
+        row.appendChild(vs);
+        dump.appendChild(row);
+      });
+    }
+    form.style.display = 'none';
+    thanks.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function emailFallback(data) {
+    var subject = 'Hidden Work sharing test: ' + (data.name || 'beta reader');
+    var href = 'mailto:' + FALLBACK_EMAIL +
+      '?subject=' + encodeURIComponent(subject) +
+      '&body=' + encodeURIComponent(asText(data));
+    window.location.href = href;
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var data = collect();
+
+    if (!data.name || !data.name.trim()) {
+      setStatus('Please add your name so we can match this to your other feedback.', 'err');
+      document.getElementById('name').focus();
+      return;
+    }
+    if (!data.share_sent) {
+      setStatus('Please let us know whether you sent it.', 'err');
+      return;
+    }
+
+    submitBtn.disabled = true;
+
+    if (!ENDPOINT) {
+      setStatus('Opening your email app to send your answers to ' + FALLBACK_EMAIL + '...', 'ok');
+      emailFallback(data);
+      setTimeout(function () { showThanks(data); }, 1200);
+      return;
+    }
+
+    setStatus('Sending...', '');
+    fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(function (res) {
+      if (res.ok) { showThanks(data); }
+      else { throw new Error('bad status ' + res.status); }
+    }).catch(function () {
+      submitBtn.disabled = false;
+      setStatus('Something went wrong sending that. Please email your answers to ' + FALLBACK_EMAIL + ', and thank you.', 'err');
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
