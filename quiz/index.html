@@ -177,6 +177,29 @@
   .ch-btn:hover { opacity: .88; }
   .share-toast { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--text-primary); color: #fff; font-family: var(--sans); font-size: 13px; font-weight: 600; padding: 11px 18px; border-radius: 9px; opacity: 0; pointer-events: none; transition: all .25s; z-index: 50; }
   .share-toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+  /* ---- invite landing + compare (arriving via a friend's share link) ---- */
+  .inv-card { background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--a); border-radius: 12px; padding: 20px 24px; max-width: 460px; margin: 0 auto 30px; text-align: left; }
+  .inv-ey { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin: 0 0 7px; }
+  .inv-name { font-family: var(--heading); font-size: 26px; font-weight: 600; margin: 0 0 7px; }
+  .inv-claim { font-family: var(--heading); font-style: italic; font-size: 15.5px; line-height: 1.45; color: var(--text-body); margin: 0; }
+  .cmp-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; }
+  .cmp-names { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-family: var(--sans); font-size: 13px; color: var(--text-muted); margin: 0 0 12px; }
+  .cmp-names b { color: var(--text-primary); font-weight: 600; }
+  .cmp-row { padding: 13px 0; border-bottom: 1px solid #E7E4DE; }
+  .cmp-row:last-of-type { border-bottom: none; }
+  .cmp-head { display: flex; justify-content: space-between; align-items: baseline; margin: 0 0 9px; }
+  .cmp-dim { font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--text-body); }
+  .cmp-verdict { font-family: var(--sans); font-size: 12px; font-weight: 600; }
+  .cmp-line { display: flex; align-items: center; gap: 10px; margin: 5px 0; }
+  .cmp-who { font-family: var(--sans); font-size: 10.5px; font-weight: 600; letter-spacing: .8px; text-transform: uppercase; color: var(--text-subtle); width: 52px; flex: none; }
+  .cmp-track { flex: 1; height: 8px; background: var(--inner); border: 1px solid #E7E4DE; border-radius: 5px; overflow: hidden; }
+  .cmp-fill { height: 100%; border-radius: 5px; }
+  .cmp-fill.them { opacity: .4; }
+  .cmp-num { font-family: var(--sans); font-size: 12px; font-weight: 600; width: 26px; text-align: right; flex: none; }
+  .cmp-band { font-family: var(--heading); font-style: italic; font-size: 14px; color: var(--text-body); }
+  .cmp-summary { font-family: var(--heading); font-size: 16.5px; line-height: 1.55; color: var(--text-body); margin: 16px 0 0; }
+  .cmp-back { margin-top: 20px; padding-top: 18px; border-top: 1px solid #E7E4DE; text-align: center; }
+  .cmp-back-h { font-family: var(--heading); font-size: 19px; font-weight: 600; margin: 0 0 12px; }
   @media (max-width: 600px) { .dd-row { flex-direction: column; gap: 10px; } .dd-left { width: auto; } .dd-verdict { font-size: 32px; } .dd-micro { margin-bottom: 38px; } }
   @media (max-width: 600px) { .q-text { font-size: 22px; } .intro-title { font-size: 40px; } .word-tile { font-size: 17px; padding: 18px 6px; } .res-name { font-size: 34px; } .res-share { font-size: 18px; } .sc-in { padding: 28px 22px 22px; } }
   /* ---- new share card (wc) ---- */
@@ -234,6 +257,27 @@
   .saveimg-hint { font-family: var(--sans); font-size: 12px; color: var(--text-muted); text-align: center; line-height: 1.5; margin: 8px auto 0; max-width: 360px; }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
+<!-- ===== PostHog: product analytics + session replay =====
+     Inert until POSTHOG_KEY is set to the real project key.
+     Get it from PostHog > Settings > Project > "Project API Key" (starts with phc_).
+     Privacy choices baked in: cookieless (no consent banner), autocapture off (lean events,
+     no stray capture of the email or free-text answers), replay masks all inputs. -->
+<script>
+(function(){
+  var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
+  var POSTHOG_HOST = 'https://us.i.posthog.com';          // EU data residency? use https://eu.i.posthog.com
+  if (!POSTHOG_KEY || POSTHOG_KEY.indexOf('phc_REPLACE') === 0) return;   // not configured yet -> skip
+  !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording capturePageView capturePageLeave debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+  posthog.init(POSTHOG_KEY, {
+    api_host: POSTHOG_HOST,
+    persistence: 'memory',                        // cookieless: no consent banner needed
+    autocapture: false,                           // explicit events only
+    capture_pageview: true,                       // top-of-funnel count
+    disable_surveys: true,
+    session_recording: { maskAllInputs: true }    // email + free-text answers are never recorded
+  });
+})();
+</script>
 </head>
 <body>
 <div class="nav">
@@ -357,6 +401,17 @@ function saveState(){ try{ sessionStorage.setItem(STATE_KEY, JSON.stringify({scr
 function loadState(){ try{ var r = sessionStorage.getItem(STATE_KEY); if(!r) return false; var st = JSON.parse(r); if(!st || (st.screen !== 'question' && st.screen !== 'gate')) return false; screen=st.screen; qIdx=st.qIdx||0; answers=st.answers||{}; activityNames=st.activityNames||['','','']; activityScores=st.activityScores||[null,null,null]; textVal=st.textVal||''; rankState=st.rankState||{}; rankTouched=st.rankTouched||{}; rankConfirmPending=st.rankConfirmPending||{}; return true; }catch(e){ return false; } }
 function clearState(){ try{ sessionStorage.removeItem(STATE_KEY); }catch(e){} }
 
+// ===== PostHog instrumentation (no-op if PostHog is not loaded) =====
+function hwCap(name, props){ try{ if(window.posthog && posthog.capture){ posthog.capture(name, props || {}); } }catch(e){} }
+// Completion-time tracking. "duration" is raw wall-clock; "active" caps each question at
+// HW_STEP_CAP so a walk-away gap does not inflate it. Persisted so a refresh-resume keeps t0.
+var HW_STEP_CAP = 90000, hwT0 = 0, hwLastStep = 0, hwActiveMs = 0;
+function hwTimingPersist(){ try{ sessionStorage.setItem('hw_timing', JSON.stringify({ t0:hwT0, last:hwLastStep, active:hwActiveMs })); }catch(e){} }
+function hwTimingStart(){ hwT0 = Date.now(); hwLastStep = hwT0; hwActiveMs = 0; hwTimingPersist(); }
+function hwTimingLoad(){ try{ var r = JSON.parse(sessionStorage.getItem('hw_timing') || 'null'); if(r && r.t0){ hwT0 = r.t0; hwLastStep = r.last || r.t0; hwActiveMs = r.active || 0; } }catch(e){} }
+function hwTimingStep(){ var now = Date.now(); if(hwLastStep){ hwActiveMs += Math.min(now - hwLastStep, HW_STEP_CAP); } hwLastStep = now; hwTimingPersist(); }
+function hwDurations(){ return { duration_seconds: hwT0 ? Math.round((Date.now() - hwT0)/1000) : null, active_seconds: Math.round(hwActiveMs/1000) }; }
+
 function currentSection() { return questions[qIdx]?.section || 'X'; }
 function sectionProgress() {
   const sec = currentSection();
@@ -395,13 +450,30 @@ function setProgress() {
   else nav.textContent = 'The Hidden Work';
 }
 function renderIntro() {
+  // Invited visitors (arriving via a friend's share link) get the friend's pattern up
+  // front and a compare promise; everyone else gets the standard intro.
+  var invited = _invite && ARCH[_invite.key];
+  var title = invited ? 'Which of the 8 work patterns are you?' : 'Discover the work you are meant to do';
+  var invCard = '';
+  var desc = 'A 7-minute assessment that helps you identify your work patterns and clarify your next move.';
+  var begin = 'Begin';
+  if (invited){
+    invCard = '<div class="inv-card" style="border-left-color:' + VIRAL[_invite.key].accent + '">'
+      + '<p class="inv-ey">The friend who sent you this came out as</p>'
+      + '<p class="inv-name">' + ARCH[_invite.key].name + '</p>'
+      + '<p class="inv-claim">&ldquo;' + VIRAL[_invite.key].claim + '&rdquo;</p>'
+      + '</div>';
+    desc = 'Take the same 7-minute assessment. At the end you’ll see your own pattern, plus where you two match and where you differ' + (_invite.scores ? ', dimension by dimension.' : '.');
+    begin = 'Find your pattern';
+  }
   return '<p class="intro-eyebrow">The Hidden Work</p>'
-    + '<h1 class="intro-title">Discover the work you are meant to do</h1>'
-    + '<p class="intro-desc">A 7-minute assessment that helps you identify your work patterns and clarify your next move.</p>'
+    + '<h1 class="intro-title">' + title + '</h1>'
+    + invCard
+    + '<p class="intro-desc">' + desc + '</p>'
     + '<div class="intro-stats"><div class="intro-stat"><div class="intro-stat-num">' + TOTAL_Q + '</div><div class="intro-stat-lbl">Questions</div></div>'
     + '<div class="intro-stat"><div class="intro-stat-num">~7</div><div class="intro-stat-lbl">Minutes</div></div>'
     + '<div class="intro-stat"><div class="intro-stat-num">8</div><div class="intro-stat-lbl">Patterns</div></div></div>'
-    + '<button class="continue-btn" onclick="startQuiz()">Begin</button>';
+    + '<button class="continue-btn" onclick="startQuiz()">' + begin + '</button>';
 }
 function renderQuestion() {
   const q = questions[qIdx];
@@ -641,6 +713,35 @@ function computeResult(){
            chapters:plan.chapters, mode:plan.mode, flag, border, neighbour, neighbourKey };
 }
 
+// ================= INVITE (arriving via a friend's share link) =================
+// Share links carry the sender's archetype (?type=KEY) and, since the compare build,
+// their three dimension scores (&s=C-AG-AL, each 0-100). Both are validated hard;
+// anything malformed is ignored and the page behaves as a normal visit. The invite
+// survives the whole session (sessionStorage) so it is still there at the result.
+const INVITE_KEY = 'hw_invite';
+function parseInviteFromUrl(){
+  try {
+    var q = new URLSearchParams(location.search);
+    var t = (q.get('type') || '').toUpperCase();
+    if (!ARCH[t]) return null;
+    var inv = { key: t };
+    var raw = q.get('s') || '';
+    if (/^\d{1,3}-\d{1,3}-\d{1,3}$/.test(raw)){
+      var p = raw.split('-').map(Number);
+      if (p.every(function(n){ return n >= 0 && n <= 100; })) inv.scores = { C: p[0], AG: p[1], AL: p[2] };
+    }
+    return inv;
+  } catch(e){ return null; }
+}
+var _invite = parseInviteFromUrl();
+if (_invite){
+  try { sessionStorage.setItem(INVITE_KEY, JSON.stringify(_invite)); } catch(e){}
+  hwCap('landed_from_share', { invite_type: _invite.key, has_scores: !!_invite.scores });
+} else {
+  try { _invite = JSON.parse(sessionStorage.getItem(INVITE_KEY) || 'null'); } catch(e){ _invite = null; }
+  if (_invite && !ARCH[_invite.key]) _invite = null;
+}
+
 // ================= RESULT PAGE =================
 // ===== VIRAL SHARE LOOP =====
 const VIRAL = {
@@ -660,7 +761,7 @@ const SHARE_CHALLENGE_BODY = 'They will get their own pattern, then you can comp
 const SHARE_CHALLENGE_MESSAGE = 'Want to compare Hidden Work patterns? Take The Hidden Work and see: ';
 var _share = null;
 function viralShareText(r){ return 'I did the Hidden Work quiz and came out as the ' + r.archetype.replace(/^The\s+/, '') + '. Which of the 8 work patterns are you?'; }
-function viralLink(r){ return SHARE_BASE + '?type=' + r.key; }
+function viralLink(r, s){ return SHARE_BASE + '?type=' + r.key + (s ? '&s=' + s.C + '-' + s.AG + '-' + s.AL : ''); }
 function shareDimensionData(s){
   return [
     { name:'Clarity', color:'#1E5F8C', lo:'Searching', hi:'Focused', score:s.C },
@@ -677,7 +778,7 @@ function sharePayload(r, s){
     accent: v.accent,
     claim: v.claim,
     prompt: v.prompt,
-    link: viralLink(r),
+    link: viralLink(r, s),
     text: viralShareText(r),
     dims: shareDimensionData(s)
   };
@@ -814,6 +915,88 @@ function viralSaveImage(){
 }
 function viralChallenge(){ if(!_share) return; var msg=SHARE_CHALLENGE_MESSAGE+_share.link; if(navigator.share){ navigator.share({ title:'The Hidden Work', text:msg, url:_share.link }).catch(function(){}); } else { (navigator.clipboard?navigator.clipboard.writeText(msg):Promise.reject()).then(function(){ viralToast('Invite copied, paste it to a friend'); }).catch(function(){ window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank'); }); } }
 
+// ===== compare with the friend who invited you (closes the share loop) =====
+// Renders only when an invite is present. With scores (&s=) it draws You/Them bars;
+// with type-only links (older shares) it falls back to the friend's High/Low verdicts.
+const CMP_GAP_LINE = {
+  Clarity: 'One of you can already name the work; the other is still circling it.',
+  Agency: 'One of you is already building; the other has not started moving yet.',
+  Alignment: 'One of you chose their path; the other is still walking the expected one.'
+};
+var _cmpBack = null;
+function compareHtml(r, s){
+  if (!_invite || !ARCH[_invite.key]) return '';
+  var fk = _invite.key, fs = _invite.scores || null;
+  var fName = ARCH[fk].name;
+  var keyPos = { Clarity: 0, Agency: 1, Alignment: 2 };
+  var sKey = { Clarity: 'C', Agency: 'AG', Alignment: 'AL' };
+  var matches = [], diffs = [];
+  var rowsHtml = shareDimensionData(s).map(function(d){
+    var themScore = fs ? fs[sKey[d.name]] : null;
+    var youBand = d.score > 50 ? 'H' : 'L';
+    var themBand = (themScore != null) ? (themScore > 50 ? 'H' : 'L') : fk[keyPos[d.name]];
+    var same = youBand === themBand;
+    (same ? matches : diffs).push({ name: d.name, gap: (themScore != null) ? Math.abs(d.score - themScore) : 0 });
+    var themLine = (themScore != null)
+      ? '<div class="cmp-line"><span class="cmp-who">Them</span><div class="cmp-track"><div class="cmp-fill them" style="width:' + themScore + '%;background:' + d.color + '"></div></div><span class="cmp-num" style="color:' + d.color + ';opacity:.55">' + themScore + '</span></div>'
+      : '<div class="cmp-line"><span class="cmp-who">Them</span><span class="cmp-band">' + (themBand === 'H' ? d.hi : d.lo) + '</span></div>';
+    return '<div class="cmp-row">'
+      + '<div class="cmp-head"><span class="cmp-dim">' + d.name + '</span><span class="cmp-verdict" style="color:' + (same ? '#3D7A6E' : '#A85A3D') + '">' + (same ? 'You match' : 'You differ') + '</span></div>'
+      + '<div class="cmp-line"><span class="cmp-who">You</span><div class="cmp-track"><div class="cmp-fill" style="width:' + d.score + '%;background:' + d.color + '"></div></div><span class="cmp-num" style="color:' + d.color + '">' + d.score + '</span></div>'
+      + themLine
+      + '</div>';
+  }).join('');
+  var names = function(list){ return list.map(function(m){ return m.name; }).join(' and '); };
+  var summary;
+  if (!diffs.length){
+    summary = (fk === r.key)
+      ? 'You both came out as ' + fName.replace(/^The\s/, 'the ') + '. Same pattern, two different lives. Compare notes on what you each do about it.'
+      : 'You sit on the same side of all three dimensions. Your patterns are close neighbours; the differences are in degree, not direction.';
+  } else {
+    diffs.sort(function(a, b){ return b.gap - a.gap; });
+    summary = (matches.length ? 'You match on ' + names(matches) + ', and split on ' + names(diffs) : 'You split on all three dimensions') + '. '
+      + CMP_GAP_LINE[diffs[0].name] + ' That is worth a conversation.';
+  }
+  var meShort = r.archetype.replace(/^The\s+/, ''), themShort = fName.replace(/^The\s+/, '');
+  var backMsg = (fk === r.key)
+    ? 'I took the quiz you sent. I came out as the ' + meShort + ' too. We match.'
+    : 'I took the quiz you sent. You are the ' + themShort + ', I am the ' + meShort + '. We split on ' + (diffs.length ? names(diffs) : 'nothing, just degree') + '.';
+  _cmpBack = { text: backMsg, link: viralLink(r, s) };
+  return '<div class="res-divider"></div>'
+    + '<p class="res-section-label">You and the Friend Who Invited You</p>'
+    + '<div class="cmp-card">'
+      + '<p class="cmp-names"><span>You: <b>' + r.archetype + '</b></span><span>Them: <b>' + fName + '</b></span></p>'
+      + rowsHtml
+      + '<p class="cmp-summary">' + summary + '</p>'
+      + '<div class="cmp-back">'
+        + '<p class="cmp-back-h">Send your result back</p>'
+        + '<div class="preview"><span class="quo">&ldquo;</span><span class="msg" contenteditable="true" role="textbox" spellcheck="true" oninput="cmpEditMsg(this)">' + backMsg + '</span><span class="quo">&rdquo;</span></div>'
+        + '<div class="share-btns">'
+          + '<button class="sbtn native" onclick="cmpNativeShare()"><span class="g">↗</span>Share</button>'
+          + '<a class="sbtn share-wa" id="cmp-wa" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(backMsg + ' ' + _cmpBack.link) + '"><span class="g g-wa">w</span>WhatsApp</a>'
+          + '<button class="sbtn" onclick="cmpCopy()"><span class="g g-cp">⧉</span>Copy</button>'
+        + '</div>'
+      + '</div>'
+    + '</div>';
+}
+function cmpEditMsg(el){
+  if (_cmpBack) _cmpBack.text = (el.textContent || '').replace(/\s+/g, ' ').trim();
+  var wa = document.getElementById('cmp-wa');
+  if (wa && _cmpBack) wa.href = 'https://wa.me/?text=' + encodeURIComponent(_cmpBack.text + ' ' + _cmpBack.link);
+}
+function cmpNativeShare(){
+  if (!_cmpBack) return;
+  hwCap('compare_sendback', { channel: 'native' });
+  if (navigator.share){ navigator.share({ title: 'The Hidden Work', text: _cmpBack.text, url: _cmpBack.link }).catch(function(){}); }
+  else { cmpCopy(); }
+}
+function cmpCopy(){
+  if (!_cmpBack) return;
+  hwCap('compare_sendback', { channel: 'copy' });
+  var u = _cmpBack.text + ' ' + _cmpBack.link;
+  (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(function(){ viralToast('Copied, send it back to them'); }).catch(function(){ viralToast(u); });
+}
+
 function renderResult(){
   const r = computeResult();
   const s = r.scores;
@@ -870,6 +1053,7 @@ function renderResult(){
     + '<div class="res-divider"></div>'
     + '<p class="res-section-label">Where You Sit on the Three Dimensions</p>'
     + '<div class="dd-card">' + rows + '</div>'
+    + compareHtml(r, s)
     + (r.neighbour
         ? '<div class="res-divider"></div>'
           + '<p class="res-section-label">Your ' + r.border[0] + ' Sits Close to the Midpoint</p>'
@@ -928,7 +1112,7 @@ function render(keepScroll) {
   saveState();
   if (!keepScroll) window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-function startQuiz() { clearState(); _submitting=false; _submitted=false; _kitConfirmed=false; _kitEmail=''; screen = 'question'; qIdx = 0; render(); }
+function startQuiz() { clearState(); _submitting=false; _submitted=false; _kitConfirmed=false; _kitEmail=''; hwTimingStart(); hwCap('quiz_started', { total_questions: TOTAL_Q }); screen = 'question'; qIdx = 0; render(); }
 function selectChoice(i) {
   if (advancing) return;
   const q = questions[qIdx];
@@ -964,8 +1148,13 @@ function selectRank() {
 }
 function updateFreetext(v) { textVal = v; const b = document.getElementById('freetext-btn'); if (b) b.disabled = !v.trim(); }
 function selectFreetext() { answers[qIdx] = { value: textVal, label: textVal, section: 'X', unscored: true }; textVal=''; advance(); }
-function advance() { if (qIdx < questions.length - 1) { qIdx++; render(); } else { screen='gate'; render(); } }
-function goBack() { if (advancing) return; if (qIdx > 0) { qIdx--; render(); } }
+function advance() {
+  hwTimingStep();
+  hwCap('question_answered', { index: qIdx + 1, section: currentSection(), total: TOTAL_Q });
+  if (qIdx < questions.length - 1) { qIdx++; render(); }
+  else { screen='gate'; hwCap('gate_viewed', {}); render(); }
+}
+function goBack() { if (advancing) return; if (qIdx > 0) { hwCap('question_back', { from_index: qIdx + 1 }); qIdx--; render(); } }
 // ===== KIT WRITE-BACK (gate submit -> Kit form subscribe with all hw_* fields) =====
 // Posts to the public Kit form endpoint (no API secret in the page). The form's automation
 // fires Email 1, enrols the 7-day course, and applies the archetype tag server-side from
@@ -1051,6 +1240,7 @@ function submitGate(){
   if (!EMAIL_RE.test(email)){
     if (err){ err.textContent = 'Please enter a valid email address.'; err.style.display = 'block'; }
     if (input) input.focus();
+    hwCap('gate_email_invalid', {});
     return;
   }
   if (err) err.style.display = 'none';
@@ -1061,6 +1251,22 @@ function submitGate(){
   const proceed = confirmed => {                               // never trap the reader
     if (done) return; done = true;
     _submitting = false; _submitted = true; _kitConfirmed = !!confirmed;
+    try {
+      hwTimingStep();
+      var r = computeResult(), d = hwDurations();
+      hwCap('quiz_completed', {
+        archetype: r.archetype, archetype_key: r.key,
+        regret_signal: r.regret && r.regret.label,
+        vitality_band: r.vitality && r.vitality.verdict,
+        score_clarity: r.scores.C, score_agency: r.scores.AG,
+        score_alignment: r.scores.AL, score_vitality: r.scores.V,
+        chapters: r.chapters.length, mode: r.mode,
+        past_wound: !!(r.flag && r.flag !== 'none'),
+        kit_ok: !!confirmed,
+        invited: !!_invite, invite_type: _invite ? _invite.key : null, invite_has_scores: !!(_invite && _invite.scores),
+        duration_seconds: d.duration_seconds, active_seconds: d.active_seconds
+      });
+    } catch(e){}
     showResult();
   };
   submitToKit(email, hwFields())
@@ -1086,7 +1292,9 @@ document.addEventListener('click', function(e){
   box.querySelectorAll('.seg-btn').forEach(function(x){ x.classList.toggle('active', x===b); });
   box.querySelectorAll('.seg-body').forEach(function(x){ x.style.display = (x.getAttribute('data-m')===m)?'block':'none'; });
 });
-loadState();
+var _resumed = loadState();
+hwTimingLoad();
+if (_resumed) hwCap('quiz_resumed', { screen: screen });
 render();
 </script>
 </body>

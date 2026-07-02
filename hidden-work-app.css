@@ -166,6 +166,29 @@
   .ch-btn:hover { opacity: .88; }
   .share-toast { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--text-primary); color: #fff; font-family: var(--sans); font-size: 13px; font-weight: 600; padding: 11px 18px; border-radius: 9px; opacity: 0; pointer-events: none; transition: all .25s; z-index: 50; }
   .share-toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+  /* ---- invite landing + compare (arriving via a friend's share link) ---- */
+  .inv-card { background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--a); border-radius: 12px; padding: 20px 24px; max-width: 460px; margin: 0 auto 30px; text-align: left; }
+  .inv-ey { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin: 0 0 7px; }
+  .inv-name { font-family: var(--heading); font-size: 26px; font-weight: 600; margin: 0 0 7px; }
+  .inv-claim { font-family: var(--heading); font-style: italic; font-size: 15.5px; line-height: 1.45; color: var(--text-body); margin: 0; }
+  .cmp-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; }
+  .cmp-names { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-family: var(--sans); font-size: 13px; color: var(--text-muted); margin: 0 0 12px; }
+  .cmp-names b { color: var(--text-primary); font-weight: 600; }
+  .cmp-row { padding: 13px 0; border-bottom: 1px solid #E7E4DE; }
+  .cmp-row:last-of-type { border-bottom: none; }
+  .cmp-head { display: flex; justify-content: space-between; align-items: baseline; margin: 0 0 9px; }
+  .cmp-dim { font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--text-body); }
+  .cmp-verdict { font-family: var(--sans); font-size: 12px; font-weight: 600; }
+  .cmp-line { display: flex; align-items: center; gap: 10px; margin: 5px 0; }
+  .cmp-who { font-family: var(--sans); font-size: 10.5px; font-weight: 600; letter-spacing: .8px; text-transform: uppercase; color: var(--text-subtle); width: 52px; flex: none; }
+  .cmp-track { flex: 1; height: 8px; background: var(--inner); border: 1px solid #E7E4DE; border-radius: 5px; overflow: hidden; }
+  .cmp-fill { height: 100%; border-radius: 5px; }
+  .cmp-fill.them { opacity: .4; }
+  .cmp-num { font-family: var(--sans); font-size: 12px; font-weight: 600; width: 26px; text-align: right; flex: none; }
+  .cmp-band { font-family: var(--heading); font-style: italic; font-size: 14px; color: var(--text-body); }
+  .cmp-summary { font-family: var(--heading); font-size: 16.5px; line-height: 1.55; color: var(--text-body); margin: 16px 0 0; }
+  .cmp-back { margin-top: 20px; padding-top: 18px; border-top: 1px solid #E7E4DE; text-align: center; }
+  .cmp-back-h { font-family: var(--heading); font-size: 19px; font-weight: 600; margin: 0 0 12px; }
   @media (max-width: 600px) { .dd-row { flex-direction: column; gap: 10px; } .dd-left { width: auto; } .dd-verdict { font-size: 32px; } .dd-micro { margin-bottom: 38px; } }
   @media (max-width: 600px) { .q-text { font-size: 22px; } .intro-title { font-size: 40px; } .word-tile { font-size: 17px; padding: 18px 6px; } .res-name { font-size: 34px; } .res-share { font-size: 18px; } .sc-in { padding: 28px 22px 22px; } }
   /* ---- new share card (wc) ---- */
