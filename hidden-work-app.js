@@ -178,7 +178,7 @@ function renderIntro() {
   var desc = 'A 7-minute assessment that helps you identify your work patterns and clarify your next move.';
   var begin = 'Begin';
   if (invited){
-    invCard = '<div class="inv-card" style="border-left-color:' + VIRAL[_invite.key].accent + '">'
+    invCard = '<div class="inv-card">'
       + '<p class="inv-ey">The friend who sent you this came out as</p>'
       + '<p class="inv-name">' + ARCH[_invite.key].name + '</p>'
       + '<p class="inv-claim">&ldquo;' + VIRAL[_invite.key].claim + '&rdquo;</p>'
