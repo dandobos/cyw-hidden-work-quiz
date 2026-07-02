@@ -439,9 +439,11 @@ function computeResult(){
 
 // ================= INVITE (arriving via a friend's share link) =================
 // Share links carry the sender's archetype (?type=KEY) and, since the compare build,
-// their three dimension scores (&s=C-AG-AL, each 0-100). Both are validated hard;
-// anything malformed is ignored and the page behaves as a normal visit. The invite
-// survives the whole session (sessionStorage) so it is still there at the result.
+// their three dimension scores (&hws=C-AG-AL, each 0-100). The scores param MUST NOT
+// be named "s": that is WordPress's reserved search var and 404s the live page.
+// Both are validated hard; anything malformed is ignored and the page behaves as a
+// normal visit. The invite survives the session (sessionStorage) so it is still
+// there at the result.
 const INVITE_KEY = 'hw_invite';
 function parseInviteFromUrl(){
   try {
@@ -449,7 +451,7 @@ function parseInviteFromUrl(){
     var t = (q.get('type') || '').toUpperCase();
     if (!ARCH[t]) return null;
     var inv = { key: t };
-    var raw = q.get('s') || '';
+    var raw = q.get('hws') || q.get('s') || '';
     if (/^\d{1,3}-\d{1,3}-\d{1,3}$/.test(raw)){
       var p = raw.split('-').map(Number);
       if (p.every(function(n){ return n >= 0 && n <= 100; })) inv.scores = { C: p[0], AG: p[1], AL: p[2] };
@@ -485,7 +487,7 @@ const SHARE_CHALLENGE_BODY = 'They will get their own pattern, then you can comp
 const SHARE_CHALLENGE_MESSAGE = 'Want to compare Hidden Work patterns? Take The Hidden Work and see: ';
 var _share = null;
 function viralShareText(r){ return 'I did the Hidden Work quiz and came out as the ' + r.archetype.replace(/^The\s+/, '') + '. Which of the 8 work patterns are you?'; }
-function viralLink(r, s){ return SHARE_BASE + '?type=' + r.key + (s ? '&s=' + s.C + '-' + s.AG + '-' + s.AL : ''); }
+function viralLink(r, s){ return SHARE_BASE + '?type=' + r.key + (s ? '&hws=' + s.C + '-' + s.AG + '-' + s.AL : ''); }
 function shareDimensionData(s){
   return [
     { name:'Clarity', color:'#1E5F8C', lo:'Searching', hi:'Focused', score:s.C },
