@@ -168,10 +168,6 @@ function setProgress() {
   else if (screen === 'gate' || screen === 'complete') pct = 100;
   document.getElementById('progress').style.width = pct + '%';
   var _pb=document.getElementById('progressbar'); if(_pb) _pb.setAttribute('aria-valuenow', Math.round(pct));
-  const nav = document.getElementById('nav-counter');
-  if (screen === 'question') { const sp = sectionProgress(); nav.textContent = sp.show ? (sp.posInSection + ' of ' + sp.totalInSection) : 'About you'; }
-  else if (screen === 'gate') nav.textContent = 'Almost done';
-  else nav.textContent = 'The Hidden Work';
 }
 function renderIntro() {
   // Invited visitors (arriving via a friend's share link) get the friend's pattern up
@@ -591,33 +587,36 @@ function shareLoopHtml(r, s){
         + '<div class="preview"><span class="quo">“</span><span class="msg" contenteditable="true" role="textbox" spellcheck="true" oninput="viralEditMsg(this)">' + fMsg + '</span><span class="quo">”</span></div>'
         + '<div class="share-btns">'
           + '<button class="sbtn native" onclick="viralNativeShare()"><span class="g">↗</span>Share</button>'
-          + '<a class="sbtn share-wa" data-link="'+p.link+'" target="_blank" rel="noopener" href="https://wa.me/?text='+e(fMsg+' '+p.link)+'"><span class="g g-wa">w</span>WhatsApp</a>'
+          + '<a class="sbtn share-wa" data-link="'+p.link+'" target="_blank" rel="noopener" onclick="hwShareClick(\'whatsapp\')" href="https://wa.me/?text='+e(fMsg+' '+p.link)+'"><span class="g g-wa">w</span>WhatsApp</a>'
           + '<button class="sbtn" onclick="viralCopyLink()"><span class="g g-cp">⧉</span>Copy info</button>'
         + '</div>'
       + '</div>'
       + '<div class="seg-body" data-m="socials" style="display:none">'
         + '<div class="share-btns">'
-          + '<a class="sbtn share-tw" data-link="'+p.link+'" target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text='+e(fMsg)+'&url='+e(p.link)+'"><span class="g g-x">X</span>Post</a>'
-          + '<button class="sbtn" onclick="viralSocial(\'https://www.linkedin.com/sharing/share-offsite/?url='+e(p.link)+'\')"><span class="g g-li">in</span>LinkedIn</button>'
-          + '<button class="sbtn" onclick="viralSocial(\'https://www.facebook.com/sharer/sharer.php?u='+e(p.link)+'\')"><span class="g g-fb">f</span>Facebook</button>'
+          + '<a class="sbtn share-tw" data-link="'+p.link+'" target="_blank" rel="noopener" onclick="hwShareClick(\'x\')" href="https://twitter.com/intent/tweet?text='+e(fMsg)+'&url='+e(p.link)+'"><span class="g g-x">X</span>Post</a>'
+          + '<button class="sbtn" onclick="viralSocial(\'https://www.linkedin.com/sharing/share-offsite/?url='+e(p.link)+'\',\'linkedin\')"><span class="g g-li">in</span>LinkedIn</button>'
+          + '<button class="sbtn" onclick="viralSocial(\'https://www.facebook.com/sharer/sharer.php?u='+e(p.link)+'\',\'facebook\')"><span class="g g-fb">f</span>Facebook</button>'
           + '<button class="sbtn" onclick="viralInstagram()"><span class="g g-ig">ig</span>Instagram</button>'
         + '</div>'
       + '</div>'
       + '<div class="seg-body" data-m="save" style="display:none">'
         + '<button class="save-green" onclick="viralSaveImage()"><span class="main"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 4v10m0 0l-3.5-3.5M12 14l3.5-3.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Save Image to Your Device</span><span class="sub">Great reference. Compare with others.</span></button>'
+        + '<button class="save-green" onclick="viralSaveStory()" style="margin-top:10px"><span class="main"><svg viewBox="0 0 24 24" width="16" height="16"><rect x="7" y="3" width="10" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/></svg>Save for Stories (9:16)</span><span class="sub">Portrait, for Instagram and TikTok stories.</span></button>'
       + '</div>'
     + '</div>';
 }
 function viralToast(msg){ var t=document.getElementById('share-toast'); if(!t){ t=document.createElement('div'); t.id='share-toast'; t.className='share-toast'; document.body.appendChild(t); } t.textContent=msg; t.classList.add('on'); clearTimeout(t._t); t._t=setTimeout(function(){ t.classList.remove('on'); },1900); }
 function viralShareString(){ return (_share && _share.text ? _share.text + ' ' : '') + (_share ? _share.link : ''); }
-function viralCopyLink(){ if(!_share) return; var u=viralShareString(); (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(function(){ viralToast('Copied'); }).catch(function(){ viralToast(u); }); }
-function viralSocial(url){ if(!_share) return; var u=viralShareString(); if(navigator.clipboard){ navigator.clipboard.writeText(u).then(function(){ viralToast('Message copied, paste it into your post'); }).catch(function(){}); } window.open(url,'_blank','noopener'); }
-function viralInstagram(){ if(!_share) return; var u=viralShareString(); (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(function(){ viralToast('Message copied, paste it into Instagram'); }).catch(function(){ viralToast(u); }); }
-function viralNativeShare(){ if(!_share) return; if(navigator.share){ navigator.share({ title:'The Hidden Work', text:_share.text, url:_share.link }).catch(function(){}); } else { viralCopyLink(); } }
+function hwShareClick(ch){ hwCap('share_clicked', { channel: ch, archetype_key: (_share && _share.key) || null }); }
+function viralCopyLink(){ if(!_share) return; hwShareClick('copy'); var u=viralShareString(); (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(function(){ viralToast('Copied'); }).catch(function(){ viralToast(u); }); }
+function viralSocial(url, channel){ if(!_share) return; hwShareClick(channel||'social'); var u=viralShareString(); if(navigator.clipboard){ navigator.clipboard.writeText(u).then(function(){ viralToast('Message copied, paste it into your post'); }).catch(function(){}); } window.open(url,'_blank','noopener'); }
+function viralInstagram(){ if(!_share) return; hwShareClick('instagram'); var u=viralShareString(); (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(function(){ viralToast('Message copied, paste it into Instagram'); }).catch(function(){ viralToast(u); }); }
+function viralNativeShare(){ if(!_share) return; hwShareClick('native'); if(navigator.share){ navigator.share({ title:'The Hidden Work', text:_share.text, url:_share.link }).catch(function(){}); } else { viralCopyLink(); } }
 function viralEditMsg(el){ var t=(el.textContent||'').replace(/\s+/g,' ').trim(); if(_share) _share.text=t; var box=el.closest&&el.closest('.panelbox'); if(!box) return; var e=encodeURIComponent; var wa=box.querySelector('a.share-wa, a[href*="wa.me"]'); if(wa){ var lw=wa.getAttribute('data-link')||''; wa.href='https://wa.me/?text='+e(t+(lw?' '+lw:'')); } var tw=box.querySelector('a.share-tw, a[href*="twitter.com"]'); if(tw){ var lt=tw.getAttribute('data-link')||''; tw.href='https://twitter.com/intent/tweet?text='+e(t)+(lt?'&url='+e(lt):''); } }
 function viralSaveImage(){
   var el=document.getElementById('wc-card');
   if(!el||typeof html2canvas==='undefined'){ viralToast('Image tool still loading, try again in a moment'); return; }
+  hwCap('card_saved', { format: 'card', archetype_key: (_share && _share.key) || null });
   viralToast('Creating image…');
   // Render a clone with the download footer (Discover prompt + URL as the CTA), no corner icon.
   var clone=el.cloneNode(true); clone.removeAttribute('id');
@@ -639,7 +638,44 @@ function viralSaveImage(){
     },'image/png');
   }).catch(function(){ cleanup(); viralToast('Could not create image, please screenshot the card'); });
 }
-function viralChallenge(){ if(!_share) return; var msg=SHARE_CHALLENGE_MESSAGE+_share.link; if(navigator.share){ navigator.share({ title:'The Hidden Work', text:msg, url:_share.link }).catch(function(){}); } else { (navigator.clipboard?navigator.clipboard.writeText(msg):Promise.reject()).then(function(){ viralToast('Invite copied, paste it to a friend'); }).catch(function(){ window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank'); }); } }
+// 9:16 story export: the card centered on a brand-coloured portrait canvas, for
+// Instagram / TikTok stories, where quiz results actually circulate.
+function viralSaveStory(){
+  var el=document.getElementById('wc-card');
+  if(!el||typeof html2canvas==='undefined'){ viralToast('Image tool still loading, try again in a moment'); return; }
+  hwCap('card_saved', { format: 'story', archetype_key: (_share && _share.key) || null });
+  viralToast('Creating story image…');
+  var accent=(_share && _share.accent) || '#3D7A6E';
+  var wrap=document.createElement('div');
+  wrap.style.cssText='position:fixed;left:-9999px;top:0;width:1080px;height:1920px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:110px 90px;box-sizing:border-box;background:linear-gradient(165deg,'+accent+' 0%,#141414 135%);font-family:\'Source Serif Pro\',Georgia,serif;';
+  var top=document.createElement('div');
+  top.style.cssText='text-align:center;color:#fff;';
+  top.innerHTML='<p style="font-family:\'Inter\',sans-serif;font-size:24px;font-weight:700;letter-spacing:5px;text-transform:uppercase;opacity:.85;margin:0 0 18px">The Hidden Work</p><p style="font-size:52px;line-height:1.15;font-weight:400;margin:0;">Which of the 8 work<br>patterns are you?</p>';
+  var mid=document.createElement('div');
+  var clone=el.cloneNode(true); clone.removeAttribute('id');
+  var cc=clone.querySelector('.card-corner'); if(cc) cc.parentNode.removeChild(cc);
+  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Hidden Work</p><span class="dl-url">dandobos.com/hidden-work</span></div>';
+  clone.style.width='860px'; clone.style.boxShadow='0 30px 80px rgba(0,0,0,.35)'; clone.style.borderRadius='6px';
+  mid.appendChild(clone);
+  var bot=document.createElement('div');
+  bot.style.cssText='text-align:center;color:#fff;font-family:\'Inter\',sans-serif;';
+  bot.innerHTML='<p style="font-size:30px;font-weight:600;margin:0 0 8px">Find your pattern</p><p style="font-size:26px;opacity:.85;margin:0;letter-spacing:.5px">dandobos.com/hidden-work</p>';
+  wrap.appendChild(top); wrap.appendChild(mid); wrap.appendChild(bot);
+  document.body.appendChild(wrap);
+  function cleanup(){ if(wrap.parentNode) wrap.parentNode.removeChild(wrap); }
+  html2canvas(wrap,{backgroundColor:null,scale:2,useCORS:true,logging:false}).then(function(canvas){
+    cleanup();
+    canvas.toBlob(function(blob){
+      if(!blob){ viralToast('Could not create image'); return; }
+      var url=URL.createObjectURL(blob);
+      var a=document.createElement('a'); a.href=url; a.download='my-hidden-work-story.png';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); },1000);
+      viralToast('Story image saved');
+    },'image/png');
+  }).catch(function(){ cleanup(); viralToast('Could not create image, please screenshot the card'); });
+}
+function viralChallenge(){ if(!_share) return; hwShareClick('challenge'); var msg=SHARE_CHALLENGE_MESSAGE+_share.link; if(navigator.share){ navigator.share({ title:'The Hidden Work', text:msg, url:_share.link }).catch(function(){}); } else { (navigator.clipboard?navigator.clipboard.writeText(msg):Promise.reject()).then(function(){ viralToast('Invite copied, paste it to a friend'); }).catch(function(){ window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank'); }); } }
 
 // ===== compare with the friend who invited you (closes the share loop) =====
 // Renders only when an invite is present. With scores (&s=) it draws You/Them bars;

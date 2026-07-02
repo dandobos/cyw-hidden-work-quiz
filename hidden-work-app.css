@@ -7,12 +7,9 @@
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); font-family: var(--heading); color: var(--text-primary); -webkit-font-smoothing: antialiased; }
-  .nav { background: var(--bg); border-bottom: 1px solid var(--border); padding: 18px 32px; display: flex; align-items: center; justify-content: space-between; }
-  .wordmark { font-family: var(--sans); font-size: 14px; font-weight: 700; letter-spacing: 3.5px; text-transform: uppercase; }
-  .nav-right { font-family: var(--sans); font-size: 12px; color: var(--text-muted); }
   .progress { height: 3px; background: var(--border); position: relative; }
   .progress-fill { position: absolute; top: 0; left: 0; height: 100%; background: var(--accent); transition: width 0.3s ease; }
-  .page { max-width: 660px; margin: 0 auto; padding: 56px 24px 100px; }
+  .page { max-width: 660px; margin: 0 auto; padding: 40px 24px 100px; }
   .stepper { display: flex; gap: 7px; justify-content: center; margin: 0 auto 22px; max-width: 340px; }
   .step { flex: 1; text-align: center; }
   .step-bar { height: 4px; background: var(--border); margin-bottom: 6px; transition: background 0.3s; }
