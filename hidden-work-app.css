@@ -56,7 +56,7 @@
   .back-link { text-align: center; margin-top: 36px; }
   .back-link button { background: transparent; border: none; font-family: var(--sans); font-size: 12px; color: var(--text-muted); cursor: pointer; }
   .back-link button:hover { color: var(--accent); }
-  .intro-eyebrow { font-family: var(--sans); font-size: 11px; letter-spacing: 4px; color: var(--accent); text-transform: uppercase; font-weight: 600; text-align: center; margin: 60px 0 24px; }
+  .intro-eyebrow { font-family: var(--sans); font-size: 14px; letter-spacing: 4.5px; color: var(--accent); text-transform: uppercase; font-weight: 700; text-align: center; margin: 60px 0 24px; }
   .intro-title { font-family: var(--heading); font-size: 56px; font-weight: 400; text-align: center; margin: 0 0 24px; letter-spacing: -1px; line-height: 1.05; }
   .intro-desc { font-family: var(--heading); font-style: italic; font-size: 19px; color: var(--text-body); text-align: center; line-height: 1.5; max-width: 520px; margin: 0 auto 48px; }
   .intro-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 520px; margin: 0 auto 48px; }
@@ -171,17 +171,18 @@
   .cmp-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; }
   .cmp-names { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-family: var(--sans); font-size: 13px; color: var(--text-muted); margin: 0 0 12px; }
   .cmp-names b { color: var(--text-primary); font-weight: 600; }
-  .cmp-row { padding: 13px 0; border-bottom: 1px solid #E7E4DE; }
+  .cmp-row { padding: 16px 0 22px; border-bottom: 1px solid #E7E4DE; }
   .cmp-row:last-of-type { border-bottom: none; }
-  .cmp-head { display: flex; justify-content: space-between; align-items: baseline; margin: 0 0 9px; }
+  .cmp-head { display: flex; justify-content: space-between; align-items: baseline; margin: 0 0 4px; }
   .cmp-dim { font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--text-body); }
   .cmp-verdict { font-family: var(--sans); font-size: 12px; font-weight: 600; }
-  .cmp-line { display: flex; align-items: center; gap: 10px; margin: 5px 0; }
-  .cmp-who { font-family: var(--sans); font-size: 10.5px; font-weight: 600; letter-spacing: .8px; text-transform: uppercase; color: var(--text-subtle); width: 52px; flex: none; }
-  .cmp-track { flex: 1; height: 8px; background: var(--inner); border: 1px solid #E7E4DE; border-radius: 5px; overflow: hidden; }
-  .cmp-fill { height: 100%; border-radius: 5px; }
+  .cmp-line { display: flex; align-items: center; gap: 12px; margin: 26px 0 0; }
+  .cmp-who { font-family: var(--sans); font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-subtle); width: 44px; flex: none; }
+  .cmp-track { flex: 1; height: 3px; background: var(--inner); position: relative; border-radius: 2px; }
+  .cmp-fill { position: absolute; left: 0; top: 0; height: 100%; border-radius: 2px; }
   .cmp-fill.them { opacity: .4; }
-  .cmp-num { font-family: var(--sans); font-size: 12px; font-weight: 600; width: 26px; text-align: right; flex: none; }
+  .cmp-circle { position: absolute; top: -16px; transform: translateX(-50%); width: 34px; height: 34px; border-radius: 50%; background: var(--card); border: 2px solid; display: flex; align-items: center; justify-content: center; font-family: var(--heading); font-size: 14px; font-weight: 600; line-height: 1; }
+  .cmp-circle.them { background: var(--inner); }
   .cmp-band { font-family: var(--heading); font-style: italic; font-size: 14px; color: var(--text-body); }
   .cmp-summary { font-family: var(--heading); font-size: 16.5px; line-height: 1.55; color: var(--text-body); margin: 16px 0 0; }
   .cmp-back { margin-top: 20px; padding-top: 18px; border-top: 1px solid #E7E4DE; text-align: center; }

@@ -167,7 +167,7 @@ function setProgress() {
   }
   else if (screen === 'gate' || screen === 'complete') pct = 100;
   document.getElementById('progress').style.width = pct + '%';
-  var _pb=document.getElementById('progressbar'); if(_pb) _pb.setAttribute('aria-valuenow', Math.round(pct));
+  var _pb=document.getElementById('progressbar'); if(_pb){ _pb.setAttribute('aria-valuenow', Math.round(pct)); _pb.style.display = (screen === 'question' || screen === 'gate') ? '' : 'none'; }
 }
 function renderIntro() {
   // Invited visitors (arriving via a friend's share link) get the friend's pattern up
@@ -477,13 +477,21 @@ const VIRAL = {
   LLL:{ accent:'#6B6B6B', claim:"Everything looks fine on paper, but I know something's off, and I'm done ignoring it.", prompt:"Know someone whose work looks fine on paper but something feels off?" }
 };
 const SHARE_BASE = 'https://dandobos.com/hidden-work/';
+// Per-archetype share-preview stubs: /hidden-work/t/<slug> sets an archetype-specific
+// og:image + title, then redirects into the quiz (?type=KEY, forwarding &hws=). So a shared
+// link unfurls as the archetype card in WhatsApp/iMessage instead of the generic page.
+const SHARE_SLUG = { HHH:'aligned-maker', HHL:'high-achiever', HLH:'awakened-observer', HLL:'restless-visionary', LHH:'restless-explorer', LHL:'tireless-driver', LLH:'grounded-seeker', LLL:'late-bloomer' };
 const SHARE_COMPARE_PROMPT = 'Want to compare patterns with someone?';
 const SHARE_CHALLENGE_TITLE = 'Help a friend discover their hidden work';
 const SHARE_CHALLENGE_BODY = 'They will get their own pattern, then you can compare where you match and where you do not.';
 const SHARE_CHALLENGE_MESSAGE = 'Want to compare Hidden Work patterns? Take The Hidden Work and see: ';
 var _share = null;
 function viralShareText(r){ return 'I did the Hidden Work quiz and came out as the ' + r.archetype.replace(/^The\s+/, '') + '. Which of the 8 work patterns are you?'; }
-function viralLink(r, s){ return SHARE_BASE + '?type=' + r.key + (s ? '&hws=' + s.C + '-' + s.AG + '-' + s.AL : ''); }
+function viralLink(r, s){
+  var slug = SHARE_SLUG[r.key];
+  if (slug) return SHARE_BASE + 't/' + slug + (s ? '?hws=' + s.C + '-' + s.AG + '-' + s.AL : '');
+  return SHARE_BASE + '?type=' + r.key + (s ? '&hws=' + s.C + '-' + s.AG + '-' + s.AL : '');
+}
 function shareDimensionData(s){
   return [
     { name:'Clarity', color:'#1E5F8C', lo:'Searching', hi:'Focused', score:s.C },
@@ -700,11 +708,11 @@ function compareHtml(r, s){
     var same = youBand === themBand;
     (same ? matches : diffs).push({ name: d.name, gap: (themScore != null) ? Math.abs(d.score - themScore) : 0 });
     var themLine = (themScore != null)
-      ? '<div class="cmp-line"><span class="cmp-who">Them</span><div class="cmp-track"><div class="cmp-fill them" style="width:' + themScore + '%;background:' + d.color + '"></div></div><span class="cmp-num" style="color:' + d.color + ';opacity:.55">' + themScore + '</span></div>'
+      ? '<div class="cmp-line"><span class="cmp-who">Them</span><div class="cmp-track"><div class="cmp-fill them" style="width:' + themScore + '%;background:' + d.color + '"></div><div class="cmp-circle them" style="left:' + themScore + '%;border-color:' + d.color + ';color:' + d.color + '">' + themScore + '</div></div></div>'
       : '<div class="cmp-line"><span class="cmp-who">Them</span><span class="cmp-band">' + (themBand === 'H' ? d.hi : d.lo) + '</span></div>';
     return '<div class="cmp-row">'
       + '<div class="cmp-head"><span class="cmp-dim">' + d.name + '</span><span class="cmp-verdict" style="color:' + (same ? '#3D7A6E' : '#A85A3D') + '">' + (same ? 'You match' : 'You differ') + '</span></div>'
-      + '<div class="cmp-line"><span class="cmp-who">You</span><div class="cmp-track"><div class="cmp-fill" style="width:' + d.score + '%;background:' + d.color + '"></div></div><span class="cmp-num" style="color:' + d.color + '">' + d.score + '</span></div>'
+      + '<div class="cmp-line"><span class="cmp-who">You</span><div class="cmp-track"><div class="cmp-fill" style="width:' + d.score + '%;background:' + d.color + '"></div><div class="cmp-circle" style="left:' + d.score + '%;border-color:' + d.color + ';color:' + d.color + '">' + d.score + '</div></div></div>'
       + themLine
       + '</div>';
   }).join('');
