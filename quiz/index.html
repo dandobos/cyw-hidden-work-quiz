@@ -443,9 +443,9 @@ function renderIntro() {
   // Invited visitors (arriving via a friend's share link) get the friend's pattern up
   // front and a compare promise; everyone else gets the standard intro.
   var invited = _invite && ARCH[_invite.key];
-  var title = invited ? 'Which of the 8 work patterns are you?' : 'Discover the work you are meant to do';
+  var title = invited ? 'There are 8 Work Personalities. Which one are you?' : 'Discover your Work Personality. Uncover your Hidden Work.';
   var invCard = '';
-  var desc = 'A 7-minute assessment that helps you identify your work patterns and clarify your next move.';
+  var desc = 'A 7-minute assessment that helps you identify your Work Personality and clarify your next move.';
   var begin = 'Begin';
   if (invited){
     invCard = '<div class="inv-card">'
@@ -754,9 +754,9 @@ const SHARE_SLUG = { HHH:'aligned-maker', HHL:'high-achiever', HLH:'awakened-obs
 const SHARE_COMPARE_PROMPT = 'Want to compare patterns with someone?';
 const SHARE_CHALLENGE_TITLE = 'Help a friend discover their hidden work';
 const SHARE_CHALLENGE_BODY = 'They will get their own pattern, then you can compare where you match and where you do not.';
-const SHARE_CHALLENGE_MESSAGE = 'Want to compare Hidden Work patterns? Take The Hidden Work and see: ';
+const SHARE_CHALLENGE_MESSAGE = 'Want to compare Work Personalities? Take The Hidden Work and see: ';
 var _share = null;
-function viralShareText(r){ return 'I did the Hidden Work quiz and came out as the ' + r.archetype.replace(/^The\s+/, '') + '. Which of the 8 work patterns are you?'; }
+function viralShareText(r){ return 'I did the Hidden Work quiz and came out as the ' + r.archetype.replace(/^The\s+/, '') + '. There are 8 Work Personalities. Which one are you?'; }
 function viralLink(r, s){
   var slug = SHARE_SLUG[r.key];
   if (slug) return SHARE_BASE + 't/' + slug + (s ? '?hws=' + s.C + '-' + s.AG + '-' + s.AL : '');
@@ -829,7 +829,7 @@ function wcCardHtml(r){
     + '<p class="wc-claim">“'+SHARE_CLAIM[r.key]+'”</p>'
     + '<p class="wc-label">What people can count on me for</p>'
     + '<div class="wc-list">'+items+'</div>'
-    + '<div class="wc-divh"><span>Which of the 8 are you?</span></div>'
+    + '<div class="wc-divh"><span>Which of the 8 Work Personalities are you?</span></div>'
     + '<div class="wc-grid">'+cells+'</div>'
     + '<div class="foot-live"><a class="wc-cta" href="#">Discover your hidden work</a><p class="wc-src">Find yours at dandobos.com/hidden-work</p></div>'
     + '</div>';
@@ -846,7 +846,7 @@ const SHARE_HEADLINE = {
 };
 function shareLoopHtml(r, s){
   var p=sharePayload(r, s), e=encodeURIComponent;
-  var fMsg = 'I did the Hidden Work quiz and came out as the ' + r.archetype.replace(/^The\s+/, '') + '. Which of the 8 work patterns are you?';
+  var fMsg = 'I did the Hidden Work quiz and came out as the ' + r.archetype.replace(/^The\s+/, '') + '. There are 8 Work Personalities. Which one are you?';
   p.text = fMsg;         // every share action sends this message, followed by the link
   _share = p;
   return '<div class="res-divider"></div>'
@@ -928,7 +928,7 @@ function viralSaveStory(){
   wrap.style.cssText='position:fixed;left:-9999px;top:0;width:1080px;height:1920px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:110px 90px;box-sizing:border-box;background:linear-gradient(165deg,'+accent+' 0%,#141414 135%);font-family:\'Source Serif Pro\',Georgia,serif;';
   var top=document.createElement('div');
   top.style.cssText='text-align:center;color:#fff;';
-  top.innerHTML='<p style="font-family:\'Inter\',sans-serif;font-size:24px;font-weight:700;letter-spacing:5px;text-transform:uppercase;opacity:.85;margin:0 0 18px">The Hidden Work</p><p style="font-size:52px;line-height:1.15;font-weight:400;margin:0;">Which of the 8 work<br>patterns are you?</p>';
+  top.innerHTML='<p style="font-family:\'Inter\',sans-serif;font-size:24px;font-weight:700;letter-spacing:5px;text-transform:uppercase;opacity:.85;margin:0 0 18px">The Hidden Work</p><p style="font-size:52px;line-height:1.15;font-weight:400;margin:0;">There are 8 Work Personalities.<br>Which one are you?</p>';
   var mid=document.createElement('div');
   var clone=el.cloneNode(true); clone.removeAttribute('id');
   var cc=clone.querySelector('.card-corner'); if(cc) cc.parentNode.removeChild(cc);
