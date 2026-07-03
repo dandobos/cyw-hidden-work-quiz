@@ -405,6 +405,9 @@ function hwTimingStart(){ hwT0 = Date.now(); hwLastStep = hwT0; hwActiveMs = 0; 
 function hwTimingLoad(){ try{ var r = JSON.parse(sessionStorage.getItem('hw_timing') || 'null'); if(r && r.t0){ hwT0 = r.t0; hwLastStep = r.last || r.t0; hwActiveMs = r.active || 0; } }catch(e){} }
 function hwTimingStep(){ var now = Date.now(); if(hwLastStep){ hwActiveMs += Math.min(now - hwLastStep, HW_STEP_CAP); } hwLastStep = now; hwTimingPersist(); }
 function hwDurations(){ return { duration_seconds: hwT0 ? Math.round((Date.now() - hwT0)/1000) : null, active_seconds: Math.round(hwActiveMs/1000) }; }
+// Bottom-of-funnel clicks on the result page (free chapter + book CTA). _hwResult is set in renderResult().
+function hwDownloadClick(fmt){ var m=window._hwResult||{}; hwCap('chapter_download_clicked', { format: fmt, chapters: m.chapters, archetype_key: m.archetype_key }); }
+function hwBookClick(){ var m=window._hwResult||{}; hwCap('book_link_clicked', { archetype_key: m.archetype_key, location: 'result' }); }
 
 function currentSection() { return questions[qIdx]?.section || 'X'; }
 function sectionProgress() {
@@ -1040,6 +1043,7 @@ function cmpCopy(){
 function renderResult(){
   const r = computeResult();
   const s = r.scores;
+  window._hwResult = { archetype_key: r.key, chapters: r.chapters.slice().sort(function(a,b){return a-b;}).join('/'), mode: r.mode };
   const word = (answers[0] && answers[0].label) ? answers[0].label : 'that word';
   // Aligned Maker keeps its label, but the full "rare one" copy is gated; below the bar -> "foothills" voice.
   const amDrained = (r.key === 'HHH' && s.C >= 65 && s.AG >= 65 && s.AL >= 75 && s.V < 60);
@@ -1127,9 +1131,9 @@ function renderResult(){
           return '<div class="res-dl">'
             + '<p class="res-dl-label">' + label + '</p>'
             + '<div class="res-dl-row">'
-              + '<a class="res-dl-btn" href="' + dlUrl(key, 'pdf') + '" target="_blank" rel="noopener" download>PDF</a>'
-              + '<a class="res-dl-btn" href="' + dlUrl(key, 'epub') + '" target="_blank" rel="noopener" download>EPUB (Kindle)</a>'
-              + '<a class="res-dl-btn" href="' + dlUrl(key, 'mp3') + '" target="_blank" rel="noopener" download>Audio (MP3)</a>'
+              + '<a class="res-dl-btn" href="' + dlUrl(key, 'pdf') + '" target="_blank" rel="noopener" download onclick="hwDownloadClick(\'pdf\')">PDF</a>'
+              + '<a class="res-dl-btn" href="' + dlUrl(key, 'epub') + '" target="_blank" rel="noopener" download onclick="hwDownloadClick(\'epub\')">EPUB (Kindle)</a>'
+              + '<a class="res-dl-btn" href="' + dlUrl(key, 'mp3') + '" target="_blank" rel="noopener" download onclick="hwDownloadClick(\'mp3\')">Audio (MP3)</a>'
             + '</div>'
           + '</div>';
         })()
@@ -1137,7 +1141,7 @@ function renderResult(){
     + shareLoopHtml(r, s)
     + '<div class="res-divider"></div>'
     + '<p class="res-book-head"><em>Choose Your Work</em> Takes You From This Snapshot to the System Behind It.</p><p class="res-book-text">Your result points to where to begin, but the book is where the change happens.</p>'
-    + '<a class="continue-btn" href="https://dandobos.com/choose-your-work/" target="_blank" rel="noopener" style="text-decoration:none; display:block; width:100%; text-align:center;">Get Choose Your Work</a>';
+    + '<a class="continue-btn" href="https://dandobos.com/choose-your-work/" target="_blank" rel="noopener" onclick="hwBookClick()" style="text-decoration:none; display:block; width:100%; text-align:center;">Get Choose Your Work</a>';
 }
 function renderComplete() { return renderResult(); }
 function render(keepScroll) {
