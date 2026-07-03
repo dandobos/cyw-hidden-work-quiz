@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Your Hidden Work Beta Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --heading:'Source Serif Pro',Georgia,serif; --sans:'Inter',-apple-system,sans-serif;
+    --bg:#f7f5f1; --card:#ffffff; --border:#cfccc4; --border-soft:#e3e0d9;
+    --text:#0f0f0f; --body:#1a1a1a; --muted:#333; --subtle:#5a564e;
+    --accent:#3d7a6e; --accent-soft:#e7f1ee; --clay:#a85a3d;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--heading);line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:640px;margin:0 auto;padding:44px 20px 96px}
+  .eyebrow{font-family:var(--sans);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);font-weight:600;text-align:center;margin:0 0 16px}
+  h1{font-family:var(--heading);font-weight:400;font-size:31px;line-height:1.22;letter-spacing:-0.3px;text-align:center;margin:0 0 14px}
+  h1 .nm{color:var(--accent)}
+  .lede{font-size:16px;color:var(--body);text-align:center;max-width:520px;margin:0 auto 6px;line-height:1.6}
+  .meta{font-family:var(--sans);font-size:13px;color:var(--subtle);text-align:center;margin:14px 0 0}
+  .progress-wrap{margin:30px 0 8px}
+  .progress-bar{height:6px;background:var(--border-soft);border-radius:99px;overflow:hidden}
+  .progress-bar > i{display:block;height:100%;width:0;background:var(--accent);transition:width .5s ease}
+  .progress-label{font-family:var(--sans);font-size:12px;color:var(--subtle);text-align:center;margin-top:8px;letter-spacing:.3px}
+  .rule{height:1px;background:var(--border-soft);border:0;margin:30px 0}
+
+  .step{position:relative;background:var(--card);border:1px solid var(--border-soft);border-radius:10px;padding:20px 20px 20px 60px;margin:0 0 14px;transition:border-color .15s,box-shadow .15s}
+  .step .num{position:absolute;left:18px;top:20px;width:28px;height:28px;border-radius:99px;background:#efede8;color:var(--muted);font-family:var(--sans);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center}
+  .step h2{font-family:var(--sans);font-size:17px;font-weight:700;letter-spacing:-.2px;margin:0 0 4px}
+  .step p{font-size:14.5px;color:var(--muted);margin:0 0 14px;line-height:1.55}
+  .step .time{font-family:var(--sans);font-size:12px;color:var(--subtle);font-weight:500}
+  .step.current{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .step.current .num{background:var(--accent);color:#fff}
+  .step.done .num{background:var(--accent);color:#fff}
+  .step.done h2{color:var(--subtle)}
+  .step.done{opacity:.72}
+  .badge{display:inline-block;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:2px 8px;border-radius:4px;margin-left:8px;vertical-align:middle}
+  .badge.next{background:var(--accent-soft);color:var(--accent)}
+  .badge.done{background:#e7f1ee;color:var(--accent)}
+
+  .btn{display:inline-block;font-family:var(--sans);font-size:14px;font-weight:600;letter-spacing:.3px;color:#fff;background:var(--text);border:1px solid var(--text);border-radius:6px;padding:12px 20px;cursor:pointer;text-decoration:none;transition:opacity .15s}
+  .btn:hover{opacity:.85}
+  .btn.accent{background:var(--accent);border-color:var(--accent)}
+  .btn.ghost{background:transparent;color:var(--muted);border-color:var(--border)}
+  .btn.inline{margin:7px 0 16px;padding:9px 16px;font-size:13px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .markdone{font-family:var(--sans);font-size:13px;color:var(--subtle);text-decoration:underline;background:none;border:0;cursor:pointer;padding:6px 2px}
+
+  .note{background:var(--accent-soft);border:1px solid #cfe3dd;border-radius:8px;padding:14px 16px;font-family:var(--sans);font-size:13.5px;color:#2f6155;line-height:1.55;margin:26px 0 0}
+  .foot{font-family:var(--heading);font-size:15px;color:var(--body);text-align:center;margin:34px 0 0;line-height:1.6}
+  .center{text-align:center}
+  #loading,#error{text-align:center;padding:60px 0;font-family:var(--sans);color:var(--subtle)}
+  #error h1{font-family:var(--heading);color:var(--text)}
+  @media (max-width:520px){h1{font-size:27px}.step{padding-left:56px}.step .num{left:16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="loading">Loading your portal…</div>
+
+  <div id="error" style="display:none">
+    <p class="eyebrow">Hidden Work Beta</p>
+    <h1>This link needs a fresh copy</h1>
+    <p class="lede">We could not find your details for this link. Please use the exact link Dan sent you, or reply on Upwork and he will send a new one.</p>
+  </div>
+
+  <main id="portal" style="display:none">
+    <p class="eyebrow">Hidden Work Beta</p>
+    <h1>Welcome <span class="nm" id="hi">there</span></h1>
+    <p class="lede">This page contains your list of tasks.</p>
+
+    <div class="progress-wrap">
+      <div class="progress-bar"><i id="pbar"></i></div>
+      <div class="progress-label" id="plabel"></div>
+    </div>
+
+    <hr class="rule">
+
+    <div id="steps"></div>
+
+    <div class="note" id="course-note" style="display:none">
+      Your 7-day email course arrives by email, one message a day. Please actually do each day's small activity and take a moment to reflect. Come back here for the final feedback form once you have been through all seven days.
+    </div>
+
+    <p class="foot">Thank you for your feedback! I really appreciate it.<br>Dan</p>
+  </main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---- Config -------------------------------------------------------------
+  // Set BACKEND once the Railway service is live. Until then, the portal runs
+  // in preview mode from ?n=&e= params so the page can be reviewed.
+  var BACKEND = "https://beta-portal-production-df48.up.railway.app"; // live Railway backend
+
+  var QUIZ_URL  = "https://dandobos.com/hidden-work";
+  var FORM = {
+    quiz:    "https://dandobos.github.io/cyw-hidden-work-quiz/feedback/quiz/",
+    sharing: "https://dandobos.github.io/cyw-hidden-work-quiz/feedback/sharing/",
+    course:  "https://dandobos.github.io/cyw-hidden-work-quiz/feedback/course/"
+  };
+
+  // ---- Helpers ------------------------------------------------------------
+  function qs(k){ return new URLSearchParams(location.search).get(k); }
+  function esc(s){ var d=document.createElement("div"); d.textContent=s||""; return d.innerHTML; }
+  function withId(url, name, email){
+    var u = new URL(url);
+    if(name)  u.searchParams.set("n", name);
+    if(email) u.searchParams.set("e", email);
+    return u.toString();
+  }
+  var TOKEN = qs("t") || "";
+  var LSKEY = "hwbeta:" + (TOKEN || (qs("e")||"preview"));
+  function localState(){ try{ return JSON.parse(localStorage.getItem(LSKEY)) || {}; }catch(e){ return {}; } }
+  function saveLocal(s){ try{ localStorage.setItem(LSKEY, JSON.stringify(s)); }catch(e){} }
+
+  // ---- Load the tester ----------------------------------------------------
+  function boot(tester){
+    var name = (tester.name||"").trim();
+    var raw = name.split(/\s+/)[0];
+    var first = raw ? (raw.charAt(0).toUpperCase() + raw.slice(1)) : "there";
+    var email = tester.email || "";
+    // server-confirmed milestones (from Notion), merged with local action ticks
+    var server = tester.progress || {};
+    var local = localState();
+
+    document.getElementById("hi").textContent = first;
+
+    var STEPS = [
+      { key:"quiz", n:1, kind:"action", title:"Take the quiz", time:"Duration: about 7 minutes",
+        desc:"Please do this on your phone.",
+        btn:{label:"Open the quiz", href:withId(QUIZ_URL,name,email), accent:true} },
+      { key:"quiz_feedback", n:2, kind:"form", title:"Quiz feedback form", time:"Duration: about 7 minutes",
+        desc:"Be candid and specific.<br><span style=\"color:var(--accent);font-weight:700\">&#10003;</span> “The third question was confusing because…”<br><span style=\"color:var(--clay);font-weight:700\">&#10007;</span> “it was great.”<br><br>Please flag anything slow, ineffective or not working on your device.",
+        btn:{label:"Open the quiz feedback form", href:withId(FORM.quiz,name,email)} },
+      { key:"sharing_feedback", n:3, kind:"form", title:"Share it", time:"Duration: about 7 minutes",
+        desc:"1. Send the quiz to one person it made you think of. Open your result and use the share options there."
+             +"<br><a class=\"btn accent inline\" href=\""+withId(QUIZ_URL,name,email)+"\" target=\"_blank\" rel=\"noopener\">Open my result to share</a>"
+             +"<br>2. Send it to yourself too and go through it as a first-time receiver would."
+             +"<br>3. Fill in the sharing feedback form."
+             +"<br><a class=\"btn inline\" href=\""+withId(FORM.sharing,name,email)+"\" target=\"_blank\" rel=\"noopener\">Open the sharing form</a>",
+        btn:null },
+      { key:"course", n:4, kind:"course", title:"The 7-day email course", time:"Duration: 10 min per day for 7 days",
+        desc:"Each day brings a new email with something insightful to read and a practical activity.",
+        btn:null },
+      { key:"course_feedback", n:5, kind:"form", title:"Course feedback form", time:"Duration: about 7 minutes",
+        desc:"Once you have been through all seven days, share your candid and specific feedback.",
+        btn:{label:"Open the email course feedback form", href:withId(FORM.course,name,email)} }
+    ];
+
+    function isDone(k){ return !!(server[k] || local[k]); }
+
+    // find current step = first not-done
+    var currentIdx = STEPS.findIndex(function(s){ return !isDone(s.key); });
+
+    var host = document.getElementById("steps");
+    host.innerHTML = "";
+    STEPS.forEach(function(s, i){
+      var done = isDone(s.key);
+      var current = (i === currentIdx);
+      var el = document.createElement("section");
+      el.className = "step" + (done?" done":"") + (current?" current":"");
+      var badge = done ? '<span class="badge done">Done</span>' : (current ? '<span class="badge next">Current Task</span>' : "");
+      var numHtml = done ? "✓" : s.n;
+      var actions = "";
+      if(!done && s.btn){
+        actions = '<div class="row"><a class="btn '+(s.btn.accent?"accent":"")+'" href="'+s.btn.href+'" target="_blank" rel="noopener">'+esc(s.btn.label)+'</a>';
+        if(s.kind==="action"){ actions += '<button class="markdone" data-done="'+s.key+'">Mark as done</button>'; }
+        actions += '</div>';
+      } else if(done){
+        actions = '<div class="row"><span class="time">Completed</span>' + (s.btn ? ' &middot; <a class="markdone" href="'+s.btn.href+'" target="_blank" rel="noopener">open again</a>' : '') + '</div>';
+      } else if(s.kind==="course"){
+        actions = '<div class="time">Arrives by email, one day at a time</div>';
+      }
+      el.innerHTML =
+        '<div class="num">'+numHtml+'</div>' +
+        '<h2>'+esc(s.title)+badge+'</h2>' +
+        '<p>'+s.desc+'</p>' +
+        '<div class="time">'+esc(s.time)+'</div>' +
+        actions;
+      host.appendChild(el);
+    });
+
+    // progress bar (based on the 3 feedback milestones + quiz)
+    var milestones = ["quiz","quiz_feedback","sharing_feedback","course_feedback"];
+    var doneCount = milestones.filter(isDone).length;
+    var pct = Math.round(doneCount/milestones.length*100);
+    document.getElementById("pbar").style.width = pct + "%";
+    document.getElementById("plabel").textContent = doneCount + " of " + milestones.length + " key steps done";
+    document.getElementById("course-note").style.display = "block";
+
+    // local "mark as done" for action steps
+    host.addEventListener("click", function(ev){
+      var b = ev.target.closest("[data-done]");
+      if(!b) return;
+      var s = localState(); s[b.getAttribute("data-done")] = true; saveLocal(s);
+      boot(tester); // re-render
+    });
+
+    document.getElementById("loading").style.display="none";
+    document.getElementById("portal").style.display="block";
+
+    // tell the backend the portal was opened (best effort)
+    if(BACKEND && TOKEN){
+      fetch(BACKEND + "/opened?t=" + encodeURIComponent(TOKEN), {method:"POST", keepalive:true}).catch(function(){});
+    }
+  }
+
+  function fail(){ document.getElementById("loading").style.display="none"; document.getElementById("error").style.display="block"; }
+
+  // Preview mode: name/email straight from the URL (no backend needed).
+  var pn = qs("n"), pe = qs("e");
+  if(!BACKEND){
+    if(pn || pe){ boot({ name:pn||"", email:pe||"", progress:{} }); }
+    else { boot({ name:"", email:"", progress:{} }); } // bare preview
+    return;
+  }
+
+  // Live mode: resolve the token via the backend.
+  if(!TOKEN){ fail(); return; }
+  fetch(BACKEND + "/resolve?t=" + encodeURIComponent(TOKEN))
+    .then(function(r){ if(!r.ok) throw new Error("bad"); return r.json(); })
+    .then(function(d){ if(!d || !d.name && !d.email) throw new Error("empty"); boot(d); })
+    .catch(fail);
+})();
+</script>
+</body>
+</html>
