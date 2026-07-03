@@ -1152,12 +1152,19 @@ function renderResult(){
     + '<a class="continue-btn" href="https://dandobos.com/choose-your-work/" target="_blank" rel="noopener" onclick="hwBookClick()" style="text-decoration:none; display:block; width:100%; text-align:center;">Get Choose Your Work</a>';
 }
 function renderComplete() { return renderResult(); }
+function renderNeedQuiz() {
+  return '<p class="intro-eyebrow">The Hidden Work</p>'
+    + '<h1 class="intro-title">Please complete the quiz first</h1>'
+    + '<p class="intro-desc">Take the quiz to get your result. Once you have finished, you can open it here to share it.</p>'
+    + '<button class="continue-btn" onclick="startQuiz()">Start the quiz</button>';
+}
 function render(keepScroll) {
   setProgress();
   let html;
   if (screen === 'intro') html = renderIntro();
   else if (screen === 'question') html = renderQuestion();
   else if (screen === 'gate') html = renderGate();
+  else if (screen === 'needquiz') html = renderNeedQuiz();
   else html = renderComplete();
   document.getElementById('page').innerHTML = html;
   advancing = false;
@@ -1351,6 +1358,10 @@ if (!_resumed && !_invite) {
   try { if (loadResult()) { computeResult(); screen = 'complete'; _resumed = true; } }
   catch(e){ clearResult(); }
 }
+// The portal "Open my result to share" button adds ?result=1. If the reader has
+// not finished yet (nothing was restored, so still on the intro), show a gentle
+// "complete the quiz first" notice instead of dropping them into the intro.
+try { if (new URLSearchParams(location.search).get('result') === '1' && screen === 'intro') screen = 'needquiz'; } catch(e){}
 hwTimingLoad();
 if (_resumed) hwCap('quiz_resumed', { screen: screen });
 render();

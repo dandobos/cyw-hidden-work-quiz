@@ -118,6 +118,15 @@
     if(email) u.searchParams.set("email", email);
     return u.toString();
   }
+  // Quiz links must NOT carry name/email/token: the quiz ignores them, and "name"
+  // is a WordPress-reserved query param that 404s the quiz page. Only pass result=1
+  // (safe, and it tells the quiz to open the reader's saved result, or show a
+  // "complete the quiz first" notice if they have not finished).
+  function quizUrl(wantResult){
+    var u = new URL(QUIZ_URL);
+    if(wantResult) u.searchParams.set("result", "1");
+    return u.toString();
+  }
   var TOKEN = qs("t") || "";
   var LSKEY = "hwbeta:" + (TOKEN || (qs("e")||"preview"));
   function localState(){ try{ return JSON.parse(localStorage.getItem(LSKEY)) || {}; }catch(e){ return {}; } }
@@ -138,13 +147,13 @@
     var STEPS = [
       { key:"quiz", n:1, kind:"action", title:"Take the quiz", time:"Duration: about 7 minutes",
         desc:"Please do this on your phone.",
-        btn:{label:"Open the quiz", href:withId(QUIZ_URL,name,email), accent:true} },
+        btn:{label:"Open the quiz", href:quizUrl(false), accent:true} },
       { key:"quiz_feedback", n:2, kind:"form", title:"Quiz feedback form", time:"Duration: about 7 minutes",
         desc:"Be candid and specific.<br><span style=\"color:var(--accent);font-weight:700\">&#10003;</span> “The third question was confusing because…”<br><span style=\"color:var(--clay);font-weight:700\">&#10007;</span> “it was great.”<br><br>Please flag anything slow, ineffective or not working on your device.",
         btn:{label:"Open the quiz feedback form", href:withId(FORM.quiz,name,email)} },
       { key:"sharing_feedback", n:3, kind:"form", title:"Share it", time:"Duration: about 7 minutes",
         desc:"1. Send the quiz to one person it made you think of. Open your result and use the share options there."
-             +"<br><a class=\"btn accent inline\" href=\""+withId(QUIZ_URL,name,email)+"\" target=\"_blank\" rel=\"noopener\">Open my result to share</a>"
+             +"<br><a class=\"btn accent inline\" href=\""+quizUrl(true)+"\" target=\"_blank\" rel=\"noopener\">Open my result to share</a>"
              +"<br>2. Send it to yourself too and go through it as a first-time receiver would."
              +"<br>3. Fill in the sharing feedback form."
              +"<br><a class=\"btn inline\" href=\""+withId(FORM.sharing,name,email)+"\" target=\"_blank\" rel=\"noopener\">Open the sharing form</a>",
