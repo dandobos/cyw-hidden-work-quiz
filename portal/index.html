@@ -128,7 +128,14 @@
     if(wantResult) u.searchParams.set("result", "1");
     return u.toString();
   }
-  var TOKEN = qs("t") || "";
+  function lsGet(k){ try{ return localStorage.getItem(k)||""; }catch(e){ return ""; } }
+  function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  var rawT = qs("t") || "";
+  if(rawT.indexOf("{{") !== -1) rawT = "";           // ignore an unresolved Tally mention
+  if(rawT) lsSet("hwbeta:current", rawT);            // remember token so form redirects can find us
+  var TOKEN = rawT || lsGet("hwbeta:current");
+  var DONE = qs("done");                             // set when a Tally form redirects back after submit
+  var DONE_MAP = { quiz:"quiz_feedback", sharing:"sharing_feedback", course:"course_feedback" };
   var LSKEY = "hwbeta:" + (TOKEN || (qs("e")||"preview"));
   function localState(){ try{ return JSON.parse(localStorage.getItem(LSKEY)) || {}; }catch(e){ return {}; } }
   function saveLocal(s){ try{ localStorage.setItem(LSKEY, JSON.stringify(s)); }catch(e){} }
@@ -237,6 +244,14 @@
 
   // Live mode: resolve the token via the backend.
   if(!TOKEN){ fail(); return; }
+  // Returning from a Tally form submit: optimistically tick that step and tell the backend.
+  if(DONE && DONE_MAP[DONE]){
+    try{ var st = localState(); st[DONE_MAP[DONE]] = true; saveLocal(st); }catch(e){}
+    fetch(BACKEND + "/progress?t=" + encodeURIComponent(TOKEN), {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ step: DONE }), keepalive:true
+    }).catch(function(){});
+  }
   fetch(BACKEND + "/resolve?t=" + encodeURIComponent(TOKEN))
     .then(function(r){ if(!r.ok) throw new Error("bad"); return r.json(); })
     .then(function(d){ if(!d || !d.name && !d.email) throw new Error("empty"); boot(d); })
