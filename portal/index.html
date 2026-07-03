@@ -7,21 +7,23 @@
 <title>Your Hidden Work Beta Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Roboto:wght@500;700&family=Righteous&display=swap">
 <style>
   :root{
-    --heading:'Source Serif Pro',Georgia,serif; --sans:'Inter',-apple-system,sans-serif;
+    --heading:'Lora',Georgia,serif; --sans:'Inter',-apple-system,sans-serif;
+    --nav:'Roboto',-apple-system,sans-serif; --brand:'Righteous','Roboto',sans-serif;
     --bg:#f7f5f1; --card:#ffffff; --border:#cfccc4; --border-soft:#e3e0d9;
-    --text:#0f0f0f; --body:#1a1a1a; --muted:#333; --subtle:#5a564e;
-    --accent:#3d7a6e; --accent-soft:#e7f1ee; --clay:#a85a3d;
+    --text:#111111; --body:#333333; --muted:#333333; --subtle:#5a564e;
+    --accent:#14638e; --accent-soft:#e3eef5; --accent-border:#bcd8e8; --accent-ink:#0f4e70; --clay:#b23a2e;
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--heading);line-height:1.5;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:640px;margin:0 auto;padding:44px 20px 96px}
-  .eyebrow{font-family:var(--sans);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);font-weight:600;text-align:center;margin:0 0 16px}
-  h1{font-family:var(--heading);font-weight:400;font-size:31px;line-height:1.22;letter-spacing:-0.3px;text-align:center;margin:0 0 14px}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:640px;margin:0 auto;padding:34px 20px 96px}
+  .brand{font-family:var(--brand);font-size:21px;letter-spacing:1.5px;color:var(--text);text-align:center;margin:0 0 32px}
+  .eyebrow{font-family:var(--sans);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);font-weight:600;text-align:center;margin:0 0 16px}
+  h1{font-family:var(--heading);font-weight:600;font-size:32px;line-height:1.2;letter-spacing:-0.3px;text-align:center;margin:0 0 14px}
   h1 .nm{color:var(--accent)}
-  .lede{font-size:16px;color:var(--body);text-align:center;max-width:520px;margin:0 auto 6px;line-height:1.6}
+  .lede{font-family:var(--sans);font-size:16px;color:var(--body);text-align:center;max-width:520px;margin:0 auto 6px;line-height:1.6}
   .meta{font-family:var(--sans);font-size:13px;color:var(--subtle);text-align:center;margin:14px 0 0}
   .progress-wrap{margin:30px 0 8px}
   .progress-bar{height:6px;background:var(--border-soft);border-radius:99px;overflow:hidden}
@@ -32,7 +34,7 @@
   .step{position:relative;background:var(--card);border:1px solid var(--border-soft);border-radius:10px;padding:20px 20px 20px 60px;margin:0 0 14px;transition:border-color .15s,box-shadow .15s}
   .step .num{position:absolute;left:18px;top:20px;width:28px;height:28px;border-radius:99px;background:#efede8;color:var(--muted);font-family:var(--sans);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center}
   .step h2{font-family:var(--sans);font-size:17px;font-weight:700;letter-spacing:-.2px;margin:0 0 4px}
-  .step p{font-size:14.5px;color:var(--muted);margin:0 0 14px;line-height:1.55}
+  .step p{font-family:var(--sans);font-size:14.5px;color:var(--muted);margin:0 0 14px;line-height:1.55}
   .step .time{font-family:var(--sans);font-size:12px;color:var(--subtle);font-weight:500}
   .step.current{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
   .step.current .num{background:var(--accent);color:#fff}
@@ -41,17 +43,17 @@
   .step.done{opacity:.72}
   .badge{display:inline-block;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:2px 8px;border-radius:4px;margin-left:8px;vertical-align:middle}
   .badge.next{background:var(--accent-soft);color:var(--accent)}
-  .badge.done{background:#e7f1ee;color:var(--accent)}
+  .badge.done{background:var(--accent-soft);color:var(--accent)}
 
-  .btn{display:inline-block;font-family:var(--sans);font-size:14px;font-weight:600;letter-spacing:.3px;color:#fff;background:var(--text);border:1px solid var(--text);border-radius:6px;padding:12px 20px;cursor:pointer;text-decoration:none;transition:opacity .15s}
-  .btn:hover{opacity:.85}
+  .btn{display:inline-block;font-family:var(--nav);font-size:14px;font-weight:700;letter-spacing:.3px;color:#fff;background:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:11px 20px;cursor:pointer;text-decoration:none;transition:opacity .15s}
+  .btn:hover{opacity:.88}
   .btn.accent{background:var(--accent);border-color:var(--accent)}
-  .btn.ghost{background:transparent;color:var(--muted);border-color:var(--border)}
+  .btn.ghost{background:transparent;color:var(--accent);border-color:var(--accent-border)}
   .btn.inline{margin:7px 0 16px;padding:9px 16px;font-size:13px}
   .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
   .markdone{font-family:var(--sans);font-size:13px;color:var(--subtle);text-decoration:underline;background:none;border:0;cursor:pointer;padding:6px 2px}
 
-  .note{background:var(--accent-soft);border:1px solid #cfe3dd;border-radius:8px;padding:14px 16px;font-family:var(--sans);font-size:13.5px;color:#2f6155;line-height:1.55;margin:26px 0 0}
+  .note{background:var(--accent-soft);border:1px solid var(--accent-border);border-radius:8px;padding:14px 16px;font-family:var(--sans);font-size:13.5px;color:var(--accent-ink);line-height:1.55;margin:26px 0 0}
   .foot{font-family:var(--heading);font-size:15px;color:var(--body);text-align:center;margin:34px 0 0;line-height:1.6}
   .center{text-align:center}
   #loading,#error{text-align:center;padding:60px 0;font-family:var(--sans);color:var(--subtle)}
@@ -61,6 +63,8 @@
 </head>
 <body>
 <div class="wrap">
+
+  <div class="brand">DAN DOBOS</div>
 
   <div id="loading">Loading your portal…</div>
 
