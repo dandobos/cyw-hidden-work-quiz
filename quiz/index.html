@@ -36,8 +36,8 @@
   .option.selected { border-color: var(--accent); background: var(--accent); color: var(--card); }
   .word-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
   .word-tile { background: var(--card); border: 1px solid var(--border); padding: 24px 8px; font-family: var(--heading); font-size: 19px; color: var(--text-primary); text-align: center; cursor: pointer; transition: all 0.15s; }
-  .word-tile:hover { border-color: var(--accent); background: var(--inner); }
-  .word-tile.selected { background: var(--accent); color: var(--card); border-color: var(--accent); }
+  .word-tile:hover { border-color: var(--text-primary); background: var(--text-primary); color: var(--card); }
+  .word-tile.selected, .word-tile.selected:hover { background: var(--accent); color: var(--card); border-color: var(--accent); }
   .activity-item { background: var(--card); border: 1px solid var(--border); padding: 20px 24px; margin-bottom: 12px; }
   .activity-num { font-family: var(--sans); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-subtle); font-weight: 600; margin-bottom: 8px; }
   .activity-input { width: 100%; font-family: var(--heading); font-size: 18px; border: none; border-bottom: 1px solid var(--border); padding: 4px 0 8px; background: transparent; color: var(--text-primary); outline: none; }
