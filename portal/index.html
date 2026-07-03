@@ -103,9 +103,9 @@
 
   var QUIZ_URL  = "https://dandobos.com/hidden-work";
   var FORM = {
-    quiz:    "https://dandobos.github.io/cyw-hidden-work-quiz/feedback/quiz/",
-    sharing: "https://dandobos.github.io/cyw-hidden-work-quiz/feedback/sharing/",
-    course:  "https://dandobos.github.io/cyw-hidden-work-quiz/feedback/course/"
+    quiz:    "https://tally.so/r/Xxga2Y",  // Hidden Work Quiz: Beta Tester Feedback
+    sharing: "https://tally.so/r/GxgGQk",  // Hidden Work Quiz: The Sharing Test
+    course:  "https://tally.so/r/wgBx94"   // Email Course - General Feedback
   };
 
   // ---- Helpers ------------------------------------------------------------
@@ -113,8 +113,9 @@
   function esc(s){ var d=document.createElement("div"); d.textContent=s||""; return d.innerHTML; }
   function withId(url, name, email){
     var u = new URL(url);
-    if(name)  u.searchParams.set("n", name);
-    if(email) u.searchParams.set("e", email);
+    if(TOKEN) u.searchParams.set("token", TOKEN);
+    if(name)  u.searchParams.set("name", name);
+    if(email) u.searchParams.set("email", email);
     return u.toString();
   }
   var TOKEN = qs("t") || "";
