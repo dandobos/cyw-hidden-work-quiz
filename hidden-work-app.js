@@ -11,6 +11,16 @@
     disable_surveys: true,
     session_recording: { maskAllInputs: true }    // email + free-text answers are never recorded
   });
+  // Beta testers arrive from the portal with ?hwbt=<token>. Tag their whole session so
+  // PostHog can report on the beta cohort, per tester. Public visitors have no hwbt and
+  // stay anonymous/cookieless. The token is an opaque portal id, not a name or email.
+  try {
+    var _hwbt = (new URLSearchParams(location.search).get('hwbt') || '').slice(0, 64);
+    if (_hwbt && _hwbt.indexOf('{{') === -1) {              // ignore an unresolved Tally mention
+      posthog.register({ hw_beta: true, hw_beta_token: _hwbt });          // tags every event
+      posthog.identify('beta:' + _hwbt, { hw_beta: true, hw_beta_token: _hwbt });  // per-tester person
+    }
+  } catch (e) {}
 })();
 ;
 // THE HIDDEN WORK v2: four dimensions: Vitality, Alignment, Clarity, Agency
@@ -473,29 +483,6 @@ if (_invite){
 } else {
   try { _invite = JSON.parse(sessionStorage.getItem(INVITE_KEY) || 'null'); } catch(e){ _invite = null; }
   if (_invite && !ARCH[_invite.key]) _invite = null;
-}
-
-// ---- Beta portal tracking -----------------------------------------------
-// When a beta tester opens the quiz from their portal, the link carries ?hwbt=<token>.
-// On completion we ping the portal backend so their "Quiz taken" ticks automatically,
-// no self-report needed. Public visitors have no token, so nothing fires for them.
-var BETA_BACKEND = 'https://beta-portal-production-df48.up.railway.app';
-var _betaToken = '';
-try {
-  _betaToken = (new URLSearchParams(location.search).get('hwbt') || '').trim();
-  if (_betaToken) sessionStorage.setItem('hw_beta_token', _betaToken);
-  else _betaToken = sessionStorage.getItem('hw_beta_token') || '';
-} catch(e){}
-var _betaPinged = false;
-function pingBetaQuizDone(){
-  if (_betaPinged || !_betaToken) return;
-  _betaPinged = true;
-  try {
-    fetch(BETA_BACKEND + '/progress?t=' + encodeURIComponent(_betaToken), {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ step: 'quiz_taken' }), keepalive: true
-    }).catch(function(){});
-  } catch(e){}
 }
 
 // ================= RESULT PAGE =================
@@ -1087,7 +1074,7 @@ function submitGate(){
   setTimeout(() => proceed(false), 6000);
 }
 
-function showResult() { screen='complete'; saveResult(); pingBetaQuizDone(); render(); }
+function showResult() { screen='complete'; saveResult(); render(); }
 function restart() { clearResult(); clearState(); _submitting=false; _submitted=false; _kitConfirmed=false; _kitEmail=''; screen='intro'; qIdx=0; answers={}; activityNames=['','','']; activityScores=[null,null,null]; textVal=''; rankState={}; rankTouched={}; rankConfirmPending={}; render(); }
 function toggleNeighbour() {
   var el = document.getElementById('neighbour-profile'); if (!el) return;
@@ -1108,7 +1095,7 @@ var _resumed = loadState();
 // Not mid-quiz and not arriving from a friend's share: if this reader already
 // finished, restore straight to their saved result page.
 if (!_resumed && !_invite) {
-  try { if (loadResult()) { computeResult(); screen = 'complete'; _resumed = true; pingBetaQuizDone(); } }
+  try { if (loadResult()) { computeResult(); screen = 'complete'; _resumed = true; } }
   catch(e){ clearResult(); }
 }
 // The portal "Open my result to share" button adds ?result=1. If the reader has

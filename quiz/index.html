@@ -311,6 +311,16 @@
     disable_surveys: true,
     session_recording: { maskAllInputs: true }    // email + free-text answers are never recorded
   });
+  // Beta testers arrive from the portal with ?hwbt=<token>. Tag their whole session so
+  // PostHog can report on the beta cohort, per tester. Public visitors have no hwbt and
+  // stay anonymous/cookieless. The token is an opaque portal id, not a name or email.
+  try {
+    var _hwbt = (new URLSearchParams(location.search).get('hwbt') || '').slice(0, 64);
+    if (_hwbt && _hwbt.indexOf('{{') === -1) {              // ignore an unresolved Tally mention
+      posthog.register({ hw_beta: true, hw_beta_token: _hwbt });          // tags every event
+      posthog.identify('beta:' + _hwbt, { hw_beta: true, hw_beta_token: _hwbt });  // per-tester person
+    }
+  } catch (e) {}
 })();
 </script>
 </head>
