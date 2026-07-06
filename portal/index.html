@@ -197,9 +197,7 @@
       var numHtml = done ? "✓" : s.n;
       var actions = "";
       if(!done && s.btn){
-        actions = '<div class="row"><a class="btn '+(s.btn.accent?"accent":"")+'" href="'+s.btn.href+'" target="_blank" rel="noopener">'+esc(s.btn.label)+'</a>';
-        if(s.kind==="action"){ actions += '<button class="markdone" data-done="'+s.key+'">I have taken the quiz</button>'; }
-        actions += '</div>';
+        actions = '<div class="row"><a class="btn '+(s.btn.accent?"accent":"")+'" href="'+s.btn.href+'" target="_blank" rel="noopener">'+esc(s.btn.label)+'</a></div>';
       } else if(done){
         actions = '<div class="row"><span class="time">Completed</span>' + (s.btn ? ' &middot; <a class="markdone" href="'+s.btn.href+'" target="_blank" rel="noopener">open again</a>' : '') + '</div>';
       } else if(s.kind==="course"){
