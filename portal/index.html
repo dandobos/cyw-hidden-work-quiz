@@ -126,6 +126,7 @@
   function quizUrl(wantResult){
     var u = new URL(QUIZ_URL);
     if(wantResult) u.searchParams.set("result", "1");
+    if(TOKEN) u.searchParams.set("hwbt", TOKEN);  // lets the quiz auto-report completion
     return u.toString();
   }
   function lsGet(k){ try{ return localStorage.getItem(k)||""; }catch(e){ return ""; } }
