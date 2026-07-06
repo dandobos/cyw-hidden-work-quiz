@@ -1066,12 +1066,57 @@ function submitGate(){
         duration_seconds: d.duration_seconds, active_seconds: d.active_seconds
       });
     } catch(e){}
+    logQuizToSheet();
     showResult();
   };
   submitToKit(email, hwFields())
     .then(res => proceed(res && res.ok))
     .catch(() => proceed(false));   // CORS-opaque or offline: the POST still reached Kit; show the result anyway
   setTimeout(() => proceed(false), 6000);
+}
+
+// ---- Quiz response logging to Google Sheet ------------------------------
+// Every completed quiz is appended as one row to the "Hidden Work Quiz Responses"
+// Google Sheet via the beta-portal backend (/quiz-log). Fire-and-forget; a failed
+// log never affects the reader's result.
+var SHEET_LOG_URL = 'https://beta-portal-production-df48.up.railway.app/quiz-log';
+var _sheetLogged = false;
+function _quizBetaToken(){
+  try { var t = (new URLSearchParams(location.search).get('hwbt') || '').slice(0, 64); return (t && t.indexOf('{{') === -1) ? t : ''; } catch(e){ return ''; }
+}
+function buildQuizRecord(){
+  var rec = {};
+  try {
+    var r = computeResult(), d = hwDurations(), s = r.scores;
+    rec = {
+      timestamp: new Date().toISOString(),
+      email: _kitEmail || '',
+      beta_token: _quizBetaToken(),
+      archetype: r.archetype, archetype_key: r.key,
+      score_clarity: s.C, score_agency: s.AG, score_alignment: s.AL, score_vitality: s.V,
+      regret: r.regret && r.regret.label,
+      vitality_verdict: r.vitality && r.vitality.verdict,
+      mode: r.mode, past_wound: !!(r.flag && r.flag !== 'none'),
+      from_share: !!_invite, invite_type: _invite ? _invite.key : '',
+      duration_seconds: d.duration_seconds, active_seconds: d.active_seconds
+    };
+    for (var i = 0; i < questions.length; i++){
+      var q = questions[i]; if (!q) continue;
+      var a = answers[i];
+      var val = (a == null) ? '' : (a.value != null ? a.value : a);
+      if (val && typeof val === 'object') { try { val = JSON.stringify(val); } catch(e){ val = ''; } }
+      rec['q' + (i + 1) + '_' + (q.section || 'X')] = val;
+    }
+    try { rec.raw_answers_json = JSON.stringify(answers); } catch(e){}
+  } catch(e){}
+  return rec;
+}
+function logQuizToSheet(){
+  if (_sheetLogged || !SHEET_LOG_URL) return;
+  _sheetLogged = true;
+  try {
+    fetch(SHEET_LOG_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(buildQuizRecord()), keepalive: true }).catch(function(){});
+  } catch(e){}
 }
 
 function showResult() { screen='complete'; saveResult(); render(); }
