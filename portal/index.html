@@ -221,21 +221,23 @@
     document.getElementById("course-note").style.display = "block";
 
     // "mark as done" for action steps (the quiz). Records to Notion too, since the
-    // quiz app sends no completion signal of its own.
-    host.addEventListener("click", function(ev){
-      var b = ev.target.closest("[data-done]");
-      if(!b) return;
-      var key = b.getAttribute("data-done");
-      var s = localState(); s[key] = true; saveLocal(s);
-      if(BACKEND && TOKEN && key === "quiz"){
-        server.quiz_taken = true; // reflect immediately in this render
-        fetch(BACKEND + "/progress?t=" + encodeURIComponent(TOKEN), {
-          method:"POST", headers:{"Content-Type":"application/json"},
-          body: JSON.stringify({ step:"quiz_taken" }), keepalive:true
-        }).catch(function(){});
-      }
-      boot(tester); // re-render
-    });
+    // quiz app sends no completion signal of its own. Attach once (boot re-renders).
+    if(!host.__wired){
+      host.__wired = true;
+      host.addEventListener("click", function(ev){
+        var b = ev.target.closest("[data-done]");
+        if(!b) return;
+        var key = b.getAttribute("data-done");
+        var s = localState(); s[key] = true; saveLocal(s);
+        if(BACKEND && TOKEN && key === "quiz"){
+          fetch(BACKEND + "/progress?t=" + encodeURIComponent(TOKEN), {
+            method:"POST", headers:{"Content-Type":"application/json"},
+            body: JSON.stringify({ step:"quiz_taken" }), keepalive:true
+          }).catch(function(){});
+        }
+        loadTester(true); // re-fetch server state and re-render
+      });
+    }
 
     document.getElementById("loading").style.display="none";
     document.getElementById("portal").style.display="block";
@@ -266,10 +268,36 @@
       body: JSON.stringify({ step: DONE }), keepalive:true
     }).catch(function(){});
   }
-  fetch(BACKEND + "/resolve?t=" + encodeURIComponent(TOKEN))
-    .then(function(r){ if(!r.ok) throw new Error("bad"); return r.json(); })
-    .then(function(d){ if(!d || !d.name && !d.email) throw new Error("empty"); boot(d); })
-    .catch(fail);
+  // Resolve + render. Re-runnable: only re-renders when the server progress actually
+  // changes, so a background refresh never flickers or loses scroll position.
+  var _booted = false, _lastSig = "", _lastLoad = 0;
+  function _sig(d){ var p = (d && d.progress) || {}; return [p.quiz_taken, p.quiz_feedback, p.sharing_feedback, p.course_feedback].join("|"); }
+  function loadTester(isReload){
+    _lastLoad = Date.now();
+    return fetch(BACKEND + "/resolve?t=" + encodeURIComponent(TOKEN))
+      .then(function(r){ if(!r.ok) throw new Error("bad"); return r.json(); })
+      .then(function(d){
+        if(!d || !d.name && !d.email) throw new Error("empty");
+        var s = _sig(d);
+        if(!_booted || s !== _lastSig){ _booted = true; _lastSig = s; boot(d); }
+      })
+      .catch(function(){ if(!_booted && !isReload) fail(); }); // ignore transient errors on background refresh
+  }
+
+  // Testers open the quiz and the forms in NEW tabs, so this page sits stale. Re-check
+  // whenever they return to it (tab focus / back-navigation) and on a light poll, so
+  // each step ticks to Done without a manual refresh.
+  function maybeReload(){
+    if(document.visibilityState !== "visible") return;
+    if(Date.now() - _lastLoad < 1500) return; // throttle rapid focus/visibility bursts
+    loadTester(true);
+  }
+  document.addEventListener("visibilitychange", maybeReload);
+  window.addEventListener("focus", maybeReload);
+  window.addEventListener("pageshow", function(e){ if(e.persisted) maybeReload(); });
+  setInterval(function(){ if(document.visibilityState === "visible") loadTester(true); }, 15000);
+
+  loadTester(false);
 })();
 </script>
 </body>
