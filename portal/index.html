@@ -174,7 +174,13 @@
         btn:{label:"Open the email course feedback form", href:withId(FORM.course,name,email)} }
     ];
 
-    function isDone(k){ return !!(server[k] || local[k]); }
+    // map a step key to the server-side (Notion) progress flag
+    var SKEY = { quiz:"quiz_taken", quiz_feedback:"quiz_feedback", sharing_feedback:"sharing_feedback", course_feedback:"course_feedback" };
+    function isDone(k){
+      if(k === "course") return !!(local.course || server.course_feedback); // course = done once its feedback is in
+      var sk = SKEY[k];
+      return !!((sk && server[sk]) || local[k]);
+    }
 
     // find current step = first not-done
     var currentIdx = STEPS.findIndex(function(s){ return !isDone(s.key); });
@@ -191,7 +197,7 @@
       var actions = "";
       if(!done && s.btn){
         actions = '<div class="row"><a class="btn '+(s.btn.accent?"accent":"")+'" href="'+s.btn.href+'" target="_blank" rel="noopener">'+esc(s.btn.label)+'</a>';
-        if(s.kind==="action"){ actions += '<button class="markdone" data-done="'+s.key+'">Mark as done</button>'; }
+        if(s.kind==="action"){ actions += '<button class="markdone" data-done="'+s.key+'">I have taken the quiz</button>'; }
         actions += '</div>';
       } else if(done){
         actions = '<div class="row"><span class="time">Completed</span>' + (s.btn ? ' &middot; <a class="markdone" href="'+s.btn.href+'" target="_blank" rel="noopener">open again</a>' : '') + '</div>';
@@ -215,11 +221,20 @@
     document.getElementById("plabel").textContent = doneCount + " of " + milestones.length + " key steps done";
     document.getElementById("course-note").style.display = "block";
 
-    // local "mark as done" for action steps
+    // "mark as done" for action steps (the quiz). Records to Notion too, since the
+    // quiz app sends no completion signal of its own.
     host.addEventListener("click", function(ev){
       var b = ev.target.closest("[data-done]");
       if(!b) return;
-      var s = localState(); s[b.getAttribute("data-done")] = true; saveLocal(s);
+      var key = b.getAttribute("data-done");
+      var s = localState(); s[key] = true; saveLocal(s);
+      if(BACKEND && TOKEN && key === "quiz"){
+        server.quiz_taken = true; // reflect immediately in this render
+        fetch(BACKEND + "/progress?t=" + encodeURIComponent(TOKEN), {
+          method:"POST", headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({ step:"quiz_taken" }), keepalive:true
+        }).catch(function(){});
+      }
       boot(tester); // re-render
     });
 
