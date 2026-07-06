@@ -1426,7 +1426,24 @@ function logQuizToSheet(){
   } catch(e){}
 }
 
-function showResult() { screen='complete'; saveResult(); render(); }
+// Beta: when a tester arrives from the portal (?hwbt=<token>), tell the backend the
+// quiz is done so their "Quiz taken" ticks in Notion automatically. Public visitors
+// have no token, so nothing fires. (Separate from the PostHog tagging above.)
+var BETA_BACKEND = 'https://beta-portal-production-df48.up.railway.app';
+var _betaPinged = false;
+function pingBetaQuizDone(){
+  var tok = _quizBetaToken();
+  if (_betaPinged || !tok) return;
+  _betaPinged = true;
+  try {
+    fetch(BETA_BACKEND + '/progress?t=' + encodeURIComponent(tok), {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ step: 'quiz_taken' }), keepalive: true
+    }).catch(function(){});
+  } catch(e){}
+}
+
+function showResult() { screen='complete'; saveResult(); pingBetaQuizDone(); render(); }
 function restart() { clearResult(); clearState(); _submitting=false; _submitted=false; _kitConfirmed=false; _kitEmail=''; screen='intro'; qIdx=0; answers={}; activityNames=['','','']; activityScores=[null,null,null]; textVal=''; rankState={}; rankTouched={}; rankConfirmPending={}; render(); }
 function toggleNeighbour() {
   var el = document.getElementById('neighbour-profile'); if (!el) return;
@@ -1447,7 +1464,7 @@ var _resumed = loadState();
 // Not mid-quiz and not arriving from a friend's share: if this reader already
 // finished, restore straight to their saved result page.
 if (!_resumed && !_invite) {
-  try { if (loadResult()) { computeResult(); screen = 'complete'; _resumed = true; } }
+  try { if (loadResult()) { computeResult(); screen = 'complete'; _resumed = true; pingBetaQuizDone(); } }
   catch(e){ clearResult(); }
 }
 // The portal "Open my result to share" button adds ?result=1. If the reader has
