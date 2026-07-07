@@ -74,6 +74,7 @@
   @keyframes cBlink{50%{opacity:0}}
   .foot .foot-line{margin:0 0 8px}
   .foot .foot-sign{font-family:'Caveat',var(--heading),cursive;font-size:30px;color:var(--accent);margin:0;transform:rotate(-3deg);line-height:1}
+  #celebrate + .foot{margin:14px 0 40px}  /* spacing when the note is relocated to the top */
 </style>
 </head>
 <body>
@@ -88,6 +89,11 @@
   </div>
 
   <main id="portal" style="display:none">
+    <div id="celebrate" style="display:none">
+      <canvas class="cfx" aria-hidden="true"></canvas>
+      <h2 class="cdone"><span class="ctxt"></span><span class="cemo"></span><span class="ccaret"></span></h2>
+    </div>
+
     <p class="eyebrow">Hidden Work Beta</p>
     <h1>Welcome <span class="nm" id="hi">there</span></h1>
     <p class="lede">This page contains your list of tasks.</p>
@@ -103,11 +109,6 @@
 
     <div class="note" id="course-note" style="display:none">
       Your 7-day email course arrives by email, one message a day. Please actually do each day's small activity and take a moment to reflect. Come back here for the final feedback form once you have been through all seven days.
-    </div>
-
-    <div id="celebrate" style="display:none">
-      <canvas class="cfx" aria-hidden="true"></canvas>
-      <h2 class="cdone"><span class="ctxt"></span><span class="cemo"></span><span class="ccaret"></span></h2>
     </div>
 
     <div class="foot">
@@ -299,6 +300,9 @@
     if(!host) return;
     _celebrated = true;
     host.style.display = "block";
+    // bring the static thank-you note up to sit directly under the celebration
+    var foot = document.querySelector(".foot");
+    if(foot) host.insertAdjacentElement("afterend", foot);
     var doneEl = host.querySelector(".cdone");
     var txt = doneEl.querySelector(".ctxt"), emo = doneEl.querySelector(".cemo"), caret = doneEl.querySelector(".ccaret");
     txt.textContent = ""; emo.textContent = ""; emo.className = "cemo"; caret.className = "ccaret";
