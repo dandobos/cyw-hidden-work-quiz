@@ -211,6 +211,17 @@
         '<div class="time">'+esc(s.time)+'</div>' +
         actions;
       host.appendChild(el);
+      // Show the blue email-course note directly under the course step (between 4 and 5).
+      if(s.key === "course"){
+        var noteTpl = document.getElementById("course-note");
+        if(noteTpl){
+          var noteClone = noteTpl.cloneNode(true);
+          noteClone.removeAttribute("id");
+          noteClone.style.display = "block";
+          noteClone.style.margin = "0 0 14px";
+          host.appendChild(noteClone);
+        }
+      }
     });
 
     // progress bar (based on the 3 feedback milestones + quiz)
@@ -219,7 +230,6 @@
     var pct = Math.round(doneCount/milestones.length*100);
     document.getElementById("pbar").style.width = pct + "%";
     document.getElementById("plabel").textContent = doneCount + " of " + milestones.length + " key steps done";
-    document.getElementById("course-note").style.display = "block";
 
     // "mark as done" for action steps (the quiz). Records to Notion too, since the
     // quiz app sends no completion signal of its own. Attach once (boot re-renders).
