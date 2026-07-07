@@ -7,7 +7,7 @@
 <title>Your Hidden Work Beta Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Roboto:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Roboto:wght@500;700&family=Caveat:wght@600;700&display=swap">
 <style>
   :root{
     --heading:'Lora',Georgia,serif; --sans:'Inter',-apple-system,sans-serif;
@@ -58,6 +58,22 @@
   #loading,#error{text-align:center;padding:60px 0;font-family:var(--sans);color:var(--subtle)}
   #error h1{font-family:var(--heading);color:var(--text)}
   @media (max-width:520px){h1{font-size:27px}.step{padding-left:56px}.step .num{left:16px}}
+
+  /* completion celebration (animated headline only; footer stays static) */
+  #celebrate{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--accent-border);border-radius:12px;padding:34px 20px 30px;margin:0 0 16px;text-align:center;box-shadow:0 18px 44px -28px rgba(20,60,90,.5)}
+  #celebrate .cfx{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+  #celebrate > :not(.cfx){position:relative;z-index:2}
+  #celebrate .cdone{font-family:var(--heading);font-weight:700;font-size:clamp(24px,5vw,34px);line-height:1.15;letter-spacing:-.4px;color:var(--text);margin:0}
+  #celebrate .cdone.shine .ctxt{background:linear-gradient(100deg,var(--text) 0%,var(--text) 34%,#c89b3c 50%,var(--text) 66%,var(--text) 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:cShine 1.4s ease forwards}
+  @keyframes cShine{from{background-position:132% 0}to{background-position:-32% 0}}
+  #celebrate .cemo{display:inline-block;transform:scale(0);margin-left:.1em;vertical-align:-.04em}
+  #celebrate .cemo.in{animation:cEmo .5s cubic-bezier(.2,1.5,.4,1) forwards}
+  @keyframes cEmo{0%{transform:scale(0) rotate(-18deg)}60%{transform:scale(1.28) rotate(8deg)}100%{transform:scale(1) rotate(0)}}
+  #celebrate .ccaret{display:inline-block;width:2px;height:.9em;background:var(--accent);margin-left:3px;vertical-align:-2px;animation:cBlink 1s steps(1) infinite}
+  #celebrate .ccaret.gone{display:none}
+  @keyframes cBlink{50%{opacity:0}}
+  .foot .foot-line{margin:0 0 8px}
+  .foot .foot-sign{font-family:'Caveat',var(--heading),cursive;font-size:30px;color:var(--accent);margin:0;transform:rotate(-3deg);line-height:1}
 </style>
 </head>
 <body>
@@ -89,7 +105,15 @@
       Your 7-day email course arrives by email, one message a day. Please actually do each day's small activity and take a moment to reflect. Come back here for the final feedback form once you have been through all seven days.
     </div>
 
-    <p class="foot">Thank you for your feedback! I really appreciate it.<br>Dan</p>
+    <div id="celebrate" style="display:none">
+      <canvas class="cfx" aria-hidden="true"></canvas>
+      <h2 class="cdone"><span class="ctxt"></span><span class="cemo"></span><span class="ccaret"></span></h2>
+    </div>
+
+    <div class="foot">
+      <p class="foot-line">Thank you for your feedback! I really appreciate it.</p>
+      <p class="foot-sign">Dan</p>
+    </div>
   </main>
 </div>
 
@@ -138,6 +162,7 @@
   var DONE = qs("done");                             // set when a Tally form redirects back after submit
   var DONE_MAP = { quiz:"quiz_feedback", sharing:"sharing_feedback", course:"course_feedback" };
   var LSKEY = "hwbeta:" + (TOKEN || (qs("e")||"preview"));
+  var CELEB_KEY = "hwbeta:celebrated:" + (TOKEN || "x");
   function localState(){ try{ return JSON.parse(localStorage.getItem(LSKEY)) || {}; }catch(e){ return {}; } }
   function saveLocal(s){ try{ localStorage.setItem(LSKEY, JSON.stringify(s)); }catch(e){} }
 
@@ -253,12 +278,64 @@
     document.getElementById("loading").style.display="none";
     document.getElementById("portal").style.display="block";
 
+    // celebration: always for the ?celebrate=1 preview; otherwise once, the
+    // first time the course feedback is complete (survives across refreshes).
+    if(qs("celebrate") === "1"){ runCelebrate(); }
+    else if(isDone("course_feedback") && lsGet(CELEB_KEY) !== "1"){ lsSet(CELEB_KEY, "1"); runCelebrate(); }
+
     // tell the backend the portal was opened (best effort)
     if(BACKEND && TOKEN){
       fetch(BACKEND + "/opened?t=" + encodeURIComponent(TOKEN), {method:"POST", keepalive:true}).catch(function(){});
     }
   }
 
+  // ---- completion celebration -------------------------------------------
+  var _celebrated = false;
+  var CB_MAIN = "Thanks! You're done";
+  var CB_EMOJI = "😊";
+  function runCelebrate(){
+    if(_celebrated) return;
+    var host = document.getElementById("celebrate");
+    if(!host) return;
+    _celebrated = true;
+    host.style.display = "block";
+    var doneEl = host.querySelector(".cdone");
+    var txt = doneEl.querySelector(".ctxt"), emo = doneEl.querySelector(".cemo"), caret = doneEl.querySelector(".ccaret");
+    txt.textContent = ""; emo.textContent = ""; emo.className = "cemo"; caret.className = "ccaret";
+    doneEl.classList.remove("shine");
+    if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+      txt.textContent = CB_MAIN; emo.textContent = CB_EMOJI; caret.className = "ccaret gone"; return;
+    }
+    var chars = CB_MAIN.split(""), i = 0;
+    (function step(){
+      txt.textContent = chars.slice(0,i).join(""); i++;
+      if(i <= chars.length){ setTimeout(step, 52); }
+      else {
+        emo.textContent = CB_EMOJI; emo.className = "cemo in";
+        setTimeout(function(){ caret.className = "ccaret gone"; }, 300);
+        setTimeout(function(){ doneEl.classList.add("shine"); }, 480);
+        setTimeout(function(){ cbConfetti(host); }, 1250);
+      }
+    })();
+  }
+  function cbConfetti(host){
+    var cv = host.querySelector(".cfx"); if(!cv) return;
+    var ctx = cv.getContext("2d"), dpr = Math.min(2, window.devicePixelRatio||1);
+    var r = host.getBoundingClientRect(), W = r.width, H = r.height;
+    cv.width = W*dpr; cv.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    var cols = ["#14638e","#3d7a6e","#c89b3c","#a85a3d","#d9a441","#2e7d7a"];
+    var parts = [], cx = W/2, cy = H*0.34;
+    function pc(x,y,vx,vy,res){ return {x:x,y:y,vx:vx,vy:vy,w:(res?3.5:5)+Math.random()*(res?3:6),h:(res?6:8)+Math.random()*(res?6:9),rot:Math.random()*6.28,vr:(Math.random()-.5)*(res?.16:.42),col:cols[(Math.random()*cols.length)|0],alpha:res?.82:1,res:!!res}; }
+    for(var k=0;k<140;k++){ var a=Math.random()*Math.PI*2, sp=2+Math.random()*6.2; parts.push(pc(cx,cy,Math.cos(a)*sp,Math.sin(a)*sp-(2.5+Math.random()*3.2),false)); }
+    var raf, prev, resAcc = 0, running = true;
+    function rc(){ var n=0; for(var i=0;i<parts.length;i++) if(parts[i].res) n++; return n; }
+    function frame(t){ if(!running) return; var dt = Math.min(34, t-(prev||t)); prev = t; ctx.clearRect(0,0,W,H);
+      resAcc += dt; if(resAcc > 640){ resAcc = 0; if(rc() < 6) parts.push(pc(Math.random()*W,-14,(Math.random()-.5)*.5,.5+Math.random()*.7,true)); }
+      for(var i=parts.length-1;i>=0;i--){ var p=parts[i]; if(p.res){p.vy+=.006;p.vx+=(Math.random()-.5)*.02;p.vx*=.99;} else {p.vy+=.16;p.vx*=.995;} p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr; if(p.y>H+24){parts.splice(i,1);continue;} ctx.save();ctx.globalAlpha=p.alpha;ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.col;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore(); }
+      raf = requestAnimationFrame(frame);
+    }
+    raf = requestAnimationFrame(frame);
+  }
   function fail(){ document.getElementById("loading").style.display="none"; document.getElementById("error").style.display="block"; }
 
   // Preview mode: name/email straight from the URL (no backend needed).
@@ -266,6 +343,14 @@
   if(!BACKEND){
     if(pn || pe){ boot({ name:pn||"", email:pe||"", progress:{} }); }
     else { boot({ name:"", email:"", progress:{} }); } // bare preview
+    return;
+  }
+
+  // ?celebrate=1 : deployed-animation preview. Renders a finished portal and plays
+  // the celebration without contacting the backend (writes nothing). For verifying
+  // the live animation without completing the forms.
+  if(qs("celebrate") === "1"){
+    boot({ name: qs("n") || "there", email: "", progress: { quiz_taken:true, quiz_feedback:true, sharing_feedback:true, course_feedback:true } });
     return;
   }
 
