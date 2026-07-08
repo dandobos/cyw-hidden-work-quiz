@@ -800,9 +800,128 @@ function cmpCopy(){
   (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(function(){ viralToast('Copied, send it back to them'); }).catch(function(){ viralToast(u); });
 }
 
+// ===== Fit prompt: confirm-your-archetype gate =====
+// The result page shows the scored top, then "Does this sound like you?". Everything
+// below (diagnosis + next steps) is gated until the reader confirms. "Not quite" reveals
+// the near archetypes (r.neighbours) plus the scored one (tagged, last) as an accordion;
+// picking one re-renders the top + next chapter for that archetype. The confirmed key is
+// held in _hwConfirmedKey (Part 2 will re-tag the Kit subscriber from it).
+var _hwR = null, _hwS = null, _hwConfirmedKey = null;
+
+function _hwAmFlags(key, s){
+  var d = (key === 'HHH' && s.C >= 65 && s.AG >= 65 && s.AL >= 75 && s.V < 60);
+  var f = (key === 'HHH' && !AM_FULL_REQ(s) && !d);
+  return { amDrained: d, amFoothills: f };
+}
+function hwTopHtml(key, s){
+  var am = _hwAmFlags(key, s);
+  var share = am.amDrained ? AM_DRAINED_SHARE : am.amFoothills ? AM_FOOTHILLS_SHARE : SHARE[key];
+  var narr = am.amDrained ? AM_DRAINED_NARR : am.amFoothills ? amFoothillsNarr(s) : ((key === 'LLH' && s.V > 60) ? DS_HIGH_V_NARR : NARR[key]);
+  return '<p class="res-eyebrow">Your Hidden Work</p>'
+    + '<h1 class="res-name">' + ARCH[key].name + '</h1>'
+    + '<p class="res-share">' + share + '</p>'
+    + '<div class="res-narrative">' + narr.split('\n').map(function(p){ return '<p>' + p + '</p>'; }).join('') + '</div>';
+}
+function hwChapterHtml(key, s, flag){
+  var plan = chapterPlan(key, flag);
+  var am = _hwAmFlags(key, s);
+  var chTitleHtml, chWhy, chNote = '';
+  if (plan.mode === 'sequence'){
+    chTitleHtml = '<ul class="res-chapter-list">' + plan.chapters.map(function(n){ return '<li>Chapter ' + n + ': ' + CH_TITLE[n] + '</li>'; }).join('') + '</ul>';
+    chWhy = SEQ_LINE[key];
+  } else {
+    var base = plan.chapters[0];
+    chTitleHtml = 'Chapter ' + base + ': ' + CH_TITLE[base];
+    chWhy = am.amDrained ? AM_DRAINED_WHY : am.amFoothills ? AM_FOOTHILLS_WHY : WHY[key];
+    if (plan.mode === 'soft') chNote = (key === 'HLH') ? SOFT_AWAKENED : SOFT_GENERIC;
+  }
+  var ordered = plan.chapters.slice().sort(function(a,b){ return a - b; });
+  var dlkey = ordered.join('_');
+  var label = (plan.mode === 'sequence') ? 'Download Chapters ' + ordered.join(' and ') + ' Free' : 'Download Chapter ' + plan.chapters[0] + ' Free';
+  return '<p class="zone updates">Your next steps</p>'
+    + '<p class="res-section-label">The Next Step</p>'
+    + '<div class="res-chapter">'
+      + '<div class="res-chapter-title">' + chTitleHtml + '</div>'
+      + '<p class="res-chapter-why">' + chWhy + '</p>'
+      + (chNote ? '<p class="res-note">' + chNote + '</p>' : '')
+      + '<div class="res-dl"><p class="res-dl-label">' + label + '</p><div class="res-dl-row">'
+        + '<a class="res-dl-btn" href="' + dlUrl(dlkey, 'pdf') + '" target="_blank" rel="noopener" download onclick="hwDownloadClick(\'pdf\')">PDF</a>'
+        + '<a class="res-dl-btn" href="' + dlUrl(dlkey, 'epub') + '" target="_blank" rel="noopener" download onclick="hwDownloadClick(\'epub\')">EPUB (Kindle)</a>'
+        + '<a class="res-dl-btn" href="' + dlUrl(dlkey, 'mp3') + '" target="_blank" rel="noopener" download onclick="hwDownloadClick(\'mp3\')">Audio (MP3)</a>'
+      + '</div></div>'
+    + '</div>';
+}
+function _hwProfileCard(key, isOrig){
+  return '<div class="res-neighbour' + (isOrig ? ' is-original' : '') + '">'
+    + '<p class="res-neighbour-eyebrow">' + (isOrig ? 'Your original result' : 'You may be closer to') + '</p>'
+    + '<h3 class="res-neighbour-name">' + ARCH[key].name + '</h3>'
+    + '<p class="res-neighbour-share">' + SHARE[key] + '</p>'
+    + '<div class="res-neighbour-narr">' + NARR[key].split('\n').map(function(p){ return '<p>' + p + '</p>'; }).join('') + '</div>'
+    + '<div class="nb-actions"><button class="continue-btn thats-it" onclick="hwPick(\'' + key + '\')">That’s it &rarr;</button></div>'
+  + '</div>';
+}
+function _hwPhraseItem(key, isOrig){
+  return '<div class="acc-item">'
+    + '<button class="phrase-card" onclick="hwAcc(this)"><span class="who">' + ARCH[key].name + (isOrig ? '<span class="tag-orig">your original result</span>' : '') + '</span>&ldquo;' + SHARE[key] + '&rdquo;</button>'
+    + '<div class="acc-body" hidden>' + _hwProfileCard(key, isOrig) + '</div>'
+  + '</div>';
+}
+function hwFitBlockHtml(r){
+  var neighbours = r.neighbours || [];
+  var hasN = neighbours.length > 0;
+  var items = neighbours.map(function(n){ return _hwPhraseItem(n.key, false); }).join('') + _hwPhraseItem(r.key, true);
+  return '<div class="fit" id="hw-fit">'
+    + '<div id="hw-ask">'
+      + '<p class="res-section-label">Does this sound like you?</p>'
+      + '<div class="fit-opts">'
+        + (hasN ? '<button class="fit-btn" onclick="hwFit(\'notquite\')">Not quite</button>' : '')
+        + '<button class="fit-btn" onclick="hwFit(\'spot\')">' + (hasN ? 'Spot on' : 'Yes, show my next steps') + '</button>'
+      + '</div>'
+      + '<p class="fit-hint" id="hw-hint">Confirm this to see the bonus chapter and your next steps.</p>'
+    + '</div>'
+    + '<div class="reveal" id="hw-chooser" hidden>'
+      + '<p class="res-section-label">Which of these sounds most like you?</p>'
+      + items
+    + '</div>'
+    + '<div class="confirmed" id="hw-confirmed" hidden><button class="ghost-btn" onclick="hwReopen()">Select a different archetype</button></div>'
+  + '</div>';
+}
+function _hwScroll(el){ try { if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch(e){} }
+function hwFit(mode){
+  if (mode === 'spot'){ hwConfirm(_hwR.key); return; }
+  var hint = document.getElementById('hw-hint'); if (hint) hint.hidden = true;
+  var ch = document.getElementById('hw-chooser'); ch.hidden = false; _hwScroll(ch);
+}
+function hwAcc(btn){
+  var item = btn.parentNode, body = item.querySelector('.acc-body');
+  var willOpen = body.hidden;
+  document.querySelectorAll('#hw-chooser .acc-item').forEach(function(it){ it.classList.remove('open'); it.querySelector('.acc-body').hidden = true; });
+  if (willOpen){ item.classList.add('open'); body.hidden = false; _hwScroll(item); }
+}
+function hwPick(key){ hwConfirm(key); }
+function hwConfirm(key){
+  _hwConfirmedKey = key;
+  document.getElementById('hw-top').innerHTML = hwTopHtml(key, _hwS);
+  document.getElementById('hw-chapter').innerHTML = hwChapterHtml(key, _hwS, _hwR.flag);
+  document.getElementById('hw-ask').hidden = true;
+  document.getElementById('hw-chooser').hidden = true;
+  document.getElementById('hw-confirmed').hidden = false;
+  var below = document.getElementById('hw-below'); below.hidden = false;
+  _hwScroll(below);
+  try { hwCap('fit_confirmed', { archetype_key: key, changed: key !== _hwR.key }); } catch(e){}
+}
+function hwReopen(){
+  document.getElementById('hw-confirmed').hidden = true;
+  document.getElementById('hw-below').hidden = true;
+  document.getElementById('hw-ask').hidden = true;
+  document.querySelectorAll('#hw-chooser .acc-item').forEach(function(it){ it.classList.remove('open'); it.querySelector('.acc-body').hidden = true; });
+  var ch = document.getElementById('hw-chooser'); ch.hidden = false; _hwScroll(ch);
+}
+
 function renderResult(){
   const r = computeResult();
   const s = r.scores;
+  _hwR = r; _hwS = s; _hwConfirmedKey = r.key;
   window._hwResult = { archetype_key: r.key, chapters: r.chapters.slice().sort(function(a,b){return a-b;}).join('/'), mode: r.mode };
   const word = (answers[0] && answers[0].label) ? answers[0].label : 'that word';
   // Aligned Maker keeps its label, but the full "rare one" copy is gated; below the bar -> "foothills" voice.
@@ -849,61 +968,29 @@ function renderResult(){
     if (r.mode === 'soft') chNote = (r.key === 'HLH') ? SOFT_AWAKENED : SOFT_GENERIC;
   }
 
-  return '<p class="res-eyebrow">Your Hidden Work</p>'
-    + '<h1 class="res-name">' + r.archetype + '</h1>'
-    + '<p class="res-share">' + (amDrained ? AM_DRAINED_SHARE : amFoothills ? AM_FOOTHILLS_SHARE : SHARE[r.key]) + '</p>'
-    
-    + '<div class="res-narrative">' + (amDrained ? AM_DRAINED_NARR : amFoothills ? amFoothillsNarr(s) : (r.key === 'LLH' && s.V > 60 ? DS_HIGH_V_NARR : NARR[r.key])).split('\n').map(function(para){ return '<p>' + para + '</p>'; }).join('') + '</div>'
+  return '<div id="hw-top">' + hwTopHtml(r.key, s) + '</div>'
     + '<div class="res-divider"></div>'
-    + '<p class="res-section-label">Where You Sit on the Three Dimensions</p>'
-    + '<div class="dd-card">' + rows + '</div>'
-    + compareHtml(r, s)
-    + (r.neighbours && r.neighbours.length
-        ? '<div class="res-divider"></div>'
-          + '<p class="res-section-label">' + (r.neighbours.length > 1 ? 'Two Profiles Sit Close to Yours' : 'Your ' + r.neighbours[0].axis + ' Sits Close to the Midpoint') + '</p>'
-          + '<p class="res-borderline" style="margin-top:0">Only a few answers separate you from ' + r.neighbours.map(function(n, i){ return '<a class="res-borderline-link" onclick="toggleNeighbour(' + i + ')">' + n.name + ' (show profile)</a>'; }).join(' and ') + '. If the result above doesn’t fully fit, open ' + (r.neighbours.length > 1 ? 'either one' : 'it') + ' to compare.</p>'
-          + r.neighbours.map(function(n, i){
-              return '<div class="res-neighbour" id="neighbour-profile-' + i + '" style="display:none;">'
-                + '<p class="res-neighbour-eyebrow">If you’re more like</p>'
-                + '<h3 class="res-neighbour-name">' + n.name + '</h3>'
-                + '<p class="res-neighbour-share">' + SHARE[n.key] + '</p>'
-                + '<div class="res-neighbour-narr">' + NARR[n.key].split('\n').map(function(para){ return '<p>' + para + '</p>'; }).join('') + '</div>'
-              + '</div>';
-            }).join('')
-        : '')
-    + '<div class="res-divider"></div>'
-    + '<p class="res-section-label">Regret Signal</p>'
-    + '<div class="res-regret">'
-      + '<p class="res-regret-level" style="color:' + reg.color + '">' + reg.label + '</p>'
-      + '<div class="res-regret-meter">' + segs + '</div>'
-      + '<p class="res-regret-desc">' + reg.desc + '</p>'
-    + '</div>'
-    + '<div class="res-divider"></div>'
-    + '<p class="res-section-label">' + chEyebrow + '</p>'
-    + '<div class="res-chapter">'
-      + '<div class="res-chapter-title">' + chTitleHtml + '</div>'
-      + '<p class="res-chapter-why">' + chWhy + '</p>'
-      + (chNote ? '<p class="res-note">' + chNote + '</p>' : '')
-      + (function(){
-          var ordered = r.chapters.slice().sort(function(a,b){ return a - b; });  // bundle filename + label stay ascending so hosted files resolve
-          var key = ordered.join('_');
-          var label = (r.mode === 'sequence')
-            ? 'Download Chapters ' + ordered.join(' and ') + ' Free'
-            : 'Download Chapter ' + r.chapters[0] + ' Free';
-          return '<div class="res-dl">'
-            + '<p class="res-dl-label">' + label + '</p>'
-            + '<div class="res-dl-row">'
-              + '<a class="res-dl-btn" href="' + dlUrl(key, 'pdf') + '" target="_blank" rel="noopener" download onclick="hwDownloadClick(\'pdf\')">PDF</a>'
-              + '<a class="res-dl-btn" href="' + dlUrl(key, 'epub') + '" target="_blank" rel="noopener" download onclick="hwDownloadClick(\'epub\')">EPUB (Kindle)</a>'
-              + '<a class="res-dl-btn" href="' + dlUrl(key, 'mp3') + '" target="_blank" rel="noopener" download onclick="hwDownloadClick(\'mp3\')">Audio (MP3)</a>'
-            + '</div>'
-          + '</div>';
-        })()
-    + '</div>'
-    + shareLoopHtml(r, s)
-    + '<div class="res-divider"></div>'
-    + '<p class="res-book-head"><em>Choose Your Work</em> Takes You From This Snapshot to the System Behind It.</p><p class="res-book-text">Your result points to where to begin, but the book is where the change happens.</p>'
-    + '<a class="continue-btn" href="https://dandobos.com/choose-your-work/" target="_blank" rel="noopener" onclick="hwBookClick()" style="text-decoration:none; display:block; width:100%; text-align:center;">Get Choose Your Work</a>';
+    + hwFitBlockHtml(r)
+    + '<div id="hw-below" hidden>'
+      + '<div class="res-divider"></div>'
+      + '<p class="zone fixed">Your diagnosis &middot; from your answers</p>'
+      + '<p class="res-section-label">Where You Sit on the Three Dimensions</p>'
+      + '<div class="dd-card">' + rows + '</div>'
+      + compareHtml(r, s)
+      + '<div class="res-divider"></div>'
+      + '<p class="res-section-label">Regret Signal</p>'
+      + '<div class="res-regret">'
+        + '<p class="res-regret-level" style="color:' + reg.color + '">' + reg.label + '</p>'
+        + '<div class="res-regret-meter">' + segs + '</div>'
+        + '<p class="res-regret-desc">' + reg.desc + '</p>'
+      + '</div>'
+      + '<div class="res-divider"></div>'
+      + '<div id="hw-chapter">' + hwChapterHtml(r.key, s, r.flag) + '</div>'
+      + shareLoopHtml(r, s)
+      + '<div class="res-divider"></div>'
+      + '<p class="res-book-head"><em>Choose Your Work</em> Takes You From This Snapshot to the System Behind It.</p><p class="res-book-text">Your result points to where to begin, but the book is where the change happens.</p>'
+      + '<a class="continue-btn" href="https://dandobos.com/choose-your-work/" target="_blank" rel="noopener" onclick="hwBookClick()" style="text-decoration:none; display:block; width:100%; text-align:center;">Get Choose Your Work</a>'
+    + '</div>';
 }
 function renderComplete() { return renderResult(); }
 function renderNeedQuiz() {

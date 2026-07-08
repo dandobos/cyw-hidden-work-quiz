@@ -70,7 +70,7 @@
   .email-input { display: block; width: 100%; background: var(--card); border: 1px solid var(--border); padding: 18px 22px; font-family: var(--heading); font-size: 17px; color: var(--text-primary); margin-bottom: 16px; outline: none; }
   .gate-fine { font-family: var(--sans); font-size: 12px; color: var(--text-subtle); text-align: center; margin-top: 18px; line-height: 1.5; }
   /* ---- result page ---- */
-  .res-eyebrow { font-family: var(--sans); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; font-weight: 600; color: var(--accent); text-align: center; margin: 0 0 14px; }
+  .res-eyebrow { font-family: var(--sans); font-size: 14px; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; color: var(--accent); text-align: center; margin: 0 0 16px; }
   .res-name { font-family: var(--heading); font-size: 44px; font-weight: 400; text-align: center; letter-spacing: -0.5px; line-height: 1.1; margin: 0 0 22px; }
   .res-share { font-family: var(--heading); font-style: italic; font-size: 21px; color: var(--text-body); text-align: center; line-height: 1.45; max-width: 520px; margin: 0 auto; }
   .res-narrative { max-width: 600px; margin: 30px auto 0; }
@@ -244,6 +244,35 @@
   .saveimg-btn:hover { opacity: .9; transform: translateY(-1px); }
   .saveimg-btn .ic { font-size: 15px; line-height: 1; }
   .saveimg-hint { font-family: var(--sans); font-size: 12px; color: var(--text-muted); text-align: center; line-height: 1.5; margin: 8px auto 0; max-width: 360px; }
+
+  /* ===== Fit prompt: "does this fit you?" gate + archetype re-pick ===== */
+  .fit-opts { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .fit-btn { font-family: var(--sans); font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-body); background: var(--card); border: 1px solid var(--border); padding: 15px 34px; cursor: pointer; transition: all .15s; }
+  .fit-btn:hover { border-color: var(--text-primary); color: var(--text-primary); }
+  .fit-hint { font-family: var(--heading); font-style: italic; font-size: 15px; color: var(--text-primary); text-align: center; margin: 18px auto 0; }
+  .fit-hint[hidden] { display: none; }
+  .reveal[hidden] { display: none; }
+  .zone { font-family: var(--sans); font-size: 12.5px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; text-align: center; margin: 0 0 12px; }
+  .zone.fixed { color: var(--text-subtle); }
+  .zone.updates { color: var(--a); }
+  .acc-item { max-width: 600px; margin: 0 auto 10px; }
+  .phrase-card { display: block; width: 100%; text-align: center; background: var(--card); border: 1px solid var(--border); padding: 18px 22px; cursor: pointer; transition: .15s; font-family: var(--heading); font-style: italic; font-size: 17px; color: var(--text-body); line-height: 1.45; }
+  .phrase-card:hover { border-color: var(--text-primary); color: var(--text-primary); }
+  .phrase-card .who { display: block; font-family: var(--sans); font-size: 9.5px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; color: var(--text-subtle); margin-bottom: 7px; }
+  .tag-orig { display: inline-block; font-style: normal; font-family: var(--sans); font-size: 8.5px; letter-spacing: 1.2px; text-transform: uppercase; font-weight: 700; color: var(--a); border: 1px solid var(--a); border-radius: 20px; padding: 1px 8px; margin-left: 8px; vertical-align: middle; }
+  .acc-body[hidden] { display: none; }
+  .acc-body .res-neighbour { margin-top: 0; }
+  .acc-item.open .phrase-card { border-color: var(--a); font-style: normal; color: var(--text-primary); }
+  .acc-item.open .res-neighbour { border-color: var(--a); }
+  .res-neighbour.is-original { background: var(--a-tint); }
+  .res-neighbour.is-original .res-neighbour-eyebrow { color: var(--a); }
+  .nb-actions { display: flex; justify-content: flex-end; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border); }
+  .thats-it { width: auto; margin: 0; padding: 12px 28px; font-size: 10px; }
+  .confirmed { text-align: center; }
+  .confirmed[hidden] { display: none; }
+  .ghost-btn { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); background: none; border: 1px solid var(--border); padding: 13px 26px; cursor: pointer; transition: .15s; }
+  .ghost-btn:hover { border-color: var(--text-primary); color: var(--text-primary); }
+  #hw-below[hidden] { display: none; }
 
   /* ============================================================
      HOST-THEME ISOLATION (added 2026-07-06)
