@@ -749,17 +749,28 @@ function computeResult(){
   if (isBorderline(s.C))  border.push('Clarity');
   if (isBorderline(s.AG)) border.push('Agency');
   if (isBorderline(s.AL)) border.push('Alignment');
-  let neighbour = null, neighbourKey = null;
-  if (border.length === 1){
-    const flip = c => c === 'H' ? 'L' : 'H';
-    const pos = { Clarity:0, Agency:1, Alignment:2 }[border[0]];
-    const alt = key.split(''); alt[pos] = flip(alt[pos]);
-    neighbourKey = alt.join('');
-    neighbour = ARCH[neighbourKey].name;
-  }
+  // Neighbour archetypes: one per borderline axis (a single-axis flip is an adjacent
+  // archetype the reader is only a few answers away from). Ordered by proximity to the
+  // midpoint, nearest first, since that is the likeliest alternative fit; show up to two.
+  // (Widened 2026-07-08: previously only the single-borderline case rendered, which
+  // skipped readers sitting near two thresholds at once, exactly the people most likely
+  // to feel the result did not fully fit.)
+  const AXIS_POS   = { Clarity:0, Agency:1, Alignment:2 };
+  const AXIS_SCORE = { Clarity:s.C, Agency:s.AG, Alignment:s.AL };
+  const flipHL = c => c === 'H' ? 'L' : 'H';
+  const neighbours = border.slice()
+    .sort((a, b) => Math.abs(AXIS_SCORE[a] - THRESHOLD) - Math.abs(AXIS_SCORE[b] - THRESHOLD))
+    .slice(0, 2)
+    .map(axis => {
+      const alt = key.split(''); alt[AXIS_POS[axis]] = flipHL(alt[AXIS_POS[axis]]);
+      const nk = alt.join('');
+      return { axis: axis, key: nk, name: ARCH[nk].name };
+    });
+  const neighbour    = neighbours.length ? neighbours[0].name : null;
+  const neighbourKey = neighbours.length ? neighbours[0].key  : null;
   return { scores:s, key, archetype:ARCH[key].name, regret:regretFor(s),
            vitality:vitalityReadout(s),
-           chapters:plan.chapters, mode:plan.mode, flag, border, neighbour, neighbourKey };
+           chapters:plan.chapters, mode:plan.mode, flag, border, neighbours, neighbour, neighbourKey };
 }
 
 // ================= INVITE (arriving via a friend's share link) =================
@@ -1154,16 +1165,18 @@ function renderResult(){
     + '<p class="res-section-label">Where You Sit on the Three Dimensions</p>'
     + '<div class="dd-card">' + rows + '</div>'
     + compareHtml(r, s)
-    + (r.neighbour
+    + (r.neighbours && r.neighbours.length
         ? '<div class="res-divider"></div>'
-          + '<p class="res-section-label">Your ' + r.border[0] + ' Sits Close to the Midpoint</p>'
-          + '<p class="res-borderline" style="margin-top:0">Only a few answers separate you from <a class="res-borderline-link" onclick="toggleNeighbour()">' + r.neighbour + ' (show profile)</a>. If the above result doesn’t fit, review <a class="res-borderline-link" onclick="toggleNeighbour()">' + r.neighbour + ' (show profile)</a>.</p>'
-          + '<div class="res-neighbour" id="neighbour-profile" style="display:none;">'
-            + '<p class="res-neighbour-eyebrow">If you’re more like</p>'
-            + '<h3 class="res-neighbour-name">' + r.neighbour + '</h3>'
-            + '<p class="res-neighbour-share">' + SHARE[r.neighbourKey] + '</p>'
-            + '<div class="res-neighbour-narr">' + NARR[r.neighbourKey].split('\n').map(function(para){ return '<p>' + para + '</p>'; }).join('') + '</div>'
-          + '</div>'
+          + '<p class="res-section-label">' + (r.neighbours.length > 1 ? 'Two Profiles Sit Close to Yours' : 'Your ' + r.neighbours[0].axis + ' Sits Close to the Midpoint') + '</p>'
+          + '<p class="res-borderline" style="margin-top:0">Only a few answers separate you from ' + r.neighbours.map(function(n, i){ return '<a class="res-borderline-link" onclick="toggleNeighbour(' + i + ')">' + n.name + ' (show profile)</a>'; }).join(' and ') + '. If the result above doesn’t fully fit, open ' + (r.neighbours.length > 1 ? 'either one' : 'it') + ' to compare.</p>'
+          + r.neighbours.map(function(n, i){
+              return '<div class="res-neighbour" id="neighbour-profile-' + i + '" style="display:none;">'
+                + '<p class="res-neighbour-eyebrow">If you’re more like</p>'
+                + '<h3 class="res-neighbour-name">' + n.name + '</h3>'
+                + '<p class="res-neighbour-share">' + SHARE[n.key] + '</p>'
+                + '<div class="res-neighbour-narr">' + NARR[n.key].split('\n').map(function(para){ return '<p>' + para + '</p>'; }).join('') + '</div>'
+              + '</div>';
+            }).join('')
         : '')
     + '<div class="res-divider"></div>'
     + '<p class="res-section-label">Regret Signal</p>'
@@ -1446,12 +1459,13 @@ function pingBetaQuizDone(){
 
 function showResult() { screen='complete'; saveResult(); pingBetaQuizDone(); render(); }
 function restart() { clearResult(); clearState(); _submitting=false; _submitted=false; _kitConfirmed=false; _kitEmail=''; screen='intro'; qIdx=0; answers={}; activityNames=['','','']; activityScores=[null,null,null]; textVal=''; rankState={}; rankTouched={}; rankConfirmPending={}; render(); }
-function toggleNeighbour() {
-  var el = document.getElementById('neighbour-profile'); if (!el) return;
+function toggleNeighbour(i) {
+  var el = document.getElementById('neighbour-profile-' + i); if (!el) return;
   var open = (el.style.display === 'none');
   el.style.display = open ? 'block' : 'none';
-  var lks = document.querySelectorAll('.res-borderline-link');
-  for (var i = 0; i < lks.length; i++) { lks[i].textContent = lks[i].textContent.replace(open ? '(show profile)' : '(hide profile)', open ? '(hide profile)' : '(show profile)'); }
+  if (open) { try { hwCap('neighbour_opened'); } catch(e){} }
+  var lk = document.querySelectorAll('.res-borderline-link')[i];
+  if (lk) { lk.textContent = lk.textContent.replace(open ? '(show profile)' : '(hide profile)', open ? '(hide profile)' : '(show profile)'); }
 }
 // segmented share control: show one set of actions at a time
 document.addEventListener('click', function(e){
