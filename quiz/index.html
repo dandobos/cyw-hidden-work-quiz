@@ -1142,7 +1142,7 @@ function cmpCopy(){
 // the near archetypes (r.neighbours) plus the scored one (tagged, last) as an accordion;
 // picking one re-renders the top + next chapter for that archetype. The confirmed key is
 // held in _hwConfirmedKey (Part 2 will re-tag the Kit subscriber from it).
-var _hwR = null, _hwS = null, _hwConfirmedKey = null;
+var _hwR = null, _hwS = null, _hwConfirmedKey = null, _hwKitKey = null;
 
 function _hwAmFlags(key, s){
   var d = (key === 'HHH' && s.C >= 65 && s.AG >= 65 && s.AL >= 75 && s.V < 60);
@@ -1245,6 +1245,46 @@ function hwConfirm(key){
   var below = document.getElementById('hw-below'); below.hidden = false;
   _hwScroll(below);
   try { hwCap('fit_confirmed', { archetype_key: key, changed: key !== _hwR.key }); } catch(e){}
+  hwRepick(key);
+}
+// Part 2: when the confirmed archetype changes, re-tag the Kit subscriber's archetype
+// fields so the 7-day sequence (resolved at send time) follows the pick. Goes to the
+// beta-portal /repick, which updates fields via POST /v4/subscribers (no form join, so
+// the "joins a form" automation and Email 1 never re-fire). Fire-and-forget.
+function hwArchetypeFields(key){
+  var s = _hwS, flag = _hwR.flag, am = _hwAmFlags(key, s);
+  var share = am.amDrained ? AM_DRAINED_SHARE : am.amFoothills ? AM_FOOTHILLS_SHARE : SHARE[key];
+  var narrative = am.amDrained ? AM_DRAINED_NARR : am.amFoothills ? amFoothillsNarr(s) : ((key === 'LLH' && s.V > 60) ? DS_HIGH_V_NARR : NARR[key]);
+  var plan = chapterPlan(key, flag);
+  var ordered = plan.chapters.slice().sort(function(a,b){ return a - b; });
+  var dlkey = ordered.join('_');
+  var chapterLabel, dlLabel, chapterWhy;
+  if (plan.mode === 'sequence'){
+    chapterLabel = 'Chapters ' + ordered.join(' and ');
+    dlLabel = 'Download Chapters ' + ordered.join(' and ') + ' Free';
+    chapterWhy = SEQ_LINE[key];
+  } else {
+    var base = plan.chapters[0];
+    chapterLabel = 'Chapter ' + base + ': ' + CH_TITLE[base];
+    dlLabel = 'Download Chapter ' + base + ' Free';
+    chapterWhy = am.amDrained ? AM_DRAINED_WHY : am.amFoothills ? AM_FOOTHILLS_WHY : WHY[key];
+  }
+  return {
+    hw_archetype: ARCH[key].name, hw_share: share, hw_narrative: narrative,
+    hw_chapter_label: chapterLabel, hw_chapter_why: chapterWhy, hw_dl_label: dlLabel,
+    hw_dl_pdf: dlUrl(dlkey, 'pdf'), hw_dl_epub: dlUrl(dlkey, 'epub'), hw_dl_mp3: dlUrl(dlkey, 'mp3')
+  };
+}
+function hwRepick(key){
+  if (key === _hwKitKey) return;                                   // no change since last sent to Kit
+  _hwKitKey = key;
+  var email = (typeof _kitEmail !== 'undefined' && _kitEmail) ? _kitEmail : '';
+  if (!email) return;                                              // restored/shared result, no email to re-tag
+  try {
+    fetch(BETA_BACKEND + '/repick', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, fields: hwArchetypeFields(key) }), keepalive: true }).catch(function(){});
+    try { hwCap('archetype_repicked', { archetype_key: key }); } catch(e){}
+  } catch(e){}
 }
 function hwReopen(){
   document.getElementById('hw-confirmed').hidden = true;
@@ -1257,7 +1297,7 @@ function hwReopen(){
 function renderResult(){
   const r = computeResult();
   const s = r.scores;
-  _hwR = r; _hwS = s; _hwConfirmedKey = r.key;
+  _hwR = r; _hwS = s; _hwConfirmedKey = r.key; _hwKitKey = r.key;
   window._hwResult = { archetype_key: r.key, chapters: r.chapters.slice().sort(function(a,b){return a-b;}).join('/'), mode: r.mode };
   const word = (answers[0] && answers[0].label) ? answers[0].label : 'that word';
   // Aligned Maker keeps its label, but the full "rare one" copy is gated; below the bar -> "foothills" voice.
