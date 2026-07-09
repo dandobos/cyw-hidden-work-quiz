@@ -581,7 +581,7 @@ function renderIntro() {
       + '<p class="inv-claim">&ldquo;' + VIRAL[_invite.key].claim + '&rdquo;</p>'
       + '</div>';
     invitePatterns = '<div class="inv-pattern-grid">'
-      + [['Aligned Maker','#3D7A6E'],['High Achiever','#B8902F'],['Awakened Observer','#1E5F8C'],['Restless Visionary','#A85A3D'],['Restless Explorer','#C2722F'],['Tireless Driver','#B23A2E'],['Grounded Seeker','#557C9E'],['Late Bloomer','#6B6B6B']].map(function(p){
+      + [['True Creator','#3D7A6E'],['High Achiever','#B8902F'],['Awakened Observer','#1E5F8C'],['Restless Visionary','#A85A3D'],['Restless Explorer','#C2722F'],['Tireless Driver','#B23A2E'],['Grounded Seeker','#557C9E'],['Late Bloomer','#6B6B6B']].map(function(p){
         return '<div class="inv-pattern-pill"><i style="background:' + p[1] + '"></i>' + p[0] + '</div>';
       }).join('')
       + '</div>';
@@ -646,7 +646,7 @@ const THRESHOLD = 50;   // > 50 => High pole; <= 50 => Low pole
 const BORDERLINE = 12;  // within +/- this of threshold => axis flagged borderline
 
 const ARCH = {
-  HHH: { name: 'The Aligned Maker',       ch: 9 },
+  HHH: { name: 'The True Creator',       ch: 9 },
   HHL: { name: 'The High Achiever',       ch: 5 },
   HLH: { name: 'The Awakened Observer',    ch: 4 },
   HLL: { name: 'The Restless Visionary',   ch: 3 },
@@ -708,8 +708,8 @@ const SEQ_LINE = {
 const SOFT_AWAKENED = "You have done much of the inner work already. If the past still bothers you, Chapter 2 is there for you. But the fastest path to progress is the system in Chapter 4.";
 const SOFT_GENERIC = "If a past experience still weighs on you, Chapter 2 may help.";
 
-// Aligned Maker "praise gate": the full "rare one" narrative is earned only at genuinely high scores.
-// Below the bar the reader keeps the same clean label (The Aligned Maker) but gets a direct
+// True Creator "praise gate": the full "rare one" narrative is earned only at genuinely high scores.
+// Below the bar the reader keeps the same clean label (The True Creator) but gets a direct
 // "foothills" read instead of the celebration. (DRAFT COPY, pending review.)
 const AM_FULL_REQ = s => (s.AL >= 75 && s.C >= 65 && s.AG >= 65 && s.V >= 60);
 const AM_FOOTHILLS_SHARE = "I'm close to work that's fully mine. Now to close the gap.";
@@ -723,7 +723,7 @@ function amFoothillsNarr(s){
   else tail = " The area where you can improve is agency. You know what you need to do, but you could be taking more action.";
   return base + tail;
 }
-// Drained Aligned Maker: displayed dims all strong (C/AG/AL clear the full bar) but Vitality is low.
+// Drained True Creator: displayed dims all strong (C/AG/AL clear the full bar) but Vitality is low.
 // Foothills' "close the gap on a dimension" would be false here, so this variant speaks to energy. (Copy: Dan's.)
 const AM_DRAINED_SHARE = "My work is genuinely mine. It just isn't feeding me right now.";
 const AM_DRAINED_WHY = "You've built genuinely aligned work, and this chapter is about sustaining and scaling it without letting it burn you out.";
@@ -894,7 +894,7 @@ const SHARE_BASE = 'https://dandobos.com/hidden-work/';
 // Per-archetype share-preview stubs: /hidden-work/t/<slug> sets an archetype-specific
 // og:image + title, then redirects into the quiz (?type=KEY, forwarding &hws=). So a shared
 // link unfurls as the archetype card in WhatsApp/iMessage instead of the generic page.
-const SHARE_SLUG = { HHH:'aligned-maker', HHL:'high-achiever', HLH:'awakened-observer', HLL:'restless-visionary', LHH:'restless-explorer', LHL:'tireless-driver', LLH:'grounded-seeker', LLL:'late-bloomer' };
+const SHARE_SLUG = { HHH:'true-creator', HHL:'high-achiever', HLH:'awakened-observer', HLL:'restless-visionary', LHH:'restless-explorer', LHL:'tireless-driver', LLH:'grounded-seeker', LLL:'late-bloomer' };
 const SHARE_COMPARE_PROMPT = 'Want to compare patterns with someone?';
 const SHARE_CHALLENGE_TITLE = 'Help a friend discover their hidden work';
 const SHARE_CHALLENGE_BODY = 'They will get their own pattern, then you can compare where you match and where you do not.';
@@ -956,7 +956,7 @@ const SHARE_STRENGTHS = {
   LLH:[["Genuinely themselves","No performance, no pretending; what you see is real."],["A calm, grounding presence","The steady one others feel safe around."],["Secure enough to explore","Comfortable wandering until the right path appears."]],
   LLL:[["Steady and dependable","Shows up, holds things together, keeps everything running."],["Honest with themselves","Will name the quiet thing most people talk themselves out of."],["Open to the real question","Done with settling and ready to choose."]]
 };
-const SHARE_GRID = ['Restless Visionary','Aligned Maker','High Achiever','Awakened Observer','Restless Explorer','Tireless Driver','Grounded Seeker','Late Bloomer'];
+const SHARE_GRID = ['Restless Visionary','True Creator','High Achiever','Awakened Observer','Restless Explorer','Tireless Driver','Grounded Seeker','Late Bloomer'];
 function wcCardHtml(r){
   var short = r.archetype.replace(/^The\s+/, '');
   var art = /^[AEIOU]/.test(short) ? 'an' : 'a';
@@ -979,7 +979,7 @@ function wcCardHtml(r){
     + '</div>';
 }
 const SHARE_HEADLINE = {
-  HHH:"Who else in your circle is a Maker?",
+  HHH:"Who else in your circle is a Creator?",
   HHL:"Who else in your circle is a High Achiever?",
   HLH:"Who else in your circle sees what many others miss?",
   HLL:"Who else in your circle is a Visionary?",
@@ -1345,7 +1345,7 @@ function renderResult(){
   _hwR = r; _hwS = s; _hwConfirmedKey = r.key; _hwKitKey = r.key;
   window._hwResult = { archetype_key: r.key, chapters: r.chapters.slice().sort(function(a,b){return a-b;}).join('/'), mode: r.mode };
   const word = (answers[0] && answers[0].label) ? answers[0].label : 'that word';
-  // Aligned Maker keeps its label, but the full "rare one" copy is gated; below the bar -> "foothills" voice.
+  // True Creator keeps its label, but the full "rare one" copy is gated; below the bar -> "foothills" voice.
   const amDrained = (r.key === 'HHH' && s.C >= 65 && s.AG >= 65 && s.AL >= 75 && s.V < 60);
   const amFoothills = (r.key === 'HHH' && !AM_FULL_REQ(s) && !amDrained);
 
@@ -1485,7 +1485,7 @@ const KIT_FORM_ID = '9479581';   // numeric form id (NOT the embed uid 2f8f31fba
 const KIT_SUBSCRIBE_URL = 'https://app.kit.com/forms/' + KIT_FORM_ID + '/subscriptions';
 
 // Build the exact Kit custom-field payload from the computed result. Mirrors renderResult()
-// so the email merge fields match the on-page result (incl. Aligned Maker / Grounded Seeker
+// so the email merge fields match the on-page result (incl. True Creator / Grounded Seeker
 // vitality variants and the multi-chapter past-wound bundles).
 function hwFields(){
   const r = computeResult();
