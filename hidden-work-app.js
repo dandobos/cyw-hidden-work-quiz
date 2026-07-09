@@ -290,6 +290,21 @@ const ARCH = {
 // Low-agency types where a past wound could be the brake. Awakened Observer (HLH) excluded by design.
 const WOUND_ELIGIBLE = ['HLL', 'LLH', 'LLL'];
 
+// Per-archetype subject line for Email 2 (welcome). Sent to Kit as the hw_welcome_subject
+// custom field; the sequence email's subject is just {{ subscriber.hw_welcome_subject }}
+// with a generic default. Kit caps subjects at 255 chars, so the full 8-branch Liquid
+// cannot live in the subject field itself (publish fails validation).
+const WELCOME_SUBJ = {
+  HHH: "You’ve already chosen your work. Now let’s scale it.",
+  HHL: "Has winning ever stopped feeling like winning?",
+  HLH: "You don’t need more insight. You need more action. Here’s how to get started…",
+  HLL: "How to actually move toward the life you want",
+  LHH: "How to give your momentum a clear target",
+  LHL: "✅ Grit. But what about the right direction… ❓",
+  LLH: "How to clarify where you’re going and actually get there",
+  LLL: "The pebble in your shoe"
+};
+
 const SHARE = {
   HHH: "I'm building something that matters. How can I make it world-class?",
   HHL: "I've been winning at the wrong game. I'm about to discover something important.",
@@ -947,7 +962,7 @@ function hwArchetypeFields(key){
     chapterWhy = am.amDrained ? AM_DRAINED_WHY : am.amFoothills ? AM_FOOTHILLS_WHY : WHY[key];
   }
   return {
-    hw_archetype: ARCH[key].name, hw_share: share, hw_narrative: narrative,
+    hw_archetype: ARCH[key].name, hw_welcome_subject: WELCOME_SUBJ[key], hw_share: share, hw_narrative: narrative,
     hw_chapter_label: chapterLabel, hw_chapter_why: chapterWhy, hw_dl_label: dlLabel,
     hw_dl_pdf: dlUrl(dlkey, 'pdf'), hw_dl_epub: dlUrl(dlkey, 'epub'), hw_dl_mp3: dlUrl(dlkey, 'mp3')
   };
@@ -1144,6 +1159,7 @@ function hwFields(){
   const ansVal = pred => { const i = questions.findIndex(pred); return (i >= 0 && answers[i]) ? answers[i].value : ''; };
   return {
     hw_archetype: r.archetype,
+    hw_welcome_subject: WELCOME_SUBJ[r.key],
     hw_share: share,
     hw_narrative: narrative,
     hw_clarity_score: String(s.C),
