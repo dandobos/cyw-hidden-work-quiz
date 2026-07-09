@@ -195,26 +195,39 @@ function renderIntro() {
   // Invited visitors (arriving via a friend's share link) get the friend's pattern up
   // front and a compare promise; everyone else gets the standard intro.
   var invited = _invite && ARCH[_invite.key];
-  var title = invited ? 'There are 8 Work Personalities. Which one are you?' : 'Discover your Work Personality. Uncover your Hidden Work.';
+  var title = 'Discover your Work Personality. Uncover your Hidden Work.';
+  var inviteSpectrum = '';
   var invCard = '';
+  var invitePatterns = '';
   var desc = 'A 7-minute assessment that helps you identify your Work Personality and clarify your next move.';
   var begin = 'Begin';
+  var stats = '<div class="intro-stats"><div class="intro-stat"><div class="intro-stat-num">' + TOTAL_Q + '</div><div class="intro-stat-lbl">Questions</div></div>'
+    + '<div class="intro-stat"><div class="intro-stat-num">~7</div><div class="intro-stat-lbl">Minutes</div></div>'
+    + '<div class="intro-stat"><div class="intro-stat-num">8</div><div class="intro-stat-lbl">Patterns</div></div></div>';
   if (invited){
+    title = 'There are <span class="inv-title-key">8 Work Personalities.</span> One Reveals Your Hidden Work.';
+    inviteSpectrum = '<div class="inv-spectrum" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>';
     invCard = '<div class="inv-card">'
-      + '<p class="inv-ey">The friend who sent you this came out as</p>'
+      + '<p class="inv-ey">Your friend came out as</p>'
       + '<p class="inv-name">' + ARCH[_invite.key].name + '</p>'
       + '<p class="inv-claim">&ldquo;' + VIRAL[_invite.key].claim + '&rdquo;</p>'
       + '</div>';
-    desc = 'Take the same 7-minute assessment. At the end you’ll see your own pattern, plus where you two match and where you differ' + (_invite.scores ? ', dimension by dimension.' : '.');
+    invitePatterns = '<div class="inv-pattern-grid">'
+      + [['Aligned Maker','#3D7A6E'],['High Achiever','#B8902F'],['Awakened Observer','#1E5F8C'],['Restless Visionary','#A85A3D'],['Restless Explorer','#C2722F'],['Tireless Driver','#B23A2E'],['Grounded Seeker','#557C9E'],['Late Bloomer','#6B6B6B']].map(function(p){
+        return '<div class="inv-pattern-pill"><i style="background:' + p[1] + '"></i>' + p[0] + '</div>';
+      }).join('')
+      + '</div>';
+    desc = 'Take the same 7-minute assessment and see where you and your friend match and differ.';
     begin = 'Find your pattern';
+    stats = '';
   }
   return '<p class="intro-eyebrow">The Hidden Work</p>'
+    + inviteSpectrum
     + '<h1 class="intro-title">' + title + '</h1>'
     + invCard
+    + invitePatterns
     + '<p class="intro-desc">' + desc + '</p>'
-    + '<div class="intro-stats"><div class="intro-stat"><div class="intro-stat-num">' + TOTAL_Q + '</div><div class="intro-stat-lbl">Questions</div></div>'
-    + '<div class="intro-stat"><div class="intro-stat-num">~7</div><div class="intro-stat-lbl">Minutes</div></div>'
-    + '<div class="intro-stat"><div class="intro-stat-num">8</div><div class="intro-stat-lbl">Patterns</div></div></div>'
+    + stats
     + '<button class="continue-btn" onclick="startQuiz()">' + begin + '</button>';
 }
 function renderQuestion() {

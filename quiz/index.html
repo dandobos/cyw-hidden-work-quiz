@@ -76,6 +76,19 @@
   .intro-stat { background: var(--card); border: 1px solid var(--border); padding: 24px 12px; text-align: center; }
   .intro-stat-num { font-family: var(--heading); font-size: 32px; font-weight: 400; color: var(--accent); letter-spacing: -0.5px; margin-bottom: 6px; }
   .intro-stat-lbl { font-family: var(--sans); font-size: 10px; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
+  .intro-title .inv-title-key { color: var(--accent); font-weight: 700; }
+  .inv-spectrum { display: grid; grid-template-columns: repeat(8, 1fr); height: 7px; max-width: 300px; margin: 0 auto 24px; border-radius: 999px; overflow: hidden; }
+  .inv-spectrum span:nth-child(1) { background: #3D7A6E; }
+  .inv-spectrum span:nth-child(2) { background: #B8902F; }
+  .inv-spectrum span:nth-child(3) { background: #1E5F8C; }
+  .inv-spectrum span:nth-child(4) { background: #A85A3D; }
+  .inv-spectrum span:nth-child(5) { background: #C2722F; }
+  .inv-spectrum span:nth-child(6) { background: #B23A2E; }
+  .inv-spectrum span:nth-child(7) { background: #557C9E; }
+  .inv-spectrum span:nth-child(8) { background: #6B6B6B; }
+  .inv-pattern-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; max-width: 520px; margin: -4px auto 28px; }
+  .inv-pattern-pill { display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: var(--sans); font-size: 12px; font-weight: 600; line-height: 1.2; color: var(--text-body); letter-spacing: 0; }
+  .inv-pattern-pill i { width: 8px; height: 8px; border-radius: 50%; flex: none; }
   .gate-title { font-family: var(--heading); font-size: 40px; font-weight: 400; text-align: center; margin: 0 0 20px; letter-spacing: -0.5px; line-height: 1.15; }
   .gate-desc { font-family: var(--heading); font-style: italic; font-size: 18px; color: var(--text-body); text-align: center; line-height: 1.5; max-width: 460px; margin: 0 auto 40px; }
   .email-input { display: block; width: 100%; background: var(--card); border: 1px solid var(--border); padding: 18px 22px; font-family: var(--heading); font-size: 17px; color: var(--text-primary); margin-bottom: 16px; outline: none; }
@@ -296,6 +309,7 @@
      standalone /quiz/ page (no host theme) these are no-ops.
      ============================================================ */
   .intro-title       { font-family: var(--heading) !important; font-size: 56px !important; font-weight: 400 !important; line-height: 1.05 !important; }
+  .intro-title .inv-title-key { color: var(--accent) !important; font-weight: 700 !important; }
   .gate-title        { font-family: var(--heading) !important; font-size: 40px !important; font-weight: 400 !important; line-height: 1.15 !important; }
   .res-name          { font-family: var(--heading) !important; font-size: 44px !important; font-weight: 400 !important; line-height: 1.1 !important; }
   .wc-name           { font-family: var(--heading) !important; font-size: 30px !important; font-weight: 700 !important; line-height: 1.1 !important; }
@@ -531,26 +545,39 @@ function renderIntro() {
   // Invited visitors (arriving via a friend's share link) get the friend's pattern up
   // front and a compare promise; everyone else gets the standard intro.
   var invited = _invite && ARCH[_invite.key];
-  var title = invited ? 'There are 8 Work Personalities. Which one are you?' : 'Discover your Work Personality. Uncover your Hidden Work.';
+  var title = 'Discover your Work Personality. Uncover your Hidden Work.';
+  var inviteSpectrum = '';
   var invCard = '';
+  var invitePatterns = '';
   var desc = 'A 7-minute assessment that helps you identify your Work Personality and clarify your next move.';
   var begin = 'Begin';
+  var stats = '<div class="intro-stats"><div class="intro-stat"><div class="intro-stat-num">' + TOTAL_Q + '</div><div class="intro-stat-lbl">Questions</div></div>'
+    + '<div class="intro-stat"><div class="intro-stat-num">~7</div><div class="intro-stat-lbl">Minutes</div></div>'
+    + '<div class="intro-stat"><div class="intro-stat-num">8</div><div class="intro-stat-lbl">Patterns</div></div></div>';
   if (invited){
+    title = 'There are <span class="inv-title-key">8 Work Personalities.</span> One Reveals Your Hidden Work.';
+    inviteSpectrum = '<div class="inv-spectrum" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>';
     invCard = '<div class="inv-card">'
-      + '<p class="inv-ey">The friend who sent you this came out as</p>'
+      + '<p class="inv-ey">Your friend came out as</p>'
       + '<p class="inv-name">' + ARCH[_invite.key].name + '</p>'
       + '<p class="inv-claim">&ldquo;' + VIRAL[_invite.key].claim + '&rdquo;</p>'
       + '</div>';
-    desc = 'Take the same 7-minute assessment. At the end you’ll see your own pattern, plus where you two match and where you differ' + (_invite.scores ? ', dimension by dimension.' : '.');
+    invitePatterns = '<div class="inv-pattern-grid">'
+      + [['Aligned Maker','#3D7A6E'],['High Achiever','#B8902F'],['Awakened Observer','#1E5F8C'],['Restless Visionary','#A85A3D'],['Restless Explorer','#C2722F'],['Tireless Driver','#B23A2E'],['Grounded Seeker','#557C9E'],['Late Bloomer','#6B6B6B']].map(function(p){
+        return '<div class="inv-pattern-pill"><i style="background:' + p[1] + '"></i>' + p[0] + '</div>';
+      }).join('')
+      + '</div>';
+    desc = 'Take the same 7-minute assessment and see where you and your friend match and differ.';
     begin = 'Find your pattern';
+    stats = '';
   }
   return '<p class="intro-eyebrow">The Hidden Work</p>'
+    + inviteSpectrum
     + '<h1 class="intro-title">' + title + '</h1>'
     + invCard
+    + invitePatterns
     + '<p class="intro-desc">' + desc + '</p>'
-    + '<div class="intro-stats"><div class="intro-stat"><div class="intro-stat-num">' + TOTAL_Q + '</div><div class="intro-stat-lbl">Questions</div></div>'
-    + '<div class="intro-stat"><div class="intro-stat-num">~7</div><div class="intro-stat-lbl">Minutes</div></div>'
-    + '<div class="intro-stat"><div class="intro-stat-num">8</div><div class="intro-stat-lbl">Patterns</div></div></div>'
+    + stats
     + '<button class="continue-btn" onclick="startQuiz()">' + begin + '</button>';
 }
 function renderQuestion() {
