@@ -1075,7 +1075,10 @@ function render(keepScroll) {
   else if (screen === 'gate') html = renderGate();
   else if (screen === 'needquiz') html = renderNeedQuiz();
   else html = renderComplete();
-  document.getElementById('page').innerHTML = html;
+  const pageEl = document.getElementById('page');
+  pageEl.className = 'page';
+  if (screen === 'intro' && _invite && ARCH[_invite.key]) pageEl.classList.add('invited-intro-page');
+  pageEl.innerHTML = html;
   advancing = false;
   saveState();
   if (!keepScroll) window.scrollTo({ top: 0, behavior: 'smooth' });

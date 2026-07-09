@@ -63,6 +63,8 @@
   .back-link button { background: transparent; border: none; font-family: var(--sans); font-size: 12px; color: var(--text-muted); cursor: pointer; }
   .back-link button:hover { color: var(--accent); }
   .intro-eyebrow { font-family: var(--sans); font-size: 14px; letter-spacing: 4.5px; color: var(--accent); text-transform: uppercase; font-weight: 700; text-align: center; margin: 60px 0 24px; }
+  .page.invited-intro-page { padding-top: 16px; }
+  .invited-intro-page .intro-eyebrow { margin-top: 0; margin-bottom: 20px; }
   .intro-title { font-family: var(--heading); font-size: 56px; font-weight: 400; text-align: center; margin: 0 0 24px; letter-spacing: -1px; line-height: 1.05; }
   .intro-desc { font-family: var(--heading); font-style: italic; font-size: 19px; color: var(--text-body); text-align: center; line-height: 1.5; max-width: 520px; margin: 0 auto 48px; }
   .intro-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 520px; margin: 0 auto 48px; }
@@ -207,7 +209,7 @@
   .cmp-back { margin-top: 20px; padding-top: 18px; border-top: 1px solid #E7E4DE; text-align: center; }
   .cmp-back-h { font-family: var(--heading); font-size: 19px; font-weight: 600; margin: 0 0 12px; }
   @media (max-width: 600px) { .dd-row { flex-direction: column; gap: 10px; } .dd-left { width: auto; } .dd-verdict { font-size: 32px; } .dd-micro { margin-bottom: 38px; } }
-  @media (max-width: 600px) { .q-text { font-size: 22px !important; } .intro-title { font-size: 40px; } .word-tile { font-size: 17px; padding: 18px 6px; } .res-name { font-size: 34px; } .res-share { font-size: 18px; } .sc-in { padding: 28px 22px 22px; } }
+  @media (max-width: 600px) { .q-text { font-size: 22px !important; } .intro-title { font-size: 40px; } .page.invited-intro-page { padding-top: 14px; } .word-tile { font-size: 17px; padding: 18px 6px; } .res-name { font-size: 34px; } .res-share { font-size: 18px; } .sc-in { padding: 28px 22px 22px; } }
   /* ---- new share card (wc) ---- */
   .wc { position:relative; --a:#3D7A6E; --a-tint:rgba(61,122,110,.10); width:440px; max-width:100%; margin:0 auto 26px; background:var(--card); border:1px solid var(--border); border-radius:16px; padding:36px 36px 32px; box-shadow:0 8px 26px rgba(40,32,12,.10); }
   .card-corner { position:absolute; top:18px; right:18px; z-index:3; width:32px; height:32px; border-radius:50%; background:var(--inner); border:1px solid var(--border); color:var(--text-primary); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .14s; }
