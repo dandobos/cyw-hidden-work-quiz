@@ -17,6 +17,10 @@
     --text-subtle: #9A9A9A; --accent: #1E5F8C; --a: #3D7A6E; --a-tint: rgba(61,122,110,.10);
   }
   * { box-sizing: border-box; }
+  /* Stop mobile browsers (esp. Android Chrome) auto-inflating text, which can
+     enlarge labels past their container and clip them. Keep at 100% so pinch-zoom
+     still works. */
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   body { margin: 0; background: var(--bg); font-family: var(--heading); color: var(--text-primary); -webkit-font-smoothing: antialiased; }
   .progress { height: 3px; background: var(--border); position: relative; }
   .progress-fill { position: absolute; top: 0; left: 0; height: 100%; background: var(--accent); transition: width 0.3s ease; }
@@ -328,6 +332,20 @@
      theme's svg rule outranks a plain .card-corner svg selector, so scope under
      #page (id specificity) and pin the flex box so it cannot shrink to 0. */
   #page .card-corner svg, #page .save-green svg { width: 16px !important; height: 16px !important; min-width: 16px !important; flex: none !important; }
+
+  /* Text wrapping in buttons: the host theme sets `white-space: nowrap` on
+     <button> (and often link-buttons), which leaks in and forces multi-word
+     answer/scale labels onto one line. That line then overflows its box and,
+     because the body overflow is visible, widens the layout viewport past the
+     phone's device width, so the right side is CLIPPED on mobile (Pixel 3 etc.).
+     Re-assert normal wrapping — and break-word so a long token can't overflow —
+     on every text-bearing quiz control. No-op on the standalone /quiz/ page. */
+  #page button, #page a.continue-btn, #page .option, #page .rate-btn,
+  #page .word-tile, #page .res-dl-btn, #page .sbtn, #page .ghost-btn {
+    white-space: normal !important;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
 
   @media (max-width: 600px) {
     .intro-title { font-size: 40px !important; }
