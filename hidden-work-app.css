@@ -303,6 +303,7 @@
      theme cannot reach in. Values mirror the class rules above; on the
      standalone /quiz/ page (no host theme) these are no-ops.
      ============================================================ */
+  body.page-id-3958 { padding-top: 0 !important; }
   .intro-title       { font-family: var(--heading) !important; font-size: 56px !important; font-weight: 400 !important; line-height: 1.05 !important; }
   .intro-title .inv-title-key { color: var(--accent) !important; font-weight: 700 !important; }
   .gate-title        { font-family: var(--heading) !important; font-size: 40px !important; font-weight: 400 !important; line-height: 1.15 !important; }
