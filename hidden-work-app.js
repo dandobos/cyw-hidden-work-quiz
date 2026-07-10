@@ -315,15 +315,19 @@ const SHARE = {
   LLH: "I'm at peace with who I am. I'm just not sure where I'm going.",
   LLL: "On paper everything seems fine. But something feels amiss."
 };
+// Narrative format (approved from beta feedback, 2026-07-10, Beta DB page "v2, standardized endings"):
+// plain lines = prose; lines starting with "• " = bullets; "THE X:" lines = labeled closers.
+// The page renders these via narrHtml(); the same string flows to Kit's hw_narrative, where
+// newline_to_br keeps each line readable in the email. Variant narratives further down stay prose.
 const NARR = {
-  HHH: "You are one of the rare ones. You know what your real work is, you are actually doing it, and it is truly yours. Your clarity and your actions point the same direction. Your work energizes you rather than drains you. This is not luck. It is the result of choices most people never manage to make. The risk for you is not that you are on the wrong path, it is that comfort at this altitude can quietly shrink your ambition. The question is no longer whether you have found your work. It is whether you can create something world-class.",
-  HHL: "You are very good at what you do, and you know exactly what you are aiming at. People can see the skill, the drive, the results. The trouble is the summit you are climbing was never really yours. Somewhere in the past, your ambitions were handed to you by what others expected or admired, causing you to execute brilliantly against a target your true self never chose.\nThe more you have achieved, the more you have invested, which is exactly what makes turning so hard. This is one of the hardest places to acknowledge, because everything looks like success. But winning the wrong game feels hollow after a while. The clarity and drive you already have will serve you once they are pointed at work that is actually yours.",
-  HLH: "Something has shifted. You know where you are going, the noise of other people's expectations has gone quiet, and you make your own decisions. You can see your real work clearly. What you do not have yet is a system. Clarity without action leads to drifting. You do not need more reflection or additional insights. You need to start using the 1-1-1 rule: one hour a day, on one project, in one location. Start this week. You are of the few who has a developed soul. Now it's time to take action.",
-  HLL: "You can see it clearly. You know what your real work is, maybe you have known for years. Despite this, you seem to be standing still, inside a life that was built around someone else's expectations. This can feel painful because clarity is not the problem. Your main challenge is to develop an escape plan.\nThe title, the salary, the years you have already put in, the weight of what others would think, all of it holds you in a life that is not yours while you can see the one that is. Part of what keeps you frozen is how much you have already invested, and how hard it feels to move in a direction the people closest to you would question. Seeing is not enough. The work now is to stop watching and start moving, one step at a time, toward the place you've always known is right for you.",
-  LHH: "You have energy and you have momentum. You are true to yourself, you take action and do not wait around. The one thing missing is a target. You are moving fast and well, but much of that motion may be away from what you do not want rather than toward something you do. The good news is that you have mastered the hardest parts: being true to yourself and taking action. Now you need to let the work choose you. Loosen your grip on things and notice what quietly draws you in. What speaks to your true self? Direction, not more effort, is the missing piece.",
-  LHL: "You have serious horsepower. You move fast, you push hard, and you are used to powering through resistance. The problem is the engine is running on grit, with no clear target and no sense that the work is even your own. You are grinding hard at something that was chosen by your ambition and your training rather than by your true self. This is why you sometimes feel drained. You are skilled at getting things done; what is missing is a direction worth all that drive. Your challenge is to channel your talent into work that matters to you.",
-  LLH: "You know who you are. You are not performing for anyone, nor living someone else's life. But you are not moving forward either because you are not yet clear on the shape of your real work.\nThe challenge is that being at peace can quietly become an excuse to stay put. What you are missing is not character, it is taking more action, even if you don't exactly know where it will lead.",
-  LLL: "From the outside, your life looks fine. Maybe even good. There is a paycheck, a routine, people who would call you successful. And yet there is a small, persistent pebble in your emotional shoe that you have been trying to ignore. You do not know what your real work is, you are unsure what to do next, and the life you are living does not feel like your own. You are suffering in comfort, and yet it feels easy to not change anything. The question is not whether something is off. You already know it is. The question is whether you are willing to look directly at it and then start to make changes."
+  HHH: "You are one of the rare ones. This is not luck. It is the result of making deliberate choices, something few people ever do.\n• You know what your real work is, and you are actually doing it.\n• The work is truly yours. It is chosen by you, not expected of you.\n• Your clarity and your actions point the same direction.\n• Your work energizes you rather than drains you.\nTHE RISK: Not that you are on the wrong path, but that comfort at this altitude can quietly shrink your ambition.\nTHE QUESTION: No longer whether you have found your work. It is whether you can create something world-class.",
+  HHL: "You are very good at what you do, and you know exactly what you are aiming at. Everyone can see your skill, drive, and results. The only problem is that the summit you are climbing was never really yours.\n• Somewhere in the past, your ambitions were handed to you by what others expected or admired.\n• So you execute brilliantly against a target your true self never chose.\n• The more you have achieved, the more you have invested, which is exactly what makes turning so hard.\n• This is one of the hardest places to acknowledge, because everything looks like success.\nTHE CHALLENGE: Winning the wrong game feels hollow after a while.\nTHE NEXT STEP: The clarity and drive you already have will serve you once they are pointed at work that is actually yours.",
+  HLH: "Something has shifted. You are one of the few with a developed soul, and you can see your real work clearly.\n• You know where you are going.\n• The noise of other people's expectations has gone quiet.\n• You make your own decisions.\nTHE CHALLENGE: What you do not have yet is a system. Clarity without action leads to drifting.\nTHE NEXT STEP: You do not need more reflection or additional insights. It is time to take action: start the 1-1-1 rule this week. Spend one hour a day, on one project, in one location.",
+  HLL: "You can see it clearly. You know what your real work is, maybe you have known for years. Despite this, you seem to be standing still, inside a life built around someone else's expectations. What holds you there:\n• The title, the salary, the years you have already put in.\n• The weight of what the people closest to you would think.\n• How much you have already invested, which makes moving feel harder than staying.\nTHE CHALLENGE: This can feel painful because clarity is not the problem. Knowing what to do is not enough.\nTHE NEXT STEP: Come up with at least three intensely emotional reasons why you move forward. Then develop an escape plan. Stop watching and start moving, one step at a time, toward the place you've always known is right for you.",
+  LHH: "You have energy and you have momentum. The good news is that you have already mastered the hardest parts:\n• You are true to yourself.\n• You take action and do not wait around.\nTHE CHALLENGE: The one thing missing is a target. You are moving fast and well, but much of that motion may be away from what you do not want rather than toward something you truly desire.\nTHE NEXT STEP: Let the work choose you. Loosen your grip on things and notice what quietly draws you in. What speaks to your true self? Direction, not more effort, is the missing piece.",
+  LHL: "You have serious horsepower. You move fast, you push hard, and you are used to powering through resistance. The problem is the engine is running on grit:\n• There is no clear target, and no sense that the work is even your own.\n• You are grinding hard at something chosen by your ambition and your training, not by your true self.\n• This is why you sometimes feel drained.\nTHE CHALLENGE: You are skilled at getting things done. What is missing is a direction worth all that drive.\nTHE NEXT STEP: Channel your talent into work that matters to you.",
+  LLH: "You know who you are:\n• You are not performing for anyone.\n• You are not living someone else's life.\n• But you are not moving forward either, because you are not yet clear on the shape of your real work.\nTHE RISK: Being at peace can quietly become an excuse to stay put.\nTHE NEXT STEP: What you are missing is not character. It is taking more action, even if you don't exactly know where it will lead.",
+  LLL: "From the outside, your life looks fine. Maybe even good. There is a paycheck, a routine, people who would call you successful. And yet there is a small, persistent pebble in your emotional shoe that you have been trying to ignore:\n• You do not know what your real work is.\n• You are unsure what to do next.\n• The life you are living does not feel like your own.\nTHE RISK: You are suffering in comfort, and yet it feels easy to not change anything. The question is not whether something is off. You already know it is.\nTHE NEXT STEP: Be willing to look directly at it, and then start to make changes."
 };
 const WHY = {
   HHH: "Your scores are high across all dimensions, so this chapter is about scale, not repair.",
@@ -841,6 +845,26 @@ function _hwAmFlags(key, s){
   var f = (key === 'HHH' && !AM_FULL_REQ(s) && !d);
   return { amDrained: d, amFoothills: f };
 }
+// Renders a narrative string: plain lines -> <p>, "• " lines -> bullet list,
+// "THE X:" lines -> small-caps label + text. Prose-only variants pass through as <p>s.
+function narrHtml(narr){
+  var html = '', inList = false;
+  narr.split('\n').forEach(function(line){
+    line = line.trim();
+    if (!line) return;
+    if (line.indexOf('• ') === 0){
+      if (!inList){ html += '<ul class="res-narr-list">'; inList = true; }
+      html += '<li>' + line.slice(2) + '</li>';
+      return;
+    }
+    if (inList){ html += '</ul>'; inList = false; }
+    var m = line.match(/^(THE [A-Z ]+?):\s*(.+)$/);
+    if (m) html += '<p class="res-narr-label">' + m[1] + '</p><p class="res-narr-labeltext">' + m[2] + '</p>';
+    else html += '<p>' + line + '</p>';
+  });
+  if (inList) html += '</ul>';
+  return html;
+}
 function hwTopHtml(key, s){
   var am = _hwAmFlags(key, s);
   var share = am.amDrained ? AM_DRAINED_SHARE : am.amFoothills ? AM_FOOTHILLS_SHARE : SHARE[key];
@@ -848,7 +872,7 @@ function hwTopHtml(key, s){
   return '<p class="res-eyebrow">Your Hidden Work</p>'
     + '<h1 class="res-name">' + ARCH[key].name + '</h1>'
     + '<p class="res-share">' + share + '</p>'
-    + '<div class="res-narrative">' + narr.split('\n').map(function(p){ return '<p>' + p + '</p>'; }).join('') + '</div>';
+    + '<div class="res-narrative">' + narrHtml(narr) + '</div>';
 }
 function hwChapterHtml(key, s, flag){
   var plan = chapterPlan(key, flag);
@@ -884,7 +908,7 @@ function _hwProfileCard(key, isOrig){
     + '<p class="res-neighbour-eyebrow">' + (isOrig ? 'Your original result' : 'You may be closer to') + '</p>'
     + '<h3 class="res-neighbour-name">' + ARCH[key].name + '</h3>'
     + '<p class="res-neighbour-share">' + SHARE[key] + '</p>'
-    + '<div class="res-neighbour-narr">' + NARR[key].split('\n').map(function(p){ return '<p>' + p + '</p>'; }).join('') + '</div>'
+    + '<div class="res-neighbour-narr">' + narrHtml(NARR[key]) + '</div>'
     + '<div class="nb-actions"><button class="continue-btn thats-it" onclick="hwPick(\'' + key + '\')">That’s it &rarr;</button></div>'
   + '</div>';
 }
