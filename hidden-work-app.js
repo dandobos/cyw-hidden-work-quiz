@@ -986,6 +986,72 @@ function hwReopen(){
   var ch = document.getElementById('hw-chooser'); ch.hidden = false; _hwScroll(ch);
 }
 
+const CHECKLISTS = {
+  HHH: { note: `The focus is on scale, not repair. The risk is comfort quietly shrinking your ambition.`, items: [
+    `Write one sentence: what would make your work **world-class**, not just good?`,
+    `Name the comfortable routine quietly capping your ambition. Then describe one way to interrupt it this week.`,
+    `Block 60 minutes in your calendar either today or tomorrow for that world-class version. Do this session before anything reactive.`
+  ] },
+  HHL: { note: `You have high clarity and drive, but you're possibly winning the wrong game. Choose work that fits the real you.`, items: [
+    `Write down the game you're currently winning. Then, write one line on whether it's actually yours.`,
+    `Name one metric you chase that you'd stop caring about if no one were watching.`,
+    `Protect one hour this week for work that fits **you**, not the scoreboard.`,
+    `Ask someone who you trust: "Where do you see me forcing things instead of letting them flow?"`
+  ] },
+  HLH: { note: `You can see your real work clearly. You just don't have a system yet. The next step is to turn seeing into a plan.`, items: [
+    `Write the real work you can already see yourself doing.`,
+    `Review what you have written. Come up with the first three concrete steps. Be specific. Make each step achievable. For example, instead of "Run a marathon", write "Set my alarm for 7am on Tuesday to go for a 30 min jog."`,
+    `Put step one on your calendar this week, with a notification.`,
+    `Send that first step to someone you trust and tell them the good news.`
+  ] },
+  HLL: { note: `You can see the life you want but you're held in place by situations that aren't yours.`, items: [
+    `Write down the life and work you can already picture.`,
+    `Name the one "situation that isn't yours" holding you in place right now.`,
+    `Review what you have written. Come up with the first three concrete steps. Be specific. Make each step achievable. For example, instead of "Run a marathon", write "Set my alarm for 7am on Tuesday to go for a 30 min jog."`,
+    `Put step one on your calendar this week, with a notification.`,
+    `Send that first step to someone you trust and tell them the good news.`
+  ] },
+  LHH: { note: `You are moving fast and true to yourself but you need a clear target to move toward.`, items: [
+    `List the three things you've been exploring lately, then star the one you keep returning to.`,
+    `For that one, name a single target you'd know you'd hit.`,
+    `Block one hour in your calendar this week to go deeper on it instead of starting something new.`,
+    `Tell someone you trust the target, so exploring moves towards a specific destination.`
+  ] },
+  LHL: { note: `You have serious horsepower but it's sometimes aimed at work that drains you. This is the curse of competence.`, items: [
+    `Write the task you're great at but that quietly drains you.`,
+    `Name one activity that energizes you more than the above task.`,
+    `Redirect 30 minutes of your drive this week from the draining work to the energizing one. Put 30 minutes in your calendar for this energizing activity.`,
+    `Tell someone you trust that you're pointing your engine somewhere new, so you don't drift back.`
+  ] },
+  LLH: { note: `You are at peace with who you are, but your momentum is lacking. Use play to move you forward.`, items: [
+    `Write three things you'd happily do this week just because they pull you in. No outcome required.`,
+    `Pick the one that surprises you most and think about why you like it.`,
+    `Block in your calendar a short 30 minute session in the next three days to play with it.`,
+    `Tell someone you trust what you're exploring, so you follow through.`
+  ] },
+  LLL: { note: `Everything looks fine on paper, but something's off and you're done ignoring it.`, items: [
+    `Write the quiet "something's off" you've been talking yourself out of.`,
+    `Name the one pattern that keeps everything looking fine while feeling wrong.`,
+    `Block in your calendar 30 minutes to take one honest, small action this week that your old self never would do.`,
+    `Tell someone you trust the thing you're done ignoring, so it can't slide back into silence.`
+  ] }
+};
+function checklistHtml(key){
+  var c = CHECKLISTS[key]; if (!c) return '';
+  var accent = (typeof VIRAL !== 'undefined' && VIRAL[key] && VIRAL[key].accent) || '#3D7A6E';
+  var bold = function(t){ return t.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'); };
+  var items = c.items.map(function(it){
+    return '<label class="rc-item"><input type="checkbox" class="rc-cb" style="accent-color:' + accent + '"/>'
+      + '<span class="rc-txt">' + bold(it) + '</span></label>';
+  }).join('');
+  return '<div class="res-checklist" style="border-left-color:' + accent + '">'
+    + '<p class="rc-eyebrow" style="color:' + accent + '">Your First Moves</p>'
+    + '<p class="rc-title">Apply this to your work this week</p>'
+    + '<p class="rc-sub">' + c.note + '</p>'
+    + items
+    + '</div>';
+}
+
 function renderResult(){
   const r = computeResult();
   const s = r.scores;
@@ -1052,6 +1118,8 @@ function renderResult(){
         + '<div class="res-regret-meter">' + segs + '</div>'
         + '<p class="res-regret-desc">' + reg.desc + '</p>'
       + '</div>'
+      + '<div class="res-divider"></div>'
+      + checklistHtml(r.key)
       + '<div class="res-divider"></div>'
       + '<div id="hw-chapter">' + hwChapterHtml(r.key, s, r.flag) + '</div>'
       + shareLoopHtml(r, s)
