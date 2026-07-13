@@ -77,7 +77,7 @@ const questions = [
   { type: 'rank', section: 'AL',
     text: "Order these voices from loudest to quietest when you make a big life decision.",
     sub: "The top voice is the loudest.",
-    items: ["Society's voice", "A parent's voice", "A partner's voice", "My own voice"] },
+    items: ["Society\u2019s voice", "A parent\u2019s voice", "A partner\u2019s voice", "My own voice"] },
   { type: 'choice', section: 'AL', text: "If you keep on your current path, the person you're slowly becoming is:",
     options: [["Someone I don't really recognize", 0], ["Not quite who I want to be", 30], ["Mostly who I want to be", 70], ["Exactly who I want to become", 100]] },
 
@@ -87,7 +87,7 @@ const questions = [
   { type: 'choice', section: 'C', text: "When did you last sit in stillness long enough to actually hear yourself think, no phone, no input?",
     options: [["I genuinely can't remember", 0], ["Sometime this month", 40], ["Sometime this week", 70], ["In the last few days", 100]] },
   { type: 'choice', section: 'C', text: "The last big career decision you made was driven primarily by:",
-    options: [["External pressure or a deadline", 20], ["I'm not sure", 30], ["Logical analysis", 60], ["A clear inner knowing", 100]] },
+    options: [["External pressure or a deadline", 20], ["I\u2019m not sure", 30], ["Logical analysis", 60], ["A clear inner knowing", 100]] },
   { type: 'choice', section: 'C', text: "Is there something you keep pushing through at work, even though a quieter voice says to stop?",
     options: [["Yes, most days", 0], ["Fairly often", 30], ["Rarely", 70], ["No, nothing like that", 100]] },
   { type: 'choice', section: 'C', text: "When you think about changing direction, how much does what you've already invested hold you back?",
@@ -205,7 +205,7 @@ function renderIntro() {
     + '<div class="intro-stat"><div class="intro-stat-num">~7</div><div class="intro-stat-lbl">Minutes</div></div>'
     + '<div class="intro-stat"><div class="intro-stat-num">8</div><div class="intro-stat-lbl">Patterns</div></div></div>';
   if (invited){
-    title = 'There are <span class="inv-title-key">8 Work Personalities.</span> One Reveals Your Hidden Work.';
+    title = 'There are <span class="inv-title-key">8 Work Personalities.</span> Which one is yours?';
     inviteSpectrum = '<div class="inv-spectrum" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>';
     invCard = '<div class="inv-card">'
       + '<p class="inv-ey">Your friend came out as</p>'
