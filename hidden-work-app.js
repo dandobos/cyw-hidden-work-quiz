@@ -50,12 +50,12 @@ const questions = [
   // ===== VITALITY =====
   { type: 'choice', section: 'V', text: "On Monday morning, what's the first feeling that hits you when you remember it's a work day?",
     options: [["Dreading the start of the work week", 0], ["Mild annoyance the weekend is over", 33], ["Neutral, just another day", 66], ["Excitement", 100]] },
-  { type: 'choice', section: 'V', text: "Over the past week, roughly what share of your work hours were spent on activities that left you feeling more alive, not less?",
-    options: [["Almost none", 0], ["Less than half", 30], ["More than half", 70], ["Most of them", 100]] },
+  { type: 'choice', section: 'V', text: "Over the past week, roughly how much of your work time left you feeling more alive?",
+    options: [["Almost none", 0], ["Less than half", 30], ["More than half", 70], ["Most of it", 100]] },
   { type: 'choice', section: 'V', text: "How often does your work pull you in so deeply that you lose track of time?",
     options: [["Never", 0], ["Rarely", 30], ["Weekly", 70], ["Daily", 100]] },
   { type: 'choice', section: 'V', text: "The skill that has gotten you the furthest in your career also tends to:",
-    options: [["Drains me", 0], ["Slightly drains me", 30], ["Slightly energizes me", 70], ["Energizes me", 100]] },
+    options: [["Drain me", 0], ["Slightly drain me", 30], ["Slightly energize me", 70], ["Energize me", 100]] },
   { type: 'activity_name', section: 'V',
     text: "Name three things you're widely praised for at work.",
     sub: "These can be skills or personal attributes. Just name them for now." },
@@ -72,7 +72,7 @@ const questions = [
     options: [["I'm not sure", 10], ["It's what's expected of me", 20], ["It pays well", 40], ["I'm good at it", 60], ["It lights me up", 100]] },
   { type: 'choice', section: 'AL', text: "When someone asks \"How's work?\", what do you actually think before giving your polished answer?",
     options: [["I can't say what I really feel", 0], ["I don't really want to talk about it", 33], ["It's fine", 66], ["It's genuinely good", 100]] },
-  { type: 'choice', section: 'AL', text: "Have you stayed in your current path because of the title, the salary, or what others would think?",
+  { type: 'choice', section: 'AL', text: "Have you stayed on your current path for any of these reasons: the title, the salary, or what others would think?",
     options: [["I'm not sure", 5], ["Yes, those are the main reasons", 15], ["Partly, but not mainly", 40], ["No, my reasons are mine", 100]] },
   { type: 'rank', section: 'AL',
     text: "Order these voices from loudest to quietest when you make a big life decision.",
@@ -120,7 +120,7 @@ const questions = [
     text: "What is a buried idea you've had for years that you've never given yourself permission to pursue?",
     placeholder: "Anything that comes to mind, however small." },
   { type: 'choice', section: 'X', unscored: true, text: "Where are you in your career?",
-    options: [["Early career", "Early career"], ["Mid-career", "Mid-career"], ["Late career", "Late career"], ["In transition", "In transition"], ["Student", "Student"]] },
+    options: [["Student, still studying", "Student"], ["Early career, roughly my first 10 years of working", "Early career"], ["Mid-career, around 10 to 25 years in", "Mid-career"], ["Late career, more than 25 years in", "Late career"], ["In transition, changing paths", "In transition"]] },
   { type: 'choice', section: 'X', unscored: true, text: "What's your current role type?",
     options: [["Employee", "Employee"], ["Manager", "Manager"], ["Founder or owner", "Founder or owner"], ["Freelance or contractor", "Freelance or contractor"], ["Between roles", "Between roles"], ["Other", "Other"]] }
 ];
