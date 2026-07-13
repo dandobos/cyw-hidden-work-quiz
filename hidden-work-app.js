@@ -22,18 +22,6 @@
       posthog.identify('beta:' + _hwbt, { hw_beta: true, hw_beta_token: _hwbt });  // per-tester person
     }
   } catch (e) {}
-  // Tag Dan's own test runs so they drop out of analytics (PostHog's native $internal_or_test_user
-  // flag + the "Internal / Test users" cohort). Flip on once per device with ?internal=1; it sticks
-  // in localStorage. Public + tester sessions are unaffected. Untag: localStorage.removeItem('ph_internal').
-  try {
-    if (new URLSearchParams(location.search).get('internal') === '1') {
-      localStorage.setItem('ph_internal', '1');
-    }
-    if (localStorage.getItem('ph_internal') === '1') {
-      posthog.setPersonProperties({ $internal_or_test_user: true });   // feeds the cohort
-      posthog.register({ $internal_or_test_user: true });              // tags every event
-    }
-  } catch (e) {}
 })();
 ;
 // THE HIDDEN WORK v2: four dimensions: Vitality, Alignment, Clarity, Agency
@@ -70,7 +58,7 @@ const questions = [
     options: [["Drains me", 0], ["Slightly drains me", 30], ["Slightly energizes me", 70], ["Energizes me", 100]] },
   { type: 'activity_name', section: 'V',
     text: "Name three things you're widely praised for at work.",
-    sub: "Just name them for now." },
+    sub: "These can be skills or personal attributes. Just name them for now." },
   { type: 'activity_rate', section: 'V',
     text: "Now, how energized does each one make you feel?",
     likert: [["Drains me", 0], ["Slightly drains me", 30], ["Slightly energizes me", 70], ["Energizes me", 100]] },
