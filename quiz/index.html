@@ -429,7 +429,7 @@ const SECTION_ORDER = [
 const questions = [
   // OPENER: word association (bookended on result page)
   { type: 'word', section: 'V',
-    text: "When you think about your work, which of these words rises first?",
+    text: "When you think about your work, which of these words arises first?",
     sub: "Don't think too hard. Pick the one that surfaces.",
     words: [
       ["Drained", 20, 'V'], ["Trapped", 15, 'AL'], ["Stuck", 20, 'AG'],
@@ -456,7 +456,7 @@ const questions = [
     options: [["Dread", 0], ["Heaviness", 30], ["Quiet contentment", 70], ["Excitement", 100]] },
 
   // ===== ALIGNMENT =====
-  { type: 'choice', section: 'AL', text: "If you were not paid for your current role and had to do it anonymously, would you pour your heart into it?",
+  { type: 'choice', section: 'AL', text: "If your basic needs were already covered, and you did your current role unpaid and anonymously, would you still pour your heart into it?",
     options: [["Definitely no", 0], ["Probably no", 35], ["Probably yes", 75], ["Definitely yes", 100]] },
   { type: 'choice', section: 'AL', text: "The main reason you're in your current role:",
     options: [["I'm not sure", 10], ["It's what's expected of me", 20], ["It pays well", 40], ["I'm good at it", 60], ["It lights me up", 100]] },
@@ -469,7 +469,7 @@ const questions = [
     sub: "The top voice is the loudest.",
     items: ["Society\u2019s voice", "A parent\u2019s voice", "A partner\u2019s voice", "My own voice"] },
   { type: 'choice', section: 'AL', text: "If you keep on your current path, the person you're slowly becoming is:",
-    options: [["Someone I don't really recognise", 0], ["Not quite who I want to be", 30], ["Mostly who I want to be", 70], ["Exactly who I want to become", 100]] },
+    options: [["Someone I don't really recognize", 0], ["Not quite who I want to be", 30], ["Mostly who I want to be", 70], ["Exactly who I want to become", 100]] },
 
   // ===== CLARITY =====
   { type: 'choice', section: 'C', text: "When you imagine the next chapter of your work life, what's there?",
@@ -478,7 +478,7 @@ const questions = [
     options: [["I genuinely can't remember", 0], ["Sometime this month", 40], ["Sometime this week", 70], ["In the last few days", 100]] },
   { type: 'choice', section: 'C', text: "The last big career decision you made was driven primarily by:",
     options: [["External pressure or a deadline", 20], ["I\u2019m not sure", 30], ["Logical analysis", 60], ["A clear inner knowing", 100]] },
-  { type: 'choice', section: 'C', text: "Is there something you keep grinding through at work, even though a quieter voice says to stop?",
+  { type: 'choice', section: 'C', text: "Is there something you keep pushing through at work, even though a quieter voice says to stop?",
     options: [["Yes, most days", 0], ["Fairly often", 30], ["Rarely", 70], ["No, nothing like that", 100]] },
   { type: 'choice', section: 'C', text: "When you think about changing direction, how much does what you've already invested hold you back?",
     options: [["It's the main thing stopping me, I've come too far to change", 0], ["It weighs on me heavily", 30], ["It's a factor, but not decisive", 65], ["What I've put in doesn't trap me, I'd change if it was right", 100]] },
@@ -715,7 +715,7 @@ const NARR = {
   HLH: "Something has shifted. You are one of the few with a developed soul, and you can see your real work clearly.\n• You know where you are going.\n• The noise of other people's expectations has gone quiet.\n• You make your own decisions.\nTHE CHALLENGE: What you do not have yet is a system. Clarity without action leads to drifting.\nTHE NEXT STEP: You do not need more reflection or additional insights. It is time to take action: start the 1-1-1 rule this week. Spend one hour a day, on one project, in one location.",
   HLL: "You can see it clearly. You know what your real work is, maybe you have known for years. Despite this, you seem to be standing still, inside a life built around someone else's expectations. What holds you there:\n• The title, the salary, the years you have already put in.\n• The weight of what the people closest to you would think.\n• How much you have already invested, which makes moving feel harder than staying.\nTHE CHALLENGE: This can feel painful because clarity is not the problem. Knowing what to do is not enough.\nTHE NEXT STEP: Come up with at least three intensely emotional reasons why you move forward. Then develop an escape plan. Stop watching and start moving, one step at a time, toward the place you've always known is right for you.",
   LHH: "You have energy and you have momentum. The good news is that you have already mastered the hardest parts:\n• You are true to yourself.\n• You take action and do not wait around.\nTHE CHALLENGE: The one thing missing is a target. You are moving fast and well, but much of that motion may be away from what you do not want rather than toward something you truly desire.\nTHE NEXT STEP: Let the work choose you. Loosen your grip on things and notice what quietly draws you in. What speaks to your true self? Direction, not more effort, is the missing piece.",
-  LHL: "You have serious horsepower. You move fast, you push hard, and you are used to powering through resistance. The problem is the engine is running on grit:\n• There is no clear target, and no sense that the work is even your own.\n• You are grinding hard at something chosen by your ambition and your training, not by your true self.\n• This is why you sometimes feel drained.\nTHE CHALLENGE: You are skilled at getting things done. What is missing is a direction worth all that drive.\nTHE NEXT STEP: Channel your talent into work that matters to you.",
+  LHL: "You have serious horsepower. You move fast, you push hard, and you are used to powering through resistance. The problem is the engine is running on grit:\n• There is no clear target, and no sense that the work is even your own.\n• You are working hard at something chosen by your ambition and your training, not by your true self.\n• This is why you sometimes feel drained.\nTHE CHALLENGE: You are skilled at getting things done. What is missing is a direction worth all that drive.\nTHE NEXT STEP: Channel your talent into work that matters to you.",
   LLH: "You know who you are:\n• You are not performing for anyone.\n• You are not living someone else's life.\n• But you are not moving forward either, because you are not yet clear on the shape of your real work.\nTHE RISK: Being at peace can quietly become an excuse to stay put.\nTHE NEXT STEP: What you are missing is not character. It is taking more action, even if you don't exactly know where it will lead.",
   LLL: "From the outside, your life looks fine. Maybe even good. There is a paycheck, a routine, people who would call you successful. And yet there is a small, persistent pebble in your emotional shoe that you have been trying to ignore:\n• You do not know what your real work is.\n• You are unsure what to do next.\n• The life you are living does not feel like your own.\nTHE RISK: You are suffering in comfort, and yet it feels easy to not change anything. The question is not whether something is off. You already know it is.\nTHE NEXT STEP: Be willing to look directly at it, and then start to make changes."
 };
