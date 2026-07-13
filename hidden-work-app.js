@@ -82,7 +82,7 @@ const questions = [
     options: [["Someone I don't really recognize", 0], ["Not quite who I want to be", 30], ["Mostly who I want to be", 70], ["Exactly who I want to become", 100]] },
 
   // ===== CLARITY =====
-  { type: 'choice', section: 'C', text: "When you imagine the next chapter of your work life, what's there?",
+  { type: 'choice', section: 'C', text: "When you imagine the next chapter of your work life, how clearly can you see it? What's there?",
     options: [["Nothing at all", 0], ["A list of things I think I should do", 30], ["A vague sense of direction", 60], ["A clear, specific picture", 100]] },
   { type: 'choice', section: 'C', text: "When did you last sit in stillness long enough to actually hear yourself think, no phone, no input?",
     options: [["I genuinely can't remember", 0], ["Sometime this month", 40], ["Sometime this week", 70], ["In the last few days", 100]] },
@@ -92,7 +92,7 @@ const questions = [
     options: [["Yes, most days", 0], ["Fairly often", 30], ["Rarely", 70], ["No, nothing like that", 100]] },
   { type: 'choice', section: 'C', text: "When you think about changing direction, how much does what you've already invested hold you back?",
     options: [["It's the main thing stopping me, I've come too far to change", 0], ["It weighs on me heavily", 30], ["It's a factor, but not decisive", 65], ["What I've put in doesn't trap me, I'd change if it was right", 100]] },
-  { type: 'choice', section: 'C', text: "When you picture changing your work, what's pulling you?",
+  { type: 'choice', section: 'C', text: "When you picture changing your work, is it more of a push or a pull?",
     options: [["I just want to get away from where I am now", 20], ["Mostly escaping the current situation", 40], ["A mix of escaping this and moving toward something", 65], ["I'm drawn toward something specific I want", 100]] },
 
   // ===== AGENCY =====
@@ -105,7 +105,7 @@ const questions = [
   { type: 'choice', section: 'AG', text: "When someone whose opinion you value disapproves of a direction you want to take, what usually happens?",
     options: [["I drop it to keep the peace", 0], ["I delay it, sometimes indefinitely", 30], ["I push back but often compromise", 65], ["I hear them out and still do what I think is right", 100]] },
   { type: 'choice', section: 'AG', text: "When you face something you want but it feels too big, what tends to happen?",
-    options: [["I freeze and don't start", 0], ["I overthink it for a long time", 30], ["I gradually create a plan", 70], ["I take the smallest first step quickly", 100]] },
+    options: [["I freeze or struggle to get motivated to start at all", 0], ["I overthink it for a long time", 30], ["I start strong, then stall before it's done", 50], ["I gradually create a plan", 70], ["I take the smallest first step quickly and then make consistent progress", 100]] },
   { type: 'choice', section: 'AG', text: "In the last few months, how much have you actually moved on work that matters to you, outside your job's demands?",
     options: [["Not at all", 0], ["I thought about it but didn't act", 30], ["A few small steps", 70], ["Steady, ongoing action", 100]] },
 
