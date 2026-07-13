@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Hidden Work Course: Beta Reader Feedback</title>
+<title>Choose Your Work Course: Beta Reader Feedback</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap">
@@ -155,8 +155,8 @@
 <div class="wrap">
 
   <p class="eyebrow">Beta Tester Feedback</p>
-  <h1>Hidden Work Course Feedback</h1>
-  <p class="lede">Thank you for going through <em>The Hidden Work</em> email course. Your honest feedback matters more than a polite one, so please be candid, including about anything that felt off, slow, or confusing.<br><br>I really appreciate your input.<br>Dan</p>
+  <h1>Choose Your Work Course Feedback</h1>
+  <p class="lede">Thank you for going through the <em>Choose Your Work</em> email course. Your honest feedback matters more than a polite one, so please be candid, including about anything that felt off, slow, or confusing.<br><br>I really appreciate your input.<br>Dan</p>
 
   <hr class="rule">
 
@@ -531,7 +531,7 @@
   };
 
   function asText(data) {
-    var lines = ['Hidden Work Course: Beta Reader Feedback', ''];
+    var lines = ['Choose Your Work Course: Beta Reader Feedback', ''];
     Object.keys(LABELS).forEach(function (k) {
       var val = (data[k] || '').toString().trim();
       lines.push(LABELS[k] + ': ' + (val || '(blank)'));
@@ -573,7 +573,7 @@
   }
 
   function emailFallback(data) {
-    var subject = 'Hidden Work course feedback: ' + (data.name || 'beta reader');
+    var subject = 'Choose Your Work course feedback: ' + (data.name || 'beta reader');
     var href = 'mailto:' + FALLBACK_EMAIL +
       '?subject=' + encodeURIComponent(subject) +
       '&body=' + encodeURIComponent(asText(data));

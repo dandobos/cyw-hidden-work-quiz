@@ -185,22 +185,22 @@ function shareBlock(p){
   var v=VS[p.arch], key=v.key, accent=v.accent, e=encodeURIComponent;
   var short=p.arch.replace(/^The\s+/,'');
   var art=/^[AEIOU]/.test(short)?'an':'a';
-  var link='https://dandobos.com/hidden-work/?type='+key;
-  var fMsg='I did the Hidden Work quiz and came out as the '+short+'. I thought you might find it useful.';
+  var link='https://dandobos.com/choose-your-work-quiz/?type='+key;
+  var fMsg='Hey! I did the Choose Your Work Quiz and came out as the '+short+'. I thought you might find it useful.';
   return sectionTitle('Share your result with a friend or colleague')
    + '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">'
    + '<table role="presentation" width="440" cellpadding="0" cellspacing="0" style="width:440px;max-width:440px;background:#FFFFFF;border:1px solid #D8D5CE;border-radius:16px;">'
      + '<tr><td style="background:'+accent+';height:6px;font-size:0;line-height:0;border-radius:16px 16px 0 0;">&#160;</td></tr>'
      + '<tr><td style="padding:30px 32px 30px;">'
-       + '<p style="font-family:Inter,Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:'+accent+';text-align:center;margin:0 0 12px;">The Hidden Work &#183; Pattern '+PAT_NUM[key]+' of 8</p>'
+       + '<p style="font-family:Inter,Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:'+accent+';text-align:center;margin:0 0 12px;">The Choose Your Work Quiz &#183; Pattern '+PAT_NUM[key]+' of 8</p>'
        + '<p style="font-family:&#39;Source Serif Pro&#39;,Georgia,serif;font-weight:700;font-size:30px;line-height:1.1;text-align:center;margin:0 0 14px;color:#0F0F0F;">I am '+art+' <span style="color:'+accent+';">'+short+'</span></p>'
        + '<p style="font-family:&#39;Source Serif Pro&#39;,Georgia,serif;font-style:italic;font-size:17.5px;line-height:1.45;color:#3A3A3A;text-align:center;margin:0 auto 18px;">&#8220;'+SHARE_CLAIM[key]+'&#8221;</p>'
        + '<p style="font-family:Inter,Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#0F0F0F;text-align:center;margin:0 0 18px;">What people can count on me for</p>'
        + wcStrengths(key,accent)
        + '<p style="font-family:&#39;Source Serif Pro&#39;,Georgia,serif;font-weight:700;font-size:19px;text-align:center;margin:28px 0 18px;color:#0F0F0F;">Which of the 8 are you?</p>'
        + wcGrid(short,accent)
-       + '<a href="'+link+'" target="_blank" style="display:block;text-align:center;margin-top:26px;font-family:Inter,Arial,sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FFFFFF;background:#0F0F0F;padding:16px;border-radius:10px;text-decoration:none;">Discover your hidden work</a>'
-       + '<p style="font-family:Inter,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:.5px;color:#0F0F0F;text-align:center;margin:14px 0 0;">Find yours at dandobos.com/hidden-work</p>'
+       + '<a href="'+link+'" target="_blank" style="display:block;text-align:center;margin-top:26px;font-family:Inter,Arial,sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FFFFFF;background:#0F0F0F;padding:16px;border-radius:10px;text-decoration:none;">Discover your Work Personality</a>'
+       + '<p style="font-family:Inter,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:.5px;color:#0F0F0F;text-align:center;margin:14px 0 0;">Find yours at dandobos.com/choose-your-work-quiz</p>'
      + '</td></tr>'
    + '</table>'
    + '</td></tr></table>'
@@ -211,14 +211,14 @@ function shareBlock(p){
      + shareBtn('https://www.linkedin.com/sharing/share-offsite/?url='+e(link),'LinkedIn')
      + shareBtn('https://wa.me/?text='+e(fMsg+' '+link),'WhatsApp')
      + shareBtn('https://www.facebook.com/sharer/sharer.php?u='+e(link),'Facebook')
-     + shareBtn('mailto:?subject='+e('My Hidden Work pattern')+'&body='+e(fMsg+' '+link),'Email a friend')
+     + shareBtn('mailto:?subject='+e('My Work Personality')+'&body='+e(fMsg+' '+link),'Email a friend')
    + '</div>';
 }
 function emailCard(p){
   var reg=REG[p.reg];
   return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#EFEDE8;"><tr><td align="center" style="padding:24px 12px;">'
   + '<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:600px;background:#FFFFFF;border:1px solid #D8D5CE;border-radius:12px;"><tr><td style="padding:36px;">'
-  + '<p style="font-family:Inter,Arial,sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;font-weight:600;color:#1E5F8C;text-align:center;margin:0 0 14px;">Your Hidden Work</p>'
+  + '<p style="font-family:Inter,Arial,sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;font-weight:600;color:#1E5F8C;text-align:center;margin:0 0 14px;">Your Work Personality</p>'
   + '<h1 style="font-family:&#39;Source Serif Pro&#39;,Georgia,serif;font-size:34px;font-weight:600;color:#0F0F0F;text-align:center;margin:0 0 16px;line-height:1.1;">'+p.arch+'</h1>'
   + '<p style="font-family:&#39;Source Serif Pro&#39;,Georgia,serif;font-style:italic;font-size:21px;color:#3A3A3A;text-align:center;line-height:1.45;margin:0 0 22px;">'+p.share+'</p>'
   + '<div style="font-family:&#39;Source Serif Pro&#39;,Georgia,serif;font-size:17px;color:#3A3A3A;line-height:1.65;">'+p.narr.map(function(t){return '<p style="margin:0 0 14px;">'+t+'</p>';}).join('')+'</div>'
@@ -256,7 +256,7 @@ function emailCard(p){
   + sectionTitle('Get the Book')
   + '<p style="font-family:&#39;Source Serif Pro&#39;,Georgia,serif;font-size:17px;color:#3A3A3A;line-height:1.55;text-align:center;margin:0 0 18px;"><em>Choose Your Work</em> takes you from this snapshot to the system behind it. Your result points to where to begin, but the book is where the change happens.</p>'
   + '<a href="https://dandobos.com/choose-your-work/" style="display:block;background:#0F0F0F;color:#FFFFFF;font-family:Inter,Arial,sans-serif;font-size:15px;font-weight:bold;text-decoration:none;text-align:center;padding:15px;border-radius:8px;">Get Choose Your Work</a>'
-  + '</td></tr><tr><td style="padding:8px 36px 30px;"><p style="font-family:Inter,Arial,sans-serif;font-size:11px;color:#9A9A9A;text-align:center;line-height:1.5;margin:0;">You are receiving this because you took The Hidden Work assessment.</p></td></tr></table>'
+  + '</td></tr><tr><td style="padding:8px 36px 30px;"><p style="font-family:Inter,Arial,sans-serif;font-size:11px;color:#9A9A9A;text-align:center;line-height:1.5;margin:0;">You are receiving this because you took the Choose Your Work Quiz.</p></td></tr></table>'
   + '</td></tr></table>';
 }
 function show(i){
