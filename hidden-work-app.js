@@ -195,7 +195,7 @@ function renderIntro() {
   // Invited visitors (arriving via a friend's share link) get the friend's pattern up
   // front and a compare promise; everyone else gets the standard intro.
   var invited = _invite && ARCH[_invite.key];
-  var title = 'Discover your Work Personality. Uncover your Hidden Work.';
+  var title = 'Discover your Work Personality. Choose the Work You Are Meant to Do.';
   var inviteSpectrum = '';
   var invCard = '';
   var invitePatterns = '';
@@ -221,7 +221,7 @@ function renderIntro() {
     begin = 'Find your pattern';
     stats = '';
   }
-  return '<p class="intro-eyebrow">The Hidden Work</p>'
+  return '<p class="intro-eyebrow">The Choose Your Work Quiz</p>'
     + inviteSpectrum
     + '<h1 class="intro-title">' + title + '</h1>'
     + invCard
@@ -263,11 +263,11 @@ function renderQuestion() {
     + (qIdx > 0 ? '<div class="back-link"><button onclick="goBack()">\u2190 Previous question</button></div>' : '');
 }
 function renderGate() {
-  return '<h1 class="gate-title">Your Hidden Work result is ready.</h1>'
+  return '<h1 class="gate-title">Your Work Personality is ready.</h1>'
     + '<p class="gate-desc">Enter your email and I&rsquo;ll send your result, your free chapter, and the 7-day <em>Choose Your Work</em> course.</p>'
     + '<input class="email-input" id="hw-email" type="email" name="email" autocomplete="email" aria-label="Your email address" placeholder="your@email.com" onkeydown="if(event.key===\'Enter\'){event.preventDefault();submitGate();}"/>'
     + '<p id="hw-gate-err" role="alert" style="display:none;font-family:var(--sans);font-size:13px;color:#B23A2E;text-align:center;margin:10px 0 0;">Please enter a valid email address.</p>'
-    + '<button class="continue-btn" id="hw-gate-btn" onclick="submitGate()" style="margin: 8px auto 0; width: 100%;">Show me my Hidden Work</button>'
+    + '<button class="continue-btn" id="hw-gate-btn" onclick="submitGate()" style="margin: 8px auto 0; width: 100%;">Show me my Work Personality</button>'
     + '<p class="gate-fine">No spam. Unsubscribe anytime. Your answers stay private.</p>';
 }
 // ================= SCORING ENGINE =================
@@ -541,17 +541,17 @@ const VIRAL = {
   LLH:{ accent:'#557C9E', claim:"I'm at peace with who I am. Now I need to define where I'm going.",     prompt:"Know someone also at peace with themselves but unsure where they're headed?" },
   LLL:{ accent:'#6B6B6B', claim:"Everything looks fine on paper, but I know something's off, and I'm done ignoring it.", prompt:"Know someone whose work looks fine on paper but something feels off?" }
 };
-const SHARE_BASE = 'https://dandobos.com/hidden-work/';
-// Per-archetype share-preview stubs: /hidden-work/t/<slug> sets an archetype-specific
+const SHARE_BASE = 'https://dandobos.com/choose-your-work-quiz/';
+// Per-archetype share-preview stubs: /choose-your-work-quiz/t/<slug> sets an archetype-specific
 // og:image + title, then redirects into the quiz (?type=KEY, forwarding &hws=). So a shared
 // link unfurls as the archetype card in WhatsApp/iMessage instead of the generic page.
 const SHARE_SLUG = { HHH:'true-creator', HHL:'high-achiever', HLH:'awakened-observer', HLL:'restless-visionary', LHH:'restless-explorer', LHL:'tireless-driver', LLH:'grounded-seeker', LLL:'late-bloomer' };
 const SHARE_COMPARE_PROMPT = 'Want to compare patterns with someone?';
 const SHARE_CHALLENGE_TITLE = 'Help a friend discover their hidden work';
 const SHARE_CHALLENGE_BODY = 'They will get their own pattern, then you can compare where you match and where you do not.';
-const SHARE_CHALLENGE_MESSAGE = 'Want to compare Work Personalities? Take The Hidden Work and see: ';
+const SHARE_CHALLENGE_MESSAGE = 'Want to compare Work Personalities? Take the Choose Your Work Quiz and see: ';
 var _share = null;
-function viralShareText(r){ return 'I did the Hidden Work quiz and came out as the ' + r.archetype.replace(/^The\s+/, '') + '. There are 8 Work Personalities. Which one are you?'; }
+function viralShareText(r){ return 'Hey! I did the Choose Your Work Quiz and came out as the ' + r.archetype.replace(/^The\s+/, '') + '. There are 8 Work Personalities. Which one are you?'; }
 function viralLink(r, s){
   var slug = SHARE_SLUG[r.key];
   if (slug) return SHARE_BASE + 't/' + slug + (s ? '?hws=' + s.C + '-' + s.AG + '-' + s.AL : '');
@@ -619,14 +619,14 @@ function wcCardHtml(r){
   }).join('');
   return '<div class="wc" id="wc-card"><div class="wc-bar"></div>'
     + '<button class="card-corner" title="Save card as image" onclick="viralSaveImage()"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 4v10m0 0l-3.5-3.5M12 14l3.5-3.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>'
-    + '<p class="wc-ey">The Hidden Work</p>'
+    + '<p class="wc-ey">The Choose Your Work Quiz</p>'
     + '<h2 class="wc-name">I am '+art+' <b>'+short+'</b></h2>'
     + '<p class="wc-claim">“'+SHARE_CLAIM[r.key]+'”</p>'
     + '<p class="wc-label">What people can count on me for</p>'
     + '<div class="wc-list">'+items+'</div>'
     + '<div class="wc-divh"><span>Which of the 8 Work Personalities are you?</span></div>'
     + '<div class="wc-grid">'+cells+'</div>'
-    + '<div class="foot-live"><a class="wc-cta" href="#">Discover your hidden work</a><p class="wc-src">Find yours at dandobos.com/hidden-work</p></div>'
+    + '<div class="foot-live"><a class="wc-cta" href="#">Discover your Work Personality</a><p class="wc-src">Find yours at dandobos.com/choose-your-work-quiz</p></div>'
     + '</div>';
 }
 const SHARE_HEADLINE = {
@@ -641,11 +641,11 @@ const SHARE_HEADLINE = {
 };
 function shareLoopHtml(r, s){
   var p=sharePayload(r, s), e=encodeURIComponent;
-  var fMsg = 'I did the Hidden Work quiz and came out as the ' + r.archetype.replace(/^The\s+/, '') + '. There are 8 Work Personalities. Which one are you?';
+  var fMsg = 'Hey! I did the Choose Your Work Quiz and came out as the ' + r.archetype.replace(/^The\s+/, '') + '. There are 8 Work Personalities. Which one are you?';
   p.text = fMsg;         // every share action sends this message, followed by the link
   _share = p;
   return '<div class="res-divider"></div>'
-    + '<p class="res-section-label">Share Your Hidden Work Card With a Friend or Colleague</p>'
+    + '<p class="res-section-label">Share Your Work Personality Card With a Friend or Colleague</p>'
     + wcCardHtml(r)
     + '<div class="panelbox">'
       + '<p class="pb-h">' + SHARE_HEADLINE[r.key] + '</p>'
@@ -684,7 +684,7 @@ function hwShareClick(ch){ hwCap('share_clicked', { channel: ch, archetype_key: 
 function viralCopyLink(){ if(!_share) return; hwShareClick('copy'); var u=viralShareString(); (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(function(){ viralToast('Copied'); }).catch(function(){ viralToast(u); }); }
 function viralSocial(url, channel){ if(!_share) return; hwShareClick(channel||'social'); var u=viralShareString(); if(navigator.clipboard){ navigator.clipboard.writeText(u).then(function(){ viralToast('Message copied, paste it into your post'); }).catch(function(){}); } window.open(url,'_blank','noopener'); }
 function viralInstagram(){ if(!_share) return; hwShareClick('instagram'); var u=viralShareString(); (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(function(){ viralToast('Message copied, paste it into Instagram'); }).catch(function(){ viralToast(u); }); }
-function viralNativeShare(){ if(!_share) return; hwShareClick('native'); if(navigator.share){ navigator.share({ title:'The Hidden Work', text:_share.text, url:_share.link }).catch(function(){}); } else { viralCopyLink(); } }
+function viralNativeShare(){ if(!_share) return; hwShareClick('native'); if(navigator.share){ navigator.share({ title:'The Choose Your Work Quiz', text:_share.text, url:_share.link }).catch(function(){}); } else { viralCopyLink(); } }
 function viralEditMsg(el){ var t=(el.textContent||'').replace(/\s+/g,' ').trim(); if(_share) _share.text=t; var box=el.closest&&el.closest('.panelbox'); if(!box) return; var e=encodeURIComponent; var wa=box.querySelector('a.share-wa, a[href*="wa.me"]'); if(wa){ var lw=wa.getAttribute('data-link')||''; wa.href='https://wa.me/?text='+e(t+(lw?' '+lw:'')); } var tw=box.querySelector('a.share-tw, a[href*="twitter.com"]'); if(tw){ var lt=tw.getAttribute('data-link')||''; tw.href='https://twitter.com/intent/tweet?text='+e(t)+(lt?'&url='+e(lt):''); } }
 function viralSaveImage(){
   var el=document.getElementById('wc-card');
@@ -694,7 +694,7 @@ function viralSaveImage(){
   // Render a clone with the download footer (Discover prompt + URL as the CTA), no corner icon.
   var clone=el.cloneNode(true); clone.removeAttribute('id');
   var cc=clone.querySelector('.card-corner'); if(cc) cc.parentNode.removeChild(cc);
-  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Hidden Work</p><span class="dl-url">dandobos.com/hidden-work</span></div>';
+  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><span class="dl-url">dandobos.com/choose-your-work-quiz</span></div>';
   clone.style.position='fixed'; clone.style.left='-9999px'; clone.style.top='0'; clone.style.width=el.offsetWidth+'px';
   document.body.appendChild(clone);
   function cleanup(){ if(clone.parentNode) clone.parentNode.removeChild(clone); }
@@ -704,7 +704,7 @@ function viralSaveImage(){
       if(!blob){ viralToast('Could not create image'); return; }
       // Always download the PNG to the device.
       var url=URL.createObjectURL(blob);
-      var a=document.createElement('a'); a.href=url; a.download='my-hidden-work.png';
+      var a=document.createElement('a'); a.href=url; a.download='my-work-personality.png';
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       setTimeout(function(){ URL.revokeObjectURL(url); },1000);
       viralToast('Image saved');
@@ -723,16 +723,16 @@ function viralSaveStory(){
   wrap.style.cssText='position:fixed;left:-9999px;top:0;width:1080px;height:1920px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:110px 90px;box-sizing:border-box;background:linear-gradient(165deg,'+accent+' 0%,#141414 135%);font-family:\'Source Serif Pro\',Georgia,serif;';
   var top=document.createElement('div');
   top.style.cssText='text-align:center;color:#fff;';
-  top.innerHTML='<p style="font-family:\'Inter\',sans-serif;font-size:24px;font-weight:700;letter-spacing:5px;text-transform:uppercase;opacity:.85;margin:0 0 18px">The Hidden Work</p><p style="font-size:52px;line-height:1.15;font-weight:400;margin:0;">There are 8 Work Personalities.<br>Which one are you?</p>';
+  top.innerHTML='<p style="font-family:\'Inter\',sans-serif;font-size:24px;font-weight:700;letter-spacing:5px;text-transform:uppercase;opacity:.85;margin:0 0 18px">The Choose Your Work Quiz</p><p style="font-size:52px;line-height:1.15;font-weight:400;margin:0;">There are 8 Work Personalities.<br>Which one are you?</p>';
   var mid=document.createElement('div');
   var clone=el.cloneNode(true); clone.removeAttribute('id');
   var cc=clone.querySelector('.card-corner'); if(cc) cc.parentNode.removeChild(cc);
-  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Hidden Work</p><span class="dl-url">dandobos.com/hidden-work</span></div>';
+  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><span class="dl-url">dandobos.com/choose-your-work-quiz</span></div>';
   clone.style.width='860px'; clone.style.boxShadow='0 30px 80px rgba(0,0,0,.35)'; clone.style.borderRadius='6px';
   mid.appendChild(clone);
   var bot=document.createElement('div');
   bot.style.cssText='text-align:center;color:#fff;font-family:\'Inter\',sans-serif;';
-  bot.innerHTML='<p style="font-size:30px;font-weight:600;margin:0 0 8px">Find your pattern</p><p style="font-size:26px;opacity:.85;margin:0;letter-spacing:.5px">dandobos.com/hidden-work</p>';
+  bot.innerHTML='<p style="font-size:30px;font-weight:600;margin:0 0 8px">Find your pattern</p><p style="font-size:26px;opacity:.85;margin:0;letter-spacing:.5px">dandobos.com/choose-your-work-quiz</p>';
   wrap.appendChild(top); wrap.appendChild(mid); wrap.appendChild(bot);
   document.body.appendChild(wrap);
   function cleanup(){ if(wrap.parentNode) wrap.parentNode.removeChild(wrap); }
@@ -741,14 +741,14 @@ function viralSaveStory(){
     canvas.toBlob(function(blob){
       if(!blob){ viralToast('Could not create image'); return; }
       var url=URL.createObjectURL(blob);
-      var a=document.createElement('a'); a.href=url; a.download='my-hidden-work-story.png';
+      var a=document.createElement('a'); a.href=url; a.download='my-work-personality-story.png';
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       setTimeout(function(){ URL.revokeObjectURL(url); },1000);
       viralToast('Story image saved');
     },'image/png');
   }).catch(function(){ cleanup(); viralToast('Could not create image, please screenshot the card'); });
 }
-function viralChallenge(){ if(!_share) return; hwShareClick('challenge'); var msg=SHARE_CHALLENGE_MESSAGE+_share.link; if(navigator.share){ navigator.share({ title:'The Hidden Work', text:msg, url:_share.link }).catch(function(){}); } else { (navigator.clipboard?navigator.clipboard.writeText(msg):Promise.reject()).then(function(){ viralToast('Invite copied, paste it to a friend'); }).catch(function(){ window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank'); }); } }
+function viralChallenge(){ if(!_share) return; hwShareClick('challenge'); var msg=SHARE_CHALLENGE_MESSAGE+_share.link; if(navigator.share){ navigator.share({ title:'The Choose Your Work Quiz', text:msg, url:_share.link }).catch(function(){}); } else { (navigator.clipboard?navigator.clipboard.writeText(msg):Promise.reject()).then(function(){ viralToast('Invite copied, paste it to a friend'); }).catch(function(){ window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank'); }); } }
 
 // ===== compare with the friend who invited you (closes the share loop) =====
 // Renders only when an invite is present. With scores (&s=) it draws You/Them bars;
@@ -822,7 +822,7 @@ function cmpEditMsg(el){
 function cmpNativeShare(){
   if (!_cmpBack) return;
   hwCap('compare_sendback', { channel: 'native' });
-  if (navigator.share){ navigator.share({ title: 'The Hidden Work', text: _cmpBack.text, url: _cmpBack.link }).catch(function(){}); }
+  if (navigator.share){ navigator.share({ title: 'The Choose Your Work Quiz', text: _cmpBack.text, url: _cmpBack.link }).catch(function(){}); }
   else { cmpCopy(); }
 }
 function cmpCopy(){
@@ -869,7 +869,7 @@ function hwTopHtml(key, s){
   var am = _hwAmFlags(key, s);
   var share = am.amDrained ? AM_DRAINED_SHARE : am.amFoothills ? AM_FOOTHILLS_SHARE : SHARE[key];
   var narr = am.amDrained ? AM_DRAINED_NARR : am.amFoothills ? amFoothillsNarr(s) : ((key === 'LLH' && s.V > 60) ? DS_HIGH_V_NARR : NARR[key]);
-  return '<p class="res-eyebrow">Your Hidden Work</p>'
+  return '<p class="res-eyebrow">Your Work Personality</p>'
     + '<h1 class="res-name">' + ARCH[key].name + '</h1>'
     + '<p class="res-share">' + share + '</p>'
     + '<div class="res-narrative">' + narrHtml(narr) + '</div>';
@@ -1154,7 +1154,7 @@ function renderResult(){
 }
 function renderComplete() { return renderResult(); }
 function renderNeedQuiz() {
-  return '<p class="intro-eyebrow">The Hidden Work</p>'
+  return '<p class="intro-eyebrow">The Choose Your Work Quiz</p>'
     + '<h1 class="intro-title">Please complete the quiz first</h1>'
     + '<p class="intro-desc">Take the quiz to get your result. Once you have finished, you can open it here to share it.</p>'
     + '<button class="continue-btn" onclick="startQuiz()">Start the quiz</button>';
