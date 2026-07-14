@@ -14,7 +14,7 @@
   html,body{height:100%;margin:0;background:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%}
   body{font-family:var(--sans);-webkit-font-smoothing:antialiased}
 
-  .ex-box{background:var(--card);border:1px solid var(--border);border-radius:10px}
+  .ex-box{height:auto;max-height:100vh;overflow:hidden;background:var(--card);border:1px solid var(--border);border-radius:10px}
   .ex-in{padding:15px 15px 14px;display:flex;flex-direction:column}
   .ex-head{display:flex;align-items:center;gap:6px;flex:none;margin-bottom:11px}
   .ex-title{font-size:16px;font-weight:700;color:var(--head);flex:none}
@@ -67,12 +67,21 @@
       head=document.querySelector(".ex-head"), count=document.getElementById("count"),
       measure=document.getElementById("measure");
   var pages=[[]], page=0;
-  var PER_PAGE=3;   // fixed count per page (matches the original); the card hugs
-                    // its content and the Tally embed auto-sizes to the card.
 
   function computePages(){
-    var out=[];
-    for(var i=0;i<ITEMS.length;i+=PER_PAGE) out.push(ITEMS.slice(i,i+PER_PAGE));
+    // Pack each page to the height the embed gives us (the iframe viewport), and
+    // let the card hug its content, so it never scrolls, never clips, and leaves
+    // no blank inside the box, whatever height Tally reserves.
+    var TARGET=document.documentElement.clientHeight;
+    var avail=TARGET - head.offsetHeight - 40; // 15 pad-top + 11 head margin + 14 pad-bottom
+    measure.style.width=list.clientWidth+"px";
+    var out=[], cur=[];
+    for(var i=0;i<ITEMS.length;i++){
+      cur.push(ITEMS[i]);
+      measure.innerHTML=cur.map(li).join("");
+      if(measure.offsetHeight>avail && cur.length>1){ cur.pop(); out.push(cur); cur=[ITEMS[i]]; }
+    }
+    if(cur.length) out.push(cur);
     return out;
   }
   function render(){
