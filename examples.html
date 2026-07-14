@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Examples</title>
+<style>
+  :root{
+    --card:#ffffff; --border:#e6e8ec; --head:#1a1f2b; --text:#374151; --faint:#8b94a3; --btn:#d2d6de;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  body{font-family:var(--sans);-webkit-font-smoothing:antialiased}
+
+  .ex-box{height:auto;max-height:100vh;overflow:hidden;background:var(--card);border:1px solid var(--border);border-radius:10px}
+  .ex-in{padding:15px 15px 14px;display:flex;flex-direction:column}
+  .ex-head{display:flex;align-items:center;gap:6px;flex:none;margin-bottom:11px}
+  .ex-title{font-size:16px;font-weight:700;color:var(--head);flex:none}
+  .ex-count{font-family:var(--mono);font-size:12px;color:var(--faint);flex:none;font-variant-numeric:tabular-nums}
+  .ex-more{flex:none;margin-left:auto;font-family:var(--sans);font-size:14px;color:var(--head);background:var(--card);border:1px solid var(--btn);border-radius:9px;padding:7px 11px;cursor:pointer;font-weight:500;white-space:nowrap}
+  .ex-more:hover{background:#f7f8fa}
+  .ex-list{margin:0;padding-left:20px;list-style:disc;flex:1 1 auto;min-height:0}
+  .ex-list li{font-size:14px;color:var(--text);line-height:20px;margin-bottom:6px}
+  .ex-list li::marker{color:#aeb4be}
+  .ex-measure{position:absolute;visibility:hidden;left:-9999px;top:0;padding-left:20px;margin:0;list-style:disc}
+  .ex-measure li{font-size:14px;line-height:20px;margin-bottom:6px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+  <div class="ex-box">
+    <div class="ex-in">
+      <div class="ex-head">
+        <span class="ex-title">Examples</span>
+        <span class="ex-count" id="count"></span>
+        <button class="ex-more" id="moreBtn" type="button">More examples →</button>
+      </div>
+      <ul class="ex-list" id="list"></ul>
+    </div>
+  </div>
+  <ul class="ex-measure" id="measure"></ul>
+
+<script>
+  // ---- Example sets. Add one entry per widget; select with ?set=<key> ----
+  var SETS = {
+    "exit-first-action": [
+      "Spend a day working from a coworking space in a different industry.",
+      "Have coffee with someone in a field I’m curious about.",
+      "Start a weekend side project or create one small artifact (prototype, article, landing page, demo).",
+      "Attend a free online workshop or webinar in an area you’ve thought about switching to.",
+      "Call a recruiter and ask what roles they’d place you in if you wanted to switch tomorrow.",
+      "Read a few profiles of “A day in the life of [insert a career]”.",
+      "Volunteer for a few hours with a nonprofit in a completely different field.",
+      "Join a local meetup or networking group for professionals in a career you’re considering.",
+      "Read a bestselling book or biography about someone working in a field that fascinates you."
+    ]
+  };
+  var params = new URLSearchParams(location.search);
+  var key = params.get("set");
+  var ITEMS = SETS[key] || SETS["exit-first-action"];
+
+  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  var li = function(t){return "<li>"+esc(t)+"</li>";};
+  var box=document.querySelector(".ex-box"), list=document.getElementById("list"),
+      head=document.querySelector(".ex-head"), count=document.getElementById("count"),
+      measure=document.getElementById("measure");
+  var pages=[[]], page=0;
+
+  function computePages(){
+    // pack to the height the embed gives us (the iframe viewport), but let the
+    // CARD hug its content, so short pages never leave a blank gap inside the box.
+    var TARGET=document.documentElement.clientHeight;
+    var avail=TARGET - head.offsetHeight - 40; // 15 pad-top + 11 head margin + 14 pad-bottom
+    measure.style.width=list.clientWidth+"px";
+    var out=[], cur=[];
+    for(var i=0;i<ITEMS.length;i++){
+      cur.push(ITEMS[i]);
+      measure.innerHTML=cur.map(li).join("");
+      if(measure.offsetHeight>avail && cur.length>1){ cur.pop(); out.push(cur); cur=[ITEMS[i]]; }
+    }
+    if(cur.length) out.push(cur);
+    return out;
+  }
+  function render(){
+    pages=computePages();
+    if(page>=pages.length) page=0;
+    list.innerHTML=pages[page].map(li).join("");
+    count.textContent=(page+1)+"/"+pages.length;
+    // if only one page, the button is redundant
+    document.getElementById("moreBtn").style.display = pages.length>1 ? "" : "none";
+    count.style.display = pages.length>1 ? "" : "none";
+  }
+  document.getElementById("moreBtn").addEventListener("click",function(){ page=(page+1)%pages.length; render(); });
+  render();
+  var t; window.addEventListener("resize",function(){ clearTimeout(t); t=setTimeout(render,120); });
+</script>
+</body>
+</html>
