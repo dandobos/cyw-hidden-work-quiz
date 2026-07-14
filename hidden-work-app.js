@@ -466,7 +466,24 @@ function chapterPlan(key, flag){
 }
 function computeResult(){
   const s = dimensionScores();
-  const key = bucket(s.C) + bucket(s.AG) + bucket(s.AL);
+  let key = bucket(s.C) + bucket(s.AG) + bucket(s.AL);
+  // True Creator label gate (2026-07-14): the summit name requires the weakest displayed
+  // dimension to clear TC_GATE. Bucketing alone made HHH the default outcome of mild
+  // positivity (beta round 1: 45% of real completions, most with a weakest dim of 51-64).
+  // Below the bar, the reader is assigned the neighbour archetype by flipping their
+  // weakest dimension: a specific growth edge instead of a false summit. The "rare ones"
+  // narrative keeps its own stricter praise gate (AM_FULL_REQ) on top of this.
+  const TC_GATE = 65;
+  let tcGated = false;
+  if (key === 'HHH'){
+    const weakest = Math.min(s.C, s.AG, s.AL);
+    if (weakest < TC_GATE){
+      tcGated = true;
+      if (s.C === weakest) key = 'LHH';        // clarity is the edge -> Restless Explorer
+      else if (s.AG === weakest) key = 'HLH';  // agency is the edge  -> Awakened Observer
+      else key = 'HHL';                        // alignment is the edge -> High Achiever
+    }
+  }
   const flagIdx = questions.findIndex(q=>q.routingFlag);
   const flag = (flagIdx>=0 && answers[flagIdx]) ? answers[flagIdx].value : 'none';
   const plan = chapterPlan(key, flag);
@@ -493,7 +510,7 @@ function computeResult(){
     });
   const neighbour    = neighbours.length ? neighbours[0].name : null;
   const neighbourKey = neighbours.length ? neighbours[0].key  : null;
-  return { scores:s, key, archetype:ARCH[key].name, regret:regretFor(s),
+  return { scores:s, key, tcGated, archetype:ARCH[key].name, regret:regretFor(s),
            vitality:vitalityReadout(s),
            chapters:plan.chapters, mode:plan.mode, flag, border, neighbours, neighbour, neighbourKey };
 }
@@ -1319,7 +1336,7 @@ function submitGate(){
       hwTimingStep();
       var r = computeResult(), d = hwDurations();
       hwCap('quiz_completed', {
-        archetype: r.archetype, archetype_key: r.key,
+        archetype: r.archetype, archetype_key: r.key, tc_gated: r.tcGated,
         regret_signal: r.regret && r.regret.label,
         vitality_band: r.vitality && r.vitality.verdict,
         score_clarity: r.scores.C, score_agency: r.scores.AG,
