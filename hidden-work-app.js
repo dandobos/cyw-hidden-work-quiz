@@ -376,7 +376,7 @@ function amFoothillsNarr(s){
 }
 // Drained True Creator: displayed dims all strong (C/AG/AL clear the full bar) but Vitality is low.
 // Foothills' "close the gap on a dimension" would be false here, so this variant speaks to energy. (Copy: Dan's.)
-const AM_DRAINED_SHARE = "My work is genuinely mine. It just isn't feeding me right now.";
+const AM_DRAINED_SHARE = "My work is genuinely mine. It just isn't energizing me right now.";
 const AM_DRAINED_WHY = "You've built genuinely aligned work, and this chapter is about sustaining and scaling it without letting it burn you out.";
 const AM_DRAINED_NARR = "You've done the hard part. You've found your work and you're taking action. This is rare. But right now it's draining you more than it's energizing you. Even work you've genuinely chosen can come at a price from too much load, too little rest, or a quiet shift in your values. This isn't a sign you're on the wrong path but it is a sign that something needs to change. Observe what depletes your energy and use that as a guide to move forward.";
 // Grounded Seeker (LLH) has two readings depending on Vitality: the default narrative assumes a calm,
@@ -625,10 +625,16 @@ const SHARE_STRENGTHS = {
   LLL:[["Steady and dependable","Shows up, holds things together, keeps everything running."],["Honest with themselves","Will name the quiet thing most people talk themselves out of."],["Open to the real question","Done with settling and ready to choose."]]
 };
 const SHARE_GRID = ['Restless Visionary','True Creator','High Achiever','Awakened Observer','Restless Explorer','Tireless Driver','Grounded Seeker','Late Bloomer'];
-function wcCardHtml(r){
+function wcCardHtml(r, drained){
   var short = r.archetype.replace(/^The\s+/, '');
   var art = /^[AEIOU]/.test(short) ? 'an' : 'a';
-  var items = SHARE_STRENGTHS[r.key].map(function(s){
+  var strengths = SHARE_STRENGTHS[r.key];
+  if (drained) strengths = [
+    [strengths[0][0], 'Found their real work and owns every part of it.'],
+    strengths[1],
+    [strengths[2][0], 'Rebuilding the energy that world-class work runs on.']
+  ];
+  var items = strengths.map(function(s){
     return '<div class="wc-item"><div class="wc-ck">✓</div><div><p class="wc-it-t">'+s[0]+'</p><p class="wc-it-d">'+s[1]+'</p></div></div>';
   }).join('');
   var cells = SHARE_GRID.map(function(p){
@@ -638,7 +644,7 @@ function wcCardHtml(r){
     + '<button class="card-corner" title="Save card as image" onclick="viralSaveImage()"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 4v10m0 0l-3.5-3.5M12 14l3.5-3.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>'
     + '<p class="wc-ey">The Choose Your Work Quiz</p>'
     + '<h2 class="wc-name">I am '+art+' <b>'+short+'</b></h2>'
-    + '<p class="wc-claim">“'+SHARE_CLAIM[r.key]+'”</p>'
+    + '<p class="wc-claim">“'+(drained ? AM_DRAINED_SHARE : SHARE_CLAIM[r.key])+'”</p>'
     + '<p class="wc-label">What people can count on me for</p>'
     + '<div class="wc-list">'+items+'</div>'
     + '<div class="wc-divh"><span>Which of the 8 Work Personalities are you?</span></div>'
@@ -663,7 +669,7 @@ function shareLoopHtml(r, s){
   _share = p;
   return '<div class="res-divider"></div>'
     + '<p class="res-section-label">Share Your Work Personality Card With a Friend or Colleague</p>'
-    + wcCardHtml(r)
+    + wcCardHtml(r, _hwAmFlags(r.key, s).amDrained)
     + '<div class="panelbox">'
       + '<p class="pb-h">' + SHARE_HEADLINE[r.key] + '</p>'
       + '<p class="pb-b">Send the quiz to a friend, post it, or save your card to share anywhere.</p>'
@@ -972,6 +978,8 @@ function hwConfirm(key){
   _hwConfirmedKey = key;
   document.getElementById('hw-top').innerHTML = hwTopHtml(key, _hwS);
   document.getElementById('hw-chapter').innerHTML = hwChapterHtml(key, _hwS, _hwR.flag);
+  var fm = document.getElementById('hw-firstmoves');
+  if (fm) fm.innerHTML = checklistHtml(key, _hwAmFlags(key, _hwS).amDrained);   // re-picked archetype gets its own prompts
   document.getElementById('hw-ask').hidden = true;
   document.getElementById('hw-chooser').hidden = true;
   document.getElementById('hw-confirmed').hidden = false;
@@ -1027,6 +1035,13 @@ function hwReopen(){
   var ch = document.getElementById('hw-chooser'); ch.hidden = false; _hwScroll(ch);
 }
 
+// Drained True Creator variant: displayed dims clear the label gate but Vitality is low.
+// "Scale, not repair" is the wrong ask for a depleted reader; energy comes first.
+const CHECKLIST_HHH_DRAINED = { note: `The work is yours. The focus is on energy before scale, because world-class runs on a full tank.`, items: [
+  `Write two lists: the parts of your work that still energize you, and the parts that only drain you.`,
+  `Eliminate, shrink, or delegate one draining task this week. Even 30 minutes counts.`,
+  `Block 60 minutes for the part that energizes you, before anything reactive. Protect it like a meeting.`
+] };
 const CHECKLISTS = {
   HHH: { note: `The focus is on scale, not repair. The risk is comfort quietly shrinking your ambition.`, items: [
     `Write one sentence: what would make your work **world-class**, not just good?`,
@@ -1077,20 +1092,64 @@ const CHECKLISTS = {
     `Tell someone you trust the thing you're done ignoring, so it can't slide back into silence.`
   ] }
 };
-function checklistHtml(key){
-  var c = CHECKLISTS[key]; if (!c) return '';
+var _fmQuestions = [];
+function checklistHtml(key, drained){
+  var c = (key === 'HHH' && drained) ? CHECKLIST_HHH_DRAINED : CHECKLISTS[key]; if (!c) return '';
   var accent = (typeof VIRAL !== 'undefined' && VIRAL[key] && VIRAL[key].accent) || '#3D7A6E';
   var bold = function(t){ return t.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'); };
-  var items = c.items.map(function(it){
-    return '<label class="rc-item"><input type="checkbox" class="rc-cb" style="accent-color:' + accent + '"/>'
-      + '<span class="rc-txt">' + bold(it) + '</span></label>';
+  var plain = function(t){ return t.replace(/\*\*(.+?)\*\*/g, '$1'); };
+  _fmQuestions = c.items.map(plain);
+  var items = c.items.map(function(it, i){
+    return '<div class="rc-q"><label class="rc-qt" for="fm-a-' + i + '">' + bold(it) + '</label>'
+      + '<textarea id="fm-a-' + i + '" class="rc-a" rows="2" placeholder="Write your answer here..."></textarea></div>';
   }).join('');
+  var emailRow = (typeof _kitEmail !== 'undefined' && _kitEmail) ? ''
+    : '<input class="email-input" id="fm-email" type="email" name="email" autocomplete="email" aria-label="Your email address" placeholder="your@email.com" style="margin:10px 0 0;"/>';
   return '<div class="res-checklist" style="border-left-color:' + accent + '">'
     + '<p class="rc-eyebrow" style="color:' + accent + '">Your First Moves</p>'
     + '<p class="rc-title">Apply this to your work this week</p>'
     + '<p class="rc-sub">' + c.note + '</p>'
     + items
+    + emailRow
+    + '<button type="button" class="continue-btn rc-send" id="fm-btn" onclick="hwFirstMovesSend()">Email Me My Responses</button>'
+    + '<p class="rc-note" id="fm-note" role="status"></p>'
     + '</div>';
+}
+function hwFirstMovesSend(){
+  var btn = document.getElementById('fm-btn'), note = document.getElementById('fm-note');
+  if (!btn || btn.disabled) return;
+  var email = (typeof _kitEmail !== 'undefined' && _kitEmail) ? _kitEmail : '';
+  var inp = document.getElementById('fm-email');
+  if (!email && inp) email = (inp.value || '').trim();
+  if (!EMAIL_RE.test(email)){
+    if (note){ note.textContent = 'Please enter a valid email address.'; note.className = 'rc-note err'; }
+    if (inp) inp.focus();
+    return;
+  }
+  var moves = [];
+  _fmQuestions.forEach(function(q, i){
+    var t = document.getElementById('fm-a-' + i);
+    var a = t ? (t.value || '').trim() : '';
+    if (a) moves.push({ q: q, a: a });
+  });
+  if (!moves.length){
+    if (note){ note.textContent = 'Write at least one answer first.'; note.className = 'rc-note err'; }
+    return;
+  }
+  btn.disabled = true; btn.textContent = 'Sending...';
+  if (note){ note.textContent = ''; note.className = 'rc-note'; }
+  fetch(BETA_BACKEND + '/first-moves', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email, moves: moves }) })
+  .then(function(r){ if (!r.ok) throw new Error('send failed'); return r.json(); })
+  .then(function(){
+    btn.textContent = 'Sent';
+    if (note){ note.textContent = 'Sent. Your responses are on their way to your inbox.'; note.className = 'rc-note ok'; }
+    try { hwCap('first_moves_submitted', { archetype_key: (window._hwResult && window._hwResult.archetype_key) || null, answered: moves.length }); } catch(e){}
+  })
+  .catch(function(){
+    btn.disabled = false; btn.textContent = 'Email Me My Responses';
+    if (note){ note.textContent = 'Could not send right now. Please try again.'; note.className = 'rc-note err'; }
+  });
 }
 
 function renderResult(){
@@ -1160,7 +1219,7 @@ function renderResult(){
         + '<p class="res-regret-desc">' + reg.desc + '</p>'
       + '</div>'
       + '<div class="res-divider"></div>'
-      + checklistHtml(r.key)
+      + '<div id="hw-firstmoves">' + checklistHtml(r.key, amDrained) + '</div>'
       + '<div class="res-divider"></div>'
       + '<div id="hw-chapter">' + hwChapterHtml(r.key, s, r.flag) + '</div>'
       + shareLoopHtml(r, s)

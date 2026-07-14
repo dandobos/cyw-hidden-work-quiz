@@ -130,6 +130,15 @@
   .rc-cb { flex: 0 0 20px; width: 20px; height: 20px; margin: 2px 0 0; cursor: pointer; }
   .rc-txt { font-family: var(--sans); font-size: 15px; line-height: 1.55; color: var(--text-primary); }
   .rc-cb:checked + .rc-txt { color: var(--text-muted); text-decoration: line-through; }
+  .rc-q { padding: 10px 0 4px; }
+  .rc-qt { display: block; font-family: var(--sans); font-size: 15px; line-height: 1.55; color: var(--text-primary); margin: 0 0 7px; }
+  .rc-a { width: 100%; font-family: var(--heading); font-size: 15.5px; line-height: 1.5; color: var(--text-primary); background: var(--inner); border: 1px solid var(--border); padding: 10px 12px; min-height: 52px; resize: vertical; outline: none; }
+  .rc-a:focus { border-color: var(--accent); }
+  .rc-a::placeholder { color: var(--text-subtle); font-style: italic; }
+  .rc-send { width: 100%; margin-top: 16px; }
+  .rc-note { font-family: var(--sans); font-size: 13px; text-align: center; margin: 10px 0 0; display: none; }
+  .rc-note.ok { display: block; color: #3D7A6E; }
+  .rc-note.err { display: block; color: #B23A2E; }
   .res-chapter { background: var(--inner); border: 1px solid var(--border); padding: 30px; }
   .res-chapter-eyebrow { font-family: var(--sans); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; color: var(--accent); margin-bottom: 12px; }
   .res-chapter-title { font-family: var(--heading); font-style: italic; font-size: 22px; line-height: 1.3; margin-bottom: 14px; }
