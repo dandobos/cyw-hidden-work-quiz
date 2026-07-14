@@ -15,18 +15,18 @@
   body{font-family:var(--sans);-webkit-font-smoothing:antialiased}
 
   .ex-box{background:var(--card);border:1px solid var(--border);border-radius:10px}
-  .ex-in{padding:13px 14px 12px}
-  .ex-head{display:flex;align-items:center;gap:6px;margin-bottom:9px}
-  .ex-title{font-size:15px;font-weight:700;color:var(--head);flex:none}
-  .ex-count{font-family:var(--mono);font-size:11.5px;color:var(--faint);flex:none;font-variant-numeric:tabular-nums}
-  .ex-more{flex:none;margin-left:auto;font-family:var(--sans);font-size:13px;color:var(--head);background:var(--card);border:1px solid var(--btn);border-radius:8px;padding:5px 9px;cursor:pointer;font-weight:500;white-space:nowrap}
+  .ex-in{padding:15px 15px 14px}
+  .ex-head{display:flex;align-items:center;gap:6px;margin-bottom:11px}
+  .ex-title{font-size:16px;font-weight:700;color:var(--head);flex:none}
+  .ex-count{font-family:var(--mono);font-size:12px;color:var(--faint);flex:none;font-variant-numeric:tabular-nums}
+  .ex-more{flex:none;margin-left:auto;font-family:var(--sans);font-size:14px;color:var(--head);background:var(--card);border:1px solid var(--btn);border-radius:9px;padding:7px 11px;cursor:pointer;font-weight:500;white-space:nowrap}
   .ex-more:hover{background:#f7f8fa}
-  .ex-list{margin:0;padding-left:19px;list-style:disc}
-  .ex-list li{font-size:13px;color:var(--text);line-height:17px;margin-bottom:5px}
+  .ex-list{margin:0;padding-left:20px;list-style:disc}
+  .ex-list li{font-size:14px;color:var(--text);line-height:20px;margin-bottom:6px}
   .ex-list li:last-child{margin-bottom:0}
   .ex-list li::marker{color:#aeb4be}
-  .ex-measure{position:absolute;visibility:hidden;left:-9999px;top:0;padding-left:19px;margin:0;list-style:disc}
-  .ex-measure li{font-size:13px;line-height:17px;margin-bottom:5px}
+  .ex-measure{position:absolute;visibility:hidden;left:-9999px;top:0;padding-left:20px;margin:0;list-style:disc}
+  .ex-measure li{font-size:14px;line-height:20px;margin-bottom:6px}
 </style>
 </head>
 <body>
@@ -70,7 +70,7 @@
     // up to 3 bullets, but never more than fits the height the embed gives us,
     // so it can't scroll or clip on a short (mobile) embed.
     var TARGET=document.documentElement.clientHeight;
-    var avail=TARGET - head.offsetHeight - 34; // paddings + head margin
+    var avail=TARGET - head.offsetHeight - 40; // paddings + head margin
     measure.style.width=list.clientWidth+"px";
     var out=[], cur=[];
     for(var i=0;i<ITEMS.length;i++){
