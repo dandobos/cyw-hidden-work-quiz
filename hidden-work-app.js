@@ -534,17 +534,24 @@ function parseInviteFromUrl(){
       var p = raw.split('-').map(Number);
       if (p.every(function(n){ return n >= 0 && n <= 100; })) inv.scores = { C: p[0], AG: p[1], AL: p[2] };
     }
+    // Referral id of the friend who shared this link (b_<betaToken> or r_<random>). Opaque,
+    // no PII. Lets us credit this visit back to the sharer without fingerprinting scores.
+    var ref = (q.get('ref') || '').slice(0, 48);
+    if (/^[A-Za-z0-9_-]{2,48}$/.test(ref)) inv.ref = ref;
     return inv;
   } catch(e){ return null; }
 }
 var _invite = parseInviteFromUrl();
 if (_invite){
   try { sessionStorage.setItem(INVITE_KEY, JSON.stringify(_invite)); } catch(e){}
-  hwCap('landed_from_share', { invite_type: _invite.key, has_scores: !!_invite.scores });
+  hwCap('landed_from_share', { invite_type: _invite.key, has_scores: !!_invite.scores, ref: _invite.ref || null });
 } else {
   try { _invite = JSON.parse(sessionStorage.getItem(INVITE_KEY) || 'null'); } catch(e){ _invite = null; }
   if (_invite && !ARCH[_invite.key]) _invite = null;
 }
+// Register the sharer's ref as a super property so this visitor's quiz_started and
+// quiz_completed inherit it (single-page app + memory persistence keeps it in-session).
+try { if (_invite && _invite.ref && window.posthog && posthog.register) posthog.register({ referred_by: _invite.ref }); } catch(e){}
 
 // ================= RESULT PAGE =================
 // ===== VIRAL SHARE LOOP =====
@@ -569,10 +576,22 @@ const SHARE_CHALLENGE_BODY = 'They will get their own pattern, then you can comp
 const SHARE_CHALLENGE_MESSAGE = 'Want to compare Work Personalities? Take the Choose Your Work Quiz and see: ';
 var _share = null;
 function viralShareText(r){ return 'Hey! I did the Choose Your Work Quiz and came out as the ' + r.archetype.replace(/^The\s+/, '') + '. There are 8 Work Personalities. Which one are you?'; }
+// Per-sharer referral id, computed once. Beta testers get their stable portal token;
+// everyone else a per-share-session random id. Registered as a super property so the
+// sharer's own share_clicked events carry it, and embedded in every share link.
+var _shareRef = null;
+function myShareRef(){
+  if (_shareRef) return _shareRef;
+  var bt = _quizBetaToken();
+  _shareRef = bt ? ('b_' + bt) : ('r_' + Math.random().toString(36).slice(2, 10));
+  try { if (window.posthog && posthog.register) posthog.register({ share_ref: _shareRef }); } catch(e){}
+  return _shareRef;
+}
 function viralLink(r, s){
+  var qs = (s ? 'hws=' + s.C + '-' + s.AG + '-' + s.AL + '&' : '') + 'ref=' + encodeURIComponent(myShareRef());
   var slug = SHARE_SLUG[r.key];
-  if (slug) return SHARE_BASE + 't/' + slug + (s ? '?hws=' + s.C + '-' + s.AG + '-' + s.AL : '');
-  return SHARE_BASE + '?type=' + r.key + (s ? '&hws=' + s.C + '-' + s.AG + '-' + s.AL : '');
+  if (slug) return SHARE_BASE + 't/' + slug + '?' + qs;
+  return SHARE_BASE + '?type=' + r.key + '&' + qs;
 }
 function shareDimensionData(s){
   return [
@@ -1404,6 +1423,7 @@ function submitGate(){
         past_wound: !!(r.flag && r.flag !== 'none'),
         kit_ok: !!confirmed,
         invited: !!_invite, invite_type: _invite ? _invite.key : null, invite_has_scores: !!(_invite && _invite.scores),
+        referred_by: (_invite && _invite.ref) || null,
         duration_seconds: d.duration_seconds, active_seconds: d.active_seconds
       });
     } catch(e){}
