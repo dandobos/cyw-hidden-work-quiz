@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How will you spend the weeks you have left?</title>
+<style>
+  /* Static rebuild of the "Weeks v2" life-in-weeks app (was CodeSandbox/Heroku).
+     Same copy, math and palette; the dot grid is a canvas sized so all 52
+     week-columns always fit the embed width. Content height never exceeds the
+     default-90-row height for the current width, so a fixed embed can hold it. */
+  :root{
+    --ink:#111827; --soft:#4b5563; --border:#e5e7eb; --pill:#f9fafb;
+    --past:rgba(156,163,175,.8); --past-solid:#9ca3af; --left:#3b82f6;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{height:auto;margin:0;background:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  body{font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased}
+  .wk{padding:8px 24px 24px;display:flex;flex-direction:column;gap:22px}
+  h1{font-size:24px;line-height:1.25;font-weight:600;margin:0}
+  .sub{font-size:14px;line-height:1.5;color:var(--soft);margin:6px 0 0}
+  .controls{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:520px}
+  .controls label{display:flex;flex-direction:column;gap:4px}
+  .lbl{font-size:14px;font-weight:500}
+  input[type=number]{font-family:var(--sans);font-size:16px;color:var(--ink);border:1px solid var(--border);border-radius:12px;padding:8px 12px;width:100%;background:#fff;outline:none}
+  input[type=number]:focus{box-shadow:0 0 0 3px rgba(59,130,246,.5)}
+  .metrics{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+  .pill{padding:8px 16px;border-radius:16px;background:var(--pill);border:1px solid var(--border);font-size:15px}
+  .pill b{font-weight:600}
+  .summary{font-size:14px;color:var(--soft)}
+  .legend{display:flex;align-items:center;gap:16px;font-size:14px}
+  .legend span{display:flex;align-items:center;gap:8px}
+  .dot{width:12px;height:12px;border-radius:50%;flex:none}
+  .dot.past{background:var(--past-solid)}
+  .dot.left{background:var(--left)}
+  .axes{font-size:12px;color:var(--soft);user-select:none}
+  .chart{display:flex;gap:6px;align-items:stretch}
+  .gutter{flex:none;position:relative;font-size:11px;color:var(--soft);user-select:none}
+  .gutter i{position:absolute;right:0;transform:translateY(-50%);font-style:normal;line-height:1}
+  .chart-right{flex:1 1 auto;min-width:0}
+  .week-axis{font-size:12px;color:var(--soft);margin-bottom:4px;user-select:none}
+  .card{border:1px solid var(--border);border-radius:16px;padding:8px;background:#fff}
+  canvas{display:block;width:100%}
+  @media (max-width:560px){
+    .wk{padding:6px 12px 16px;gap:16px}
+    h1{font-size:20px}
+  }
+</style>
+</head>
+<body>
+<div class="ex-box"><div class="wk">
+  <header>
+    <h1>How will you spend the weeks you have left?</h1>
+    <p class="sub">Each dot represents one week. Adjust your age and life expectancy to see the weeks remaining.</p>
+  </header>
+
+  <section class="controls">
+    <label><span class="lbl">Current age</span>
+      <input id="age" type="number" inputmode="decimal" min="0" max="90" step="0.1" value="46">
+    </label>
+    <label><span class="lbl">Life Expectancy</span>
+      <input id="exp" type="number" inputmode="numeric" min="1" max="120" step="1" value="90">
+    </label>
+  </section>
+
+  <section class="metrics">
+    <div class="pill"><b id="pillWeeks"></b>&nbsp;weeks remaining</div>
+    <div class="pill">About&nbsp;<b id="pillYears"></b>&nbsp;years left</div>
+    <div class="summary" id="summary" aria-live="polite"></div>
+  </section>
+
+  <section class="legend">
+    <span><span class="dot past"></span> Past</span>
+    <span><span class="dot left"></span> Remaining</span>
+  </section>
+
+  <section>
+    <div class="axes">Age</div>
+    <div class="chart">
+      <div class="gutter" id="gutter"></div>
+      <div class="chart-right">
+        <div class="week-axis">Week of the year &rarr; 1 to 52</div>
+        <div class="card"><canvas id="grid"></canvas></div>
+      </div>
+    </div>
+  </section>
+</div></div>
+
+<script>
+  var COLS = 52, DEFAULT_ROWS = 90;
+  var ageEl = document.getElementById("age"), expEl = document.getElementById("exp"),
+      canvas = document.getElementById("grid"), gutter = document.getElementById("gutter");
+
+  function clamp(n, min, max){ return Math.min(Math.max(n, min), max); }
+  function num(el, fallback){ var v = Number(el.value); return isFinite(v) ? v : fallback; }
+
+  // same as the original app: whole weeks elapsed this calendar year, 0-51
+  function getWeekOfYear(){
+    var today = new Date(), start = new Date(today.getFullYear(), 0, 1);
+    var diffDays = Math.floor((today - start) / 86400000);
+    return clamp(Math.floor(diffDays / 7), 0, 51);
+  }
+  var weekOfYear = getWeekOfYear();
+
+  function compute(){
+    var expectedAge = clamp(num(expEl, 90), 1, 120);
+    var currentAge  = clamp(num(ageEl, 46), 0, 120);
+    var total = clamp(Math.round(expectedAge * 52), 0, 120 * 52);
+    var past = clamp(Math.round(currentAge * 52) + weekOfYear, 0, total);
+    var remaining = clamp(total - past, 0, total);
+    return { rows: Math.max(1, Math.round(expectedAge)), total: total, past: past,
+             remaining: remaining, years: (remaining / 52).toFixed(1) };
+  }
+
+  function render(){
+    var m = compute();
+
+    document.getElementById("pillWeeks").textContent = m.remaining.toLocaleString("en-US");
+    document.getElementById("pillYears").textContent = m.years;
+    document.getElementById("summary").textContent =
+      m.remaining.toLocaleString("en-US") + " weeks remaining (~" + m.years + " years)";
+
+    // pitch from width so 52 columns always fit; the card never grows past the
+    // height that DEFAULT_ROWS rows take at this width, so a fixed embed holds it
+    var availW = canvas.parentElement.clientWidth - 16; // card padding
+    var widthPitch = availW / COLS;
+    var capH = DEFAULT_ROWS * widthPitch;
+    var pitch = Math.min(widthPitch, capH / m.rows);
+    var w = COLS * widthPitch, h = m.rows * pitch;
+
+    var dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+    canvas.style.height = h + "px";
+    var ctx = canvas.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+
+    var r = Math.max(1.4, pitch * 0.41);
+    for (var i = 0; i < m.total; i++){
+      var col = i % COLS, row = (i / COLS) | 0;
+      ctx.fillStyle = i < m.past ? "rgba(156,163,175,.8)" : "#3b82f6";
+      ctx.beginPath();
+      ctx.arc(col * widthPitch + widthPitch / 2, row * pitch + pitch / 2, r, 0, 6.2832);
+      ctx.fill();
+    }
+
+    // age labels every 5 years, aligned to grid rows (canvas sits 8px inside the
+    // card, below the week axis line)
+    var offset = gutter.parentElement.querySelector(".week-axis").offsetHeight + 4 + 8;
+    var lab = "";
+    for (var a = 0; a < m.rows; a += 5)
+      lab += '<i style="top:' + (offset + a * pitch + pitch / 2) + 'px">' + a + "</i>";
+    gutter.innerHTML = lab;
+    gutter.style.width = (m.rows >= 100 ? 22 : 16) + "px";
+
+    // keep the age input's ceiling tied to life expectancy, like the original
+    ageEl.max = clamp(num(expEl, 90), 1, 120);
+  }
+
+  ageEl.addEventListener("input", render);
+  expEl.addEventListener("input", render);
+  render();
+  var t; window.addEventListener("resize", function(){ clearTimeout(t); t = setTimeout(render, 120); });
+</script>
+</body>
+</html>
