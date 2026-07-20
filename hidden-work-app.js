@@ -199,7 +199,7 @@ function renderIntro() {
   var inviteSpectrum = '';
   var invCard = '';
   var invitePatterns = '';
-  var desc = 'A 7-minute assessment that helps you identify your Work Personality and clarify your next move.';
+  var desc = '30 quick questions that identify your Work Personality and help clarify your next move.';
   var begin = 'Begin';
   var stats = '';  // stat blocks (30 / ~7 / 8) removed from the intro, 2026-07-20
   if (invited){
@@ -215,7 +215,7 @@ function renderIntro() {
         return '<div class="inv-pattern-pill"><i style="background:' + p[1] + '"></i>' + p[0] + '</div>';
       }).join('')
       + '</div>';
-    desc = 'Take the same 7-minute assessment and see where you and your friend match and differ.';
+    desc = 'Answer the same 30 quick questions and see where you and your friend match and differ.';
     begin = 'Find your pattern';
     stats = '';
   }
