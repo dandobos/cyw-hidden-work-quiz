@@ -579,7 +579,7 @@ const SHARE_CHALLENGE_TITLE = 'Help a friend choose their work';
 const SHARE_CHALLENGE_BODY = 'They will get their own pattern, then you can compare where you match and where you do not.';
 const SHARE_CHALLENGE_MESSAGE = 'Want to compare Work Personalities? Take the Choose Your Work Quiz and see: ';
 var _share = null;
-function viralShareText(r){ return 'Hey! I just did the Choose Your Work Quiz. It pins down how you really relate to your work, and what to do next. I came out as the ' + r.archetype.replace(/^The\s+/, '') + '. There are 8 Work Personalities. Which one are you?'; }
+function viralShareText(r){ return 'Hey! I just did the Choose Your Work Quiz, a free 3-minute career quiz for people who want more from their work. It pins down how you really relate to your work, and what to do next. I came out as the ' + r.archetype.replace(/^The\s+/, '') + '. There are 8 Work Personalities. Which one are you?'; }
 // Per-sharer referral id, computed once. Beta testers get their stable portal token;
 // everyone else a per-share-session random id. Registered as a super property so the
 // sharer's own share_clicked events carry it, and embedded in every share link.
@@ -672,7 +672,7 @@ function wcCardHtml(r, drained){
     + '<div class="wc-list">'+items+'</div>'
     + '<div class="wc-divh"><span>Which of the 8 Work Personalities are you?</span></div>'
     + '<div class="wc-grid">'+cells+'</div>'
-    + '<div class="foot-live"><a class="wc-cta" href="#">Discover your Work Personality</a><p class="wc-src">Find yours at dandobos.com/choose-your-work-quiz</p></div>'
+    + '<div class="foot-live"><a class="wc-cta" href="#">Discover your Work Personality</a><p class="wc-src">A free 3-minute career quiz for people who want more from their work<br>dandobos.com/choose-your-work-quiz</p></div>'
     + '</div>';
 }
 const SHARE_HEADLINE = {
@@ -687,7 +687,7 @@ const SHARE_HEADLINE = {
 };
 function shareLoopHtml(r, s){
   var p=sharePayload(r, s), e=encodeURIComponent;
-  var fMsg = 'Hey! I just did the Choose Your Work Quiz. It pins down how you really relate to your work, and what to do next. I came out as the ' + r.archetype.replace(/^The\s+/, '') + '. There are 8 Work Personalities. Which one are you?';
+  var fMsg = 'Hey! I just did the Choose Your Work Quiz, a free 3-minute career quiz for people who want more from their work. It pins down how you really relate to your work, and what to do next. I came out as the ' + r.archetype.replace(/^The\s+/, '') + '. There are 8 Work Personalities. Which one are you?';
   p.text = fMsg;         // every share action sends this message, followed by the link
   _share = p;
   return '<div class="res-divider"></div>'
@@ -740,7 +740,7 @@ function viralSaveImage(){
   // Render a clone with the download footer (Discover prompt + URL as the CTA), no corner icon.
   var clone=el.cloneNode(true); clone.removeAttribute('id');
   var cc=clone.querySelector('.card-corner'); if(cc) cc.parentNode.removeChild(cc);
-  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><span class="dl-url">dandobos.com/choose-your-work-quiz</span></div>';
+  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><p class="dl-tag">A free 3-minute career quiz for people who want more from their work</p><span class="dl-url">dandobos.com/choose-your-work-quiz</span></div>';
   clone.style.position='fixed'; clone.style.left='-9999px'; clone.style.top='0'; clone.style.width=el.offsetWidth+'px';
   document.body.appendChild(clone);
   function cleanup(){ if(clone.parentNode) clone.parentNode.removeChild(clone); }
@@ -773,7 +773,7 @@ function viralSaveStory(){
   var mid=document.createElement('div');
   var clone=el.cloneNode(true); clone.removeAttribute('id');
   var cc=clone.querySelector('.card-corner'); if(cc) cc.parentNode.removeChild(cc);
-  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><span class="dl-url">dandobos.com/choose-your-work-quiz</span></div>';
+  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><p class="dl-tag">A free 3-minute career quiz for people who want more from their work</p><span class="dl-url">dandobos.com/choose-your-work-quiz</span></div>';
   clone.style.width='860px'; clone.style.boxShadow='0 30px 80px rgba(0,0,0,.35)'; clone.style.borderRadius='6px';
   mid.appendChild(clone);
   var bot=document.createElement('div');

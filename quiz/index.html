@@ -258,7 +258,8 @@
   .card-corner { position:absolute; top:18px; right:18px; z-index:3; width:32px; height:32px; border-radius:50%; background:var(--inner); border:1px solid var(--border); color:var(--text-primary); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .14s; }
   .card-corner:hover { border-color:var(--a); color:var(--a); }
   .foot-dl { margin-top:24px; padding-top:20px; border-top:1px solid var(--border); text-align:center; }
-  .dl-discover { font-family:var(--heading); font-weight:700; font-size:18px; color:var(--text-primary); margin:0 0 12px; letter-spacing:-.2px; }
+  .dl-discover { font-family:var(--heading); font-weight:700; font-size:18px; color:var(--text-primary); margin:0 0 10px; letter-spacing:-.2px; }
+  .dl-tag { font-family:var(--heading); font-style:italic; font-size:14px; color:var(--text-body); margin:0 0 12px; line-height:1.4; }
   .dl-url { display:inline-block; font-family:var(--sans); font-size:13px; font-weight:700; letter-spacing:.3px; color:#fff; background:var(--text-primary); border-radius:9px; padding:12px 26px; }
   .seg { display:flex; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:4px; margin:0 0 18px; gap:4px; }
   .seg-btn { flex:1; font-family:var(--sans); font-size:11px; font-weight:600; color:var(--text-muted); background:transparent; border:none; padding:9px 6px; border-radius:7px; cursor:pointer; transition:all .14s; line-height:1.25; }
@@ -982,7 +983,7 @@ const SHARE_CHALLENGE_TITLE = 'Help a friend choose their work';
 const SHARE_CHALLENGE_BODY = 'They will get their own pattern, then you can compare where you match and where you do not.';
 const SHARE_CHALLENGE_MESSAGE = 'Want to compare Work Personalities? Take the Choose Your Work Quiz and see: ';
 var _share = null;
-function viralShareText(r){ return 'Hey! I just did the Choose Your Work Quiz. It pins down how you really relate to your work, and what to do next. I came out as the ' + r.archetype.replace(/^The\s+/, '') + '. There are 8 Work Personalities. Which one are you?'; }
+function viralShareText(r){ return 'Hey! I just did the Choose Your Work Quiz, a free 3-minute career quiz for people who want more from their work. It pins down how you really relate to your work, and what to do next. I came out as the ' + r.archetype.replace(/^The\s+/, '') + '. There are 8 Work Personalities. Which one are you?'; }
 // Per-sharer referral id, computed once. Beta testers get their stable portal token;
 // everyone else a per-share-session random id. Registered as a super property so the
 // sharer's own share_clicked events carry it, and embedded in every share link.
@@ -1075,7 +1076,7 @@ function wcCardHtml(r, drained){
     + '<div class="wc-list">'+items+'</div>'
     + '<div class="wc-divh"><span>Which of the 8 Work Personalities are you?</span></div>'
     + '<div class="wc-grid">'+cells+'</div>'
-    + '<div class="foot-live"><a class="wc-cta" href="#">Discover your Work Personality</a><p class="wc-src">Find yours at dandobos.com/choose-your-work-quiz</p></div>'
+    + '<div class="foot-live"><a class="wc-cta" href="#">Discover your Work Personality</a><p class="wc-src">A free 3-minute career quiz for people who want more from their work<br>dandobos.com/choose-your-work-quiz</p></div>'
     + '</div>';
 }
 const SHARE_HEADLINE = {
@@ -1090,7 +1091,7 @@ const SHARE_HEADLINE = {
 };
 function shareLoopHtml(r, s){
   var p=sharePayload(r, s), e=encodeURIComponent;
-  var fMsg = 'Hey! I just did the Choose Your Work Quiz. It pins down how you really relate to your work, and what to do next. I came out as the ' + r.archetype.replace(/^The\s+/, '') + '. There are 8 Work Personalities. Which one are you?';
+  var fMsg = 'Hey! I just did the Choose Your Work Quiz, a free 3-minute career quiz for people who want more from their work. It pins down how you really relate to your work, and what to do next. I came out as the ' + r.archetype.replace(/^The\s+/, '') + '. There are 8 Work Personalities. Which one are you?';
   p.text = fMsg;         // every share action sends this message, followed by the link
   _share = p;
   return '<div class="res-divider"></div>'
@@ -1143,7 +1144,7 @@ function viralSaveImage(){
   // Render a clone with the download footer (Discover prompt + URL as the CTA), no corner icon.
   var clone=el.cloneNode(true); clone.removeAttribute('id');
   var cc=clone.querySelector('.card-corner'); if(cc) cc.parentNode.removeChild(cc);
-  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><span class="dl-url">dandobos.com/choose-your-work-quiz</span></div>';
+  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><p class="dl-tag">A free 3-minute career quiz for people who want more from their work</p><span class="dl-url">dandobos.com/choose-your-work-quiz</span></div>';
   clone.style.position='fixed'; clone.style.left='-9999px'; clone.style.top='0'; clone.style.width=el.offsetWidth+'px';
   document.body.appendChild(clone);
   function cleanup(){ if(clone.parentNode) clone.parentNode.removeChild(clone); }
@@ -1176,7 +1177,7 @@ function viralSaveStory(){
   var mid=document.createElement('div');
   var clone=el.cloneNode(true); clone.removeAttribute('id');
   var cc=clone.querySelector('.card-corner'); if(cc) cc.parentNode.removeChild(cc);
-  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><span class="dl-url">dandobos.com/choose-your-work-quiz</span></div>';
+  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><p class="dl-tag">A free 3-minute career quiz for people who want more from their work</p><span class="dl-url">dandobos.com/choose-your-work-quiz</span></div>';
   clone.style.width='860px'; clone.style.boxShadow='0 30px 80px rgba(0,0,0,.35)'; clone.style.borderRadius='6px';
   mid.appendChild(clone);
   var bot=document.createElement('div');
