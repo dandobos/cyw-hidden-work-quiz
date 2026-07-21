@@ -70,6 +70,8 @@
   .page.invited-intro-page { padding-top: 16px; }
   .invited-intro-page .intro-eyebrow { margin-top: 0; margin-bottom: 20px; }
   .invited-intro-page .intro-desc { margin-bottom: 32px; }
+  /* Category + audience line for cold share-link arrivals (beta feedback: Taylor, 2026-07-09) */
+  .intro-tagline { font-family: var(--heading); font-style: italic; font-size: 16.5px; line-height: 1.5; color: var(--text-body); text-align: center; margin: -8px auto 22px; max-width: 340px; }
   .intro-title { font-family: var(--heading); font-size: 56px; font-weight: 400; text-align: center; margin: 0 0 24px; letter-spacing: -1px; line-height: 1.05; }
   .intro-desc { font-family: var(--heading); font-style: italic; font-size: 19px; color: var(--text-body); text-align: center; line-height: 1.5; max-width: 520px; margin: 0 auto 48px; }
   .intro-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 520px; margin: 0 auto 48px; }

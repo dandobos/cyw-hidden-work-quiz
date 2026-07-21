@@ -81,6 +81,8 @@
   .page.invited-intro-page { padding-top: 16px; }
   .invited-intro-page .intro-eyebrow { margin-top: 0; margin-bottom: 20px; }
   .invited-intro-page .intro-desc { margin-bottom: 32px; }
+  /* Category + audience line for cold share-link arrivals (beta feedback: Taylor, 2026-07-09) */
+  .intro-tagline { font-family: var(--heading); font-style: italic; font-size: 16.5px; line-height: 1.5; color: var(--text-body); text-align: center; margin: -8px auto 22px; max-width: 340px; }
   .intro-title { font-family: var(--heading); font-size: 56px; font-weight: 400; text-align: center; margin: 0 0 24px; letter-spacing: -1px; line-height: 1.05; }
   .intro-desc { font-family: var(--heading); font-style: italic; font-size: 19px; color: var(--text-body); text-align: center; line-height: 1.5; max-width: 520px; margin: 0 auto 48px; }
   .intro-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 520px; margin: 0 auto 48px; }
@@ -601,11 +603,15 @@ function renderIntro() {
   var inviteSpectrum = '';
   var invCard = '';
   var invitePatterns = '';
+  var tagline = '';
   var desc = '30 quick questions that identify your Work Personality and help clarify your next move.';
   var begin = 'Begin';
   var stats = '';  // stat blocks (30 / ~7 / 8) removed from the intro, 2026-07-20
   if (invited){
     title = 'There are <span class="inv-title-key">8 Work Personalities.</span> Which one is yours?';
+    // Beta feedback (Taylor, 2026-07-09): a cold recipient can't tell it's a career quiz
+    // or who it's for. Name the category + audience before the friend card.
+    tagline = '<p class="intro-tagline">A free 3-minute career quiz for people who want more from their work.</p>';
     inviteSpectrum = '<div class="inv-spectrum" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>';
     invCard = '<div class="inv-card">'
       + '<p class="inv-ey">Your friend came out as</p>'
@@ -624,6 +630,7 @@ function renderIntro() {
   return '<p class="intro-eyebrow">The Choose Your Work Quiz</p>'
     + inviteSpectrum
     + '<h1 class="intro-title">' + title + '</h1>'
+    + tagline
     + invCard
     + invitePatterns
     + '<p class="intro-desc">' + desc + '</p>'

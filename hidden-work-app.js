@@ -200,11 +200,15 @@ function renderIntro() {
   var inviteSpectrum = '';
   var invCard = '';
   var invitePatterns = '';
+  var tagline = '';
   var desc = '30 quick questions that identify your Work Personality and help clarify your next move.';
   var begin = 'Begin';
   var stats = '';  // stat blocks (30 / ~7 / 8) removed from the intro, 2026-07-20
   if (invited){
     title = 'There are <span class="inv-title-key">8 Work Personalities.</span> Which one is yours?';
+    // Beta feedback (Taylor, 2026-07-09): a cold recipient can't tell it's a career quiz
+    // or who it's for. Name the category + audience before the friend card.
+    tagline = '<p class="intro-tagline">A free 3-minute career quiz for people who want more from their work.</p>';
     inviteSpectrum = '<div class="inv-spectrum" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>';
     invCard = '<div class="inv-card">'
       + '<p class="inv-ey">Your friend came out as</p>'
@@ -223,6 +227,7 @@ function renderIntro() {
   return '<p class="intro-eyebrow">The Choose Your Work Quiz</p>'
     + inviteSpectrum
     + '<h1 class="intro-title">' + title + '</h1>'
+    + tagline
     + invCard
     + invitePatterns
     + '<p class="intro-desc">' + desc + '</p>'
