@@ -62,9 +62,10 @@
   .rank-num { font-family: var(--sans); font-size: 11px; font-weight: 700; color: var(--text-subtle); width: 24px; letter-spacing: 1px; }
   .rank-label { flex: 1; font-family: var(--heading); font-size: 17px; color: var(--text-primary); }
   .rank-controls { display: flex; gap: 4px; }
-  .rank-btn { background: transparent; border: 1px solid var(--border); width: 32px; height: 32px; font-family: var(--sans); font-size: 14px; color: var(--text-muted); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; }
-  .rank-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
-  .rank-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .rank-btn { background: var(--accent); border: 1px solid var(--accent); width: 38px; height: 38px; border-radius: 8px; font-family: var(--sans); font-size: 17px; font-weight: 700; color: #FFFFFF; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(15,15,15,.18); }
+  .rank-btn:hover:not(:disabled) { background: #17496C; border-color: #17496C; }
+  .rank-btn:active:not(:disabled) { transform: translateY(1px); }
+  .rank-btn:disabled { background: var(--inner); border-color: var(--border); color: var(--text-subtle); box-shadow: none; cursor: not-allowed; }
   .rank-nudge { font-family: var(--heading); font-style: italic; font-size: 16px; color: var(--accent); text-align: center; margin: 24px auto 0; max-width: 460px; line-height: 1.5; }
   .textarea-input { width: 100%; background: var(--card); border: 1px solid var(--border); padding: 20px 22px; font-family: var(--heading); font-size: 17px; color: var(--text-primary); min-height: 140px; resize: vertical; margin-bottom: 24px; outline: none; }
   .textarea-input:focus { border-color: var(--accent); }
