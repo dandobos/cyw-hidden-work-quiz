@@ -456,11 +456,11 @@ const questions = [
 
   // ===== VITALITY =====
   { type: 'choice', section: 'V', text: "On Monday morning, what's the first feeling that hits you when you remember it's a work day?",
-    options: [["Dreading the start of the work week", 0], ["Mild annoyance the weekend is over", 33], ["Neutral, just another day", 66], ["Excitement", 100]] },
-  { type: 'choice', section: 'V', text: "Over the past week, roughly how much of your work time left you feeling more alive?",
+    options: [["Dread: it's the start of the work week", 0], ["Mild annoyance: the weekend is over, back to reality", 33], ["Neutral: just another day", 66], ["Excitement: another week of doing what lights me up", 100]] },
+  { type: 'choice', section: 'V', text: "Over the past week, roughly how much of your work time was spent on activities that left you feeling more alive?",
     options: [["Almost none", 0], ["Less than half", 30], ["More than half", 70], ["Most of it", 100]] },
   { type: 'choice', section: 'V', text: "How often does your work pull you in so deeply that you lose track of time?",
-    options: [["Never", 0], ["Rarely", 30], ["Weekly", 70], ["Daily", 100]] },
+    options: [["Never", 0], ["Occasionally", 30], ["Weekly", 70], ["Daily", 100]] },
   { type: 'choice', section: 'V', text: "The skill that has gotten you the furthest in your career also tends to:",
     options: [["Drain me", 0], ["Slightly drain me", 30], ["Slightly energize me", 70], ["Energize me", 100]] },
   { type: 'activity_name', section: 'V',
@@ -479,8 +479,8 @@ const questions = [
     options: [["I'm not sure", 10], ["It's what's expected of me", 20], ["It pays well", 40], ["I'm good at it", 60], ["It lights me up", 100]] },
   { type: 'choice', section: 'AL', text: "When someone asks \"How's work?\", what do you actually think before giving your polished answer?",
     options: [["I can't say what I really feel", 0], ["I don't really want to talk about it", 33], ["It's fine", 66], ["It's genuinely good", 100]] },
-  { type: 'choice', section: 'AL', text: "Have you stayed on your current path for any of these reasons: the title, the salary, or what others would think?",
-    options: [["I'm not sure", 5], ["Yes, those are the main reasons", 15], ["Partly, but not mainly", 40], ["No, my reasons are mine", 100]] },
+  { type: 'choice', section: 'AL', text: "Have you stayed on your current path for one or more of the following reasons: title, salary, or what others would think?",
+    options: [["I'm not sure", 5], ["Yes, and at least one of those is my main reason for staying", 15], ["Yes, but my main reason for staying is not listed here", 40], ["No, none of these", 100]] },
   { type: 'rank', section: 'AL',
     text: "Order these voices from loudest to quietest when you make a big life decision.",
     sub: "The top voice is the loudest.",
@@ -495,7 +495,7 @@ const questions = [
     options: [["I genuinely can't remember", 0], ["Sometime this month", 40], ["Sometime this week", 70], ["In the last few days", 100]] },
   { type: 'choice', section: 'C', text: "The last big career decision you made was driven primarily by:",
     options: [["External pressure or a deadline", 20], ["I\u2019m not sure", 30], ["Logical analysis", 60], ["A clear inner knowing", 100]] },
-  { type: 'choice', section: 'C', text: "Is there something you keep pushing through at work, even though a quieter voice says to stop?",
+  { type: 'choice', section: 'C', text: "Is there something you keep grinding through at work, even though an inner voice says to stop?",
     options: [["Yes, most days", 0], ["Fairly often", 30], ["Rarely", 70], ["No, nothing like that", 100]] },
   { type: 'choice', section: 'C', text: "When you think about changing direction, how much does what you've already invested hold you back?",
     options: [["It's the main thing stopping me, I've come too far to change", 0], ["It weighs on me heavily", 30], ["It's a factor, but not decisive", 65], ["What I've put in doesn't trap me, I'd change if it was right", 100]] },
@@ -503,7 +503,7 @@ const questions = [
     options: [["I just want to get away from where I am now", 20], ["Mostly escaping the current situation", 40], ["A mix of escaping this and moving toward something", 65], ["I'm drawn toward something specific I want", 100]] },
 
   // ===== AGENCY =====
-  { type: 'choice', section: 'AG', text: "Have you set aside any regular, protected time to work on what matters to you, outside your job's demands?",
+  { type: 'choice', section: 'AG', text: "Have you set aside any regular, protected time to work on what matters to you, outside of your job?",
     options: [["No, I haven't", 0], ["I've tried, but it never sticks", 30], ["Yes, but it slips often", 60], ["Yes, and I protect it consistently", 100]] },
   { type: 'choice', section: 'AG', text: "Have you ever started a project that's genuinely yours, not one assigned or expected of you?",
     options: [["No", 0], ["Only in my head so far", 25], ["I've started, but it's stalled", 55], ["Yes, and I'm actively working on it", 100]] },
@@ -513,7 +513,7 @@ const questions = [
     options: [["I drop it to keep the peace", 0], ["I delay it, sometimes indefinitely", 30], ["I push back but often compromise", 65], ["I hear them out and still do what I think is right", 100]] },
   { type: 'choice', section: 'AG', text: "When you face something you want but it feels too big, what tends to happen?",
     options: [["I freeze or struggle to get motivated to start at all", 0], ["I overthink it for a long time", 30], ["I start strong, then stall before it's done", 50], ["I gradually create a plan", 70], ["I take the smallest first step quickly and then make consistent progress", 100]] },
-  { type: 'choice', section: 'AG', text: "In the last few months, how much have you actually moved on work that matters to you, outside your job's demands?",
+  { type: 'choice', section: 'AG', text: "In the last few months, how much have you actually moved on work that matters to you, outside of your job?",
     options: [["Not at all", 0], ["I thought about it but didn't act", 30], ["A few small steps", 70], ["Steady, ongoing action", 100]] },
 
   // ===== PAST-WOUND ROUTING FLAG (unscored; routes to Chapter 2 for eligible archetypes) =====
