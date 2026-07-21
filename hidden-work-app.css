@@ -249,6 +249,12 @@
   .wc { position:relative; --a:#3D7A6E; --a-tint:rgba(61,122,110,.10); width:440px; max-width:100%; margin:0 auto 26px; background:var(--card); border:1px solid var(--border); border-radius:16px; padding:36px 36px 32px; box-shadow:0 8px 26px rgba(40,32,12,.10); }
   .card-corner { position:absolute; top:18px; right:18px; z-index:3; width:32px; height:32px; border-radius:50%; background:var(--inner); border:1px solid var(--border); color:var(--text-primary); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .14s; }
   .card-corner:hover { border-color:var(--a); color:var(--a); }
+  /* Labelled download control at the top of the share card (beta feedback: readers missed the bare corner icon). Excluded from the exported image in viralSaveImage/Story. */
+  .wc-dlrow { text-align:center; margin:14px 0 24px; }
+  .wc-dl-btn { display:inline-flex; align-items:center; gap:7px; background:#14638e; color:#fff; border:none; border-radius:22px; padding:9px 18px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.16); transition:opacity .14s; }
+  .wc-dl-btn:hover { opacity:.92; }
+  .wc-dl-btn svg { width:16px; height:16px; flex:none; stroke:currentColor; }
+  .wc-dl-btn span { font-family:var(--sans); font-size:13px; font-weight:700; letter-spacing:.3px; }
   .foot-dl { margin-top:24px; padding-top:20px; border-top:1px solid var(--border); text-align:center; }
   .dl-discover { font-family:var(--heading); font-weight:700; font-size:18px; color:var(--text-primary); margin:0 0 10px; letter-spacing:-.2px; }
   .dl-tag { font-family:var(--heading); font-style:italic; font-size:14px; color:var(--text-body); margin:0 0 12px; line-height:1.4; }
@@ -359,7 +365,7 @@
   /* Inline icons: the theme was collapsing svg width to 0 (missing icon). The
      theme's svg rule outranks a plain .card-corner svg selector, so scope under
      #page (id specificity) and pin the flex box so it cannot shrink to 0. */
-  #page .card-corner svg, #page .save-green svg { width: 16px !important; height: 16px !important; min-width: 16px !important; flex: none !important; }
+  #page .card-corner svg, #page .save-green svg, #page .wc-dl-btn svg { width: 16px !important; height: 16px !important; min-width: 16px !important; flex: none !important; }
 
   /* Text wrapping in buttons: the host theme sets `white-space: nowrap` on
      <button> (and often link-buttons), which leaks in and forces multi-word

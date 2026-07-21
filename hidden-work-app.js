@@ -165,6 +165,10 @@ function hwDurations(){ return { duration_seconds: hwT0 ? Math.round((Date.now()
 // Bottom-of-funnel clicks on the result page (free chapter + book CTA). _hwResult is set in renderResult().
 function hwDownloadClick(fmt){ var m=window._hwResult||{}; hwCap('chapter_download_clicked', { format: fmt, chapters: m.chapters, archetype_key: m.archetype_key }); }
 function hwBookClick(){ var m=window._hwResult||{}; hwCap('book_link_clicked', { archetype_key: m.archetype_key, location: 'result' }); }
+// The share card's "Discover your Work Personality" link used to be href="#", which
+// scrolled the reader back to the top of the page. Carry them DOWN to the book CTA
+// instead, so they keep flowing toward their next step (beta feedback, 2026-07).
+function hwCardCtaDown(e){ if(e){ e.preventDefault(); } var el=document.getElementById('hw-book-cta'); if(el){ el.scrollIntoView({behavior:'smooth', block:'center'}); } }
 
 function currentSection() { return questions[qIdx]?.section || 'X'; }
 function sectionProgress() {
@@ -671,7 +675,7 @@ function wcCardHtml(r, drained){
     return '<div class="wc-cell'+(p===short?' me':'')+'"><span class="d"></span>'+p+'</div>';
   }).join('');
   return '<div class="wc" id="wc-card"><div class="wc-bar"></div>'
-    + '<button class="card-corner" title="Save card as image" onclick="viralSaveImage()"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 4v10m0 0l-3.5-3.5M12 14l3.5-3.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>'
+    + '<div class="wc-dlrow"><button class="wc-dl-btn" title="Download and share your card" onclick="viralSaveImage()"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 4v10m0 0l-3.5-3.5M12 14l3.5-3.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Download &amp; share</span></button></div>'
     + '<p class="wc-ey">The Choose Your Work Quiz</p>'
     + '<h2 class="wc-name">I am '+art+' <b>'+short+'</b></h2>'
     + '<p class="wc-claim">“'+(drained ? AM_DRAINED_SHARE : SHARE_CLAIM[r.key])+'”</p>'
@@ -679,7 +683,7 @@ function wcCardHtml(r, drained){
     + '<div class="wc-list">'+items+'</div>'
     + '<div class="wc-divh"><span>Which of the 8 Work Personalities are you?</span></div>'
     + '<div class="wc-grid">'+cells+'</div>'
-    + '<div class="foot-live"><a class="wc-cta" href="#">Discover your Work Personality</a><p class="wc-src">A free 3-minute career quiz for people who want more from their work<br>dandobos.com/choose-your-work-quiz</p></div>'
+    + '<div class="foot-live"><a class="wc-cta" href="#hw-book-cta" onclick="hwCardCtaDown(event)">Discover your Work Personality</a><p class="wc-src">A free 3-minute career quiz for people who want more from their work<br>dandobos.com/choose-your-work-quiz</p></div>'
     + '</div>';
 }
 const SHARE_HEADLINE = {
@@ -746,7 +750,7 @@ function viralSaveImage(){
   viralToast('Creating image…');
   // Render a clone with the download footer (Discover prompt + URL as the CTA), no corner icon.
   var clone=el.cloneNode(true); clone.removeAttribute('id');
-  var cc=clone.querySelector('.card-corner'); if(cc) cc.parentNode.removeChild(cc);
+  var cc=clone.querySelector('.wc-dlrow'); if(cc) cc.parentNode.removeChild(cc);
   var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><p class="dl-tag">A free 3-minute career quiz for people who want more from their work</p><span class="dl-url">dandobos.com/choose-your-work-quiz</span></div>';
   clone.style.position='fixed'; clone.style.left='-9999px'; clone.style.top='0'; clone.style.width=el.offsetWidth+'px';
   document.body.appendChild(clone);
@@ -779,7 +783,7 @@ function viralSaveStory(){
   top.innerHTML='<p style="font-family:\'Inter\',sans-serif;font-size:24px;font-weight:700;letter-spacing:5px;text-transform:uppercase;opacity:.85;margin:0 0 18px">The Choose Your Work Quiz</p><p style="font-size:52px;line-height:1.15;font-weight:400;margin:0;">There are 8 Work Personalities.<br>Which one are you?</p>';
   var mid=document.createElement('div');
   var clone=el.cloneNode(true); clone.removeAttribute('id');
-  var cc=clone.querySelector('.card-corner'); if(cc) cc.parentNode.removeChild(cc);
+  var cc=clone.querySelector('.wc-dlrow'); if(cc) cc.parentNode.removeChild(cc);
   var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><p class="dl-tag">A free 3-minute career quiz for people who want more from their work</p><span class="dl-url">dandobos.com/choose-your-work-quiz</span></div>';
   clone.style.width='860px'; clone.style.boxShadow='0 30px 80px rgba(0,0,0,.35)'; clone.style.borderRadius='6px';
   mid.appendChild(clone);
@@ -1255,7 +1259,7 @@ function renderResult(){
       + shareLoopHtml(r, s)
       + '<div class="res-divider"></div>'
       + '<p class="res-book-head"><em>Choose Your Work</em> Takes You From This Snapshot to the System Behind It.</p><p class="res-book-text">Your result points to where to begin, but the book is where the change happens.</p>'
-      + '<a class="continue-btn" href="https://dandobos.com/choose-your-work/" target="_blank" rel="noopener" onclick="hwBookClick()" style="text-decoration:none; display:block; width:100%; text-align:center;">Get Choose Your Work</a>'
+      + '<a id="hw-book-cta" class="continue-btn" href="https://dandobos.com/choose-your-work/" target="_blank" rel="noopener" onclick="hwBookClick()" style="text-decoration:none; display:block; width:100%; text-align:center;">Get Choose Your Work</a>'
     + '</div>';
 }
 function renderComplete() { return renderResult(); }
