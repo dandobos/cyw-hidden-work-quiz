@@ -38,6 +38,9 @@
   .q-sub { font-family: var(--heading); font-style: italic; font-size: 16px; color: var(--text-muted); text-align: center; margin: -30px 0 36px; }
   .options { display: flex; flex-direction: column; gap: 12px; }
   .option, .word-tile, .rank-btn, .continue-btn { touch-action: manipulation; }
+  /* Focus only for keyboard users: tapped options never keep a ring (beta: Vivienne's phantom highlights) */
+  .option:focus, .word-tile:focus, .rank-btn:focus, .continue-btn:focus { outline: none; }
+  .option:focus-visible, .word-tile:focus-visible, .rank-btn:focus-visible, .continue-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .option { background: var(--card); border: 1px solid var(--border); padding: 18px 22px; font-family: var(--heading); font-size: 17px; color: var(--text-body); text-align: left; cursor: pointer; transition: all 0.15s; line-height: 1.4; width: 100%; display: block; }
   /* black hover only on true mouse devices; on touch (iOS Safari) :hover sticks after a
      tap and would leave a button black on the next question (reported by a beta tester). */
