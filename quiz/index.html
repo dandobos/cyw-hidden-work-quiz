@@ -982,7 +982,7 @@ const SHARE_CHALLENGE_TITLE = 'Help a friend choose their work';
 const SHARE_CHALLENGE_BODY = 'They will get their own pattern, then you can compare where you match and where you do not.';
 const SHARE_CHALLENGE_MESSAGE = 'Want to compare Work Personalities? Take the Choose Your Work Quiz and see: ';
 var _share = null;
-function viralShareText(r){ return 'Hey! I did the Choose Your Work Quiz and came out as the ' + r.archetype.replace(/^The\s+/, '') + '. There are 8 Work Personalities. Which one are you?'; }
+function viralShareText(r){ return 'Hey! I just did the Choose Your Work Quiz. It pins down how you really relate to your work, and what to do next. I came out as the ' + r.archetype.replace(/^The\s+/, '') + '. There are 8 Work Personalities. Which one are you?'; }
 // Per-sharer referral id, computed once. Beta testers get their stable portal token;
 // everyone else a per-share-session random id. Registered as a super property so the
 // sharer's own share_clicked events carry it, and embedded in every share link.
@@ -1090,7 +1090,7 @@ const SHARE_HEADLINE = {
 };
 function shareLoopHtml(r, s){
   var p=sharePayload(r, s), e=encodeURIComponent;
-  var fMsg = 'Hey! I did the Choose Your Work Quiz and came out as the ' + r.archetype.replace(/^The\s+/, '') + '. There are 8 Work Personalities. Which one are you?';
+  var fMsg = 'Hey! I just did the Choose Your Work Quiz. It pins down how you really relate to your work, and what to do next. I came out as the ' + r.archetype.replace(/^The\s+/, '') + '. There are 8 Work Personalities. Which one are you?';
   p.text = fMsg;         // every share action sends this message, followed by the link
   _share = p;
   return '<div class="res-divider"></div>'
