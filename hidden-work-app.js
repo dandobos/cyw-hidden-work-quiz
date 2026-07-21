@@ -130,6 +130,7 @@ let screen = 'intro', qIdx = 0, answers = {};
 let activityNames = ['', '', ''], activityScores = [null, null, null];
 let textVal = '', rankState = {}, rankTouched = {}, rankConfirmPending = {};
 let advancing = false;
+let inputReadyAt = 0;  // ghost-click guard: taps within 350ms of a screen render are iOS tap-through, not humans (beta bug: Taylor, iPhone Safari)
 function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
 const STATE_KEY = 'hw_quiz_state_v2';
 function saveState(){ try{ sessionStorage.setItem(STATE_KEY, JSON.stringify({screen, qIdx, answers, activityNames, activityScores, textVal, rankState, rankTouched, rankConfirmPending})); }catch(e){} }
@@ -1265,12 +1266,13 @@ function render(keepScroll) {
   if (screen === 'intro' && _invite && ARCH[_invite.key]) pageEl.classList.add('invited-intro-page');
   pageEl.innerHTML = html;
   advancing = false;
+  inputReadyAt = Date.now() + 350;
   saveState();
   if (!keepScroll) window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 function startQuiz() { clearState(); _submitting=false; _submitted=false; _kitConfirmed=false; _kitEmail=''; hwTimingStart(); hwCap('quiz_started', { total_questions: TOTAL_Q }); screen = 'question'; qIdx = 0; render(); }
 function selectChoice(i) {
-  if (advancing) return;
+  if (advancing || Date.now() < inputReadyAt) return;
   const q = questions[qIdx];
   answers[qIdx] = { value: q.options[i][1], label: q.options[i][0], section: q.section, unscored: q.unscored };
   const btns = document.querySelectorAll('.option');
@@ -1280,7 +1282,7 @@ function selectChoice(i) {
   setTimeout(advance, 260);
 }
 function selectWord(i) {
-  if (advancing) return;
+  if (advancing || Date.now() < inputReadyAt) return;
   const w = questions[qIdx].words[i];
   answers[qIdx] = { value: w[1], label: w[0], section: w[2] };
   const tiles = document.querySelectorAll('.word-tile');
