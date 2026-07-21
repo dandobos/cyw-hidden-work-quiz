@@ -539,10 +539,17 @@ let textVal = '', rankState = {}, rankTouched = {}, rankConfirmPending = {};
 let advancing = false;
 let inputReadyAt = 0;  // ghost-click guard: taps within 350ms of a screen render are iOS tap-through, not humans (beta bug: Taylor, iPhone Safari)
 function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+// In-progress quiz autosave. Persisted to localStorage (DURABLE) so a browser/tab
+// crash, refresh, or accidental close never loses the reader's answers; on the next
+// load the resume gate (renderResume) offers to pick up where they left off. Only the
+// resumable screens (question/gate) are stored; completing or restarting clears it.
+// (Was sessionStorage, which a mobile browser discards when the tab is killed. That
+// was the beta's most severe bug: Vivienne froze on Part 1 Q6, the tab crashed, and
+// she reopened at the start with nothing saved, 2026-07-09.)
 const STATE_KEY = 'hw_quiz_state_v2';
-function saveState(){ try{ sessionStorage.setItem(STATE_KEY, JSON.stringify({screen, qIdx, answers, activityNames, activityScores, textVal, rankState, rankTouched, rankConfirmPending})); }catch(e){} }
-function loadState(){ try{ var r = sessionStorage.getItem(STATE_KEY); if(!r) return false; var st = JSON.parse(r); if(!st || (st.screen !== 'question' && st.screen !== 'gate')) return false; screen=st.screen; qIdx=st.qIdx||0; answers=st.answers||{}; activityNames=st.activityNames||['','','']; activityScores=st.activityScores||[null,null,null]; textVal=st.textVal||''; rankState=st.rankState||{}; rankTouched=st.rankTouched||{}; rankConfirmPending=st.rankConfirmPending||{}; return true; }catch(e){ return false; } }
-function clearState(){ try{ sessionStorage.removeItem(STATE_KEY); }catch(e){} }
+function saveState(){ try{ if(screen!=='question' && screen!=='gate') return; localStorage.setItem(STATE_KEY, JSON.stringify({screen, qIdx, answers, activityNames, activityScores, textVal, rankState, rankTouched, rankConfirmPending})); }catch(e){} }
+function loadState(){ try{ var r = localStorage.getItem(STATE_KEY); if(!r) return false; var st = JSON.parse(r); if(!st || (st.screen !== 'question' && st.screen !== 'gate')) return false; screen=st.screen; qIdx=st.qIdx||0; answers=st.answers||{}; activityNames=st.activityNames||['','','']; activityScores=st.activityScores||[null,null,null]; textVal=st.textVal||''; rankState=st.rankState||{}; rankTouched=st.rankTouched||{}; rankConfirmPending=st.rankConfirmPending||{}; return true; }catch(e){ return false; } }
+function clearState(){ try{ localStorage.removeItem(STATE_KEY); }catch(e){} }
 // Durable completed-result snapshot (localStorage, so it survives closing the tab).
 // A reader who has finished and reopens the plain quiz URL lands back on their own
 // result page (with the share card), instead of the intro. Arriving via a friend's
@@ -1665,12 +1672,36 @@ function renderNeedQuiz() {
     + '<p class="intro-desc">Take the quiz to get your result. Once you have finished, you can open it here to share it.</p>'
     + '<button class="continue-btn" onclick="startQuiz()">Start the quiz</button>';
 }
+// Resume gate: shown on load when a durable in-progress quiz is found, so a crash,
+// refresh, or accidental close never silently drops the reader back at the intro.
+var _resumeTarget = null;
+function renderResume() {
+  var where = (_resumeTarget && _resumeTarget.screen === 'gate')
+    ? 'You were at the final step.'
+    : 'You were on question ' + (((_resumeTarget && _resumeTarget.qIdx) || 0) + 1) + ' of ' + TOTAL_Q + '.';
+  return '<p class="intro-eyebrow">The Choose Your Work Quiz</p>'
+    + '<h1 class="intro-title">Welcome back</h1>'
+    + '<p class="intro-desc">' + where + ' Pick up right where you left off; your answers are saved.</p>'
+    + '<button class="continue-btn" onclick="resumeQuiz()">Resume the quiz</button>'
+    + '<div style="text-align:center;margin-top:18px"><button class="ghost-btn" onclick="startOver()">Start over</button></div>';
+}
+function resumeQuiz() {
+  if (!_resumeTarget) { screen = 'question'; qIdx = 0; }
+  else { screen = _resumeTarget.screen; qIdx = _resumeTarget.qIdx || 0; }
+  try { hwCap('quiz_resume_confirmed', { screen: screen, index: qIdx + 1 }); } catch(e){}
+  render();
+}
+function startOver() {
+  try { hwCap('quiz_resume_declined', {}); } catch(e){}
+  restart();
+}
 function render(keepScroll) {
   setProgress();
   let html;
   if (screen === 'intro') html = renderIntro();
   else if (screen === 'question') html = renderQuestion();
   else if (screen === 'gate') html = renderGate();
+  else if (screen === 'resume') html = renderResume();
   else if (screen === 'needquiz') html = renderNeedQuiz();
   else html = renderComplete();
   const pageEl = document.getElementById('page');
@@ -1703,7 +1734,7 @@ function selectWord(i) {
   advancing = true;
   setTimeout(advance, 300);
 }
-function updateActivityName(i, val) { if (activityNames[i] !== val) activityScores[i] = null; activityNames[i] = val; document.getElementById('act-name-btn').disabled = !activityNames.every(n=>n.trim()); }
+function updateActivityName(i, val) { if (activityNames[i] !== val) activityScores[i] = null; activityNames[i] = val; document.getElementById('act-name-btn').disabled = !activityNames.every(n=>n.trim()); saveState(); }
 function selectActivityNames() { answers[qIdx] = { value: activityNames.slice(), label: activityNames.join(', '), section: 'X', unscored: true }; advance(); }
 function updateActivityScore(i, score) { activityScores[i] = score; render(true); }
 function selectActivityScores() { const avg = activityScores.reduce((a,b)=>a+b,0)/activityScores.length; answers[qIdx] = { value: avg, label: activityScores.join(','), section: 'V' }; advance(); }
@@ -1716,7 +1747,7 @@ function selectRank() {
   answers[qIdx] = { value: score, label: items.join(' > '), section: 'AL' };
   advance();
 }
-function updateFreetext(v) { textVal = v; const b = document.getElementById('freetext-btn'); if (b) b.disabled = !v.trim(); }
+function updateFreetext(v) { textVal = v; const b = document.getElementById('freetext-btn'); if (b) b.disabled = !v.trim(); saveState(); }
 function selectFreetext() { answers[qIdx] = { value: textVal, label: textVal, section: 'X', unscored: true }; textVal=''; advance(); }
 function advance() {
   hwTimingStep();
@@ -1909,7 +1940,7 @@ function pingBetaQuizDone(){
   } catch(e){}
 }
 
-function showResult() { screen='complete'; saveResult(); pingBetaQuizDone(); render(); }
+function showResult() { screen='complete'; clearState(); saveResult(); pingBetaQuizDone(); render(); }
 function restart() { clearResult(); clearState(); _submitting=false; _submitted=false; _kitConfirmed=false; _kitEmail=''; screen='intro'; qIdx=0; answers={}; activityNames=['','','']; activityScores=[null,null,null]; textVal=''; rankState={}; rankTouched={}; rankConfirmPending={}; render(); }
 function toggleNeighbour(i) {
   var el = document.getElementById('neighbour-profile-' + i); if (!el) return;
@@ -1927,7 +1958,15 @@ document.addEventListener('click', function(e){
   box.querySelectorAll('.seg-btn').forEach(function(x){ x.classList.toggle('active', x===b); });
   box.querySelectorAll('.seg-body').forEach(function(x){ x.style.display = (x.getAttribute('data-m')===m)?'block':'none'; });
 });
-var _resumed = loadState();
+// An unfinished quiz saved in durable storage: show the resume gate instead of
+// silently dropping the reader mid-quiz (or, after a crash, back at the intro).
+// Invited visits (?type=) are always a fresh start and never auto-resume.
+var _resumed = false;
+if (!_invite && loadState()) {
+  _resumeTarget = { screen: screen, qIdx: qIdx };
+  screen = 'resume';
+  _resumed = true;
+}
 // Not mid-quiz and not arriving from a friend's share: if this reader already
 // finished, restore straight to their saved result page.
 if (!_resumed && !_invite) {
