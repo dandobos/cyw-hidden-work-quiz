@@ -55,8 +55,8 @@
   .note{background:var(--accent-soft);border:1px solid var(--accent-border);border-radius:8px;padding:14px 16px;font-family:var(--sans);font-size:13.5px;color:var(--accent-ink);line-height:1.55;margin:26px 0 0}
   .foot{font-family:var(--heading);font-size:15px;color:var(--body);text-align:center;margin:34px 0 0;line-height:1.6}
   .center{text-align:center}
-  #loading,#error{text-align:center;padding:60px 0;font-family:var(--sans);color:var(--subtle)}
-  #error h1{font-family:var(--heading);color:var(--text)}
+  #loading,#error,#done{text-align:center;padding:60px 0;font-family:var(--sans);color:var(--subtle)}
+  #error h1,#done h1{font-family:var(--heading);color:var(--text)}
   @media (max-width:520px){h1{font-size:27px}.step{padding-left:56px}.step .num{left:16px}}
 
   /* completion celebration (animated headline only; footer stays static) */
@@ -82,10 +82,16 @@
 
   <div id="loading">Loading your portal…</div>
 
+  <div id="done" style="display:none">
+    <p class="eyebrow">Choose Your Work Quiz Beta</p>
+    <h1>Thank you, your feedback is recorded</h1>
+    <p class="lede">That is safely saved. Thank you for taking the time to share it. You can close this tab.</p>
+  </div>
+
   <div id="error" style="display:none">
     <p class="eyebrow">Choose Your Work Quiz Beta</p>
-    <h1>This link needs a fresh copy</h1>
-    <p class="lede">We could not find your details for this link. Please use the exact link Dan sent you, or reply on Upwork and he will send a new one.</p>
+    <h1>Let us get you the right link</h1>
+    <p class="lede">This page needs your personal link to load your tasks. Please open the most recent link Dan sent you, or reply to his last message and he will send a fresh one.</p>
   </div>
 
   <main id="portal" style="display:none">
@@ -343,6 +349,12 @@
     raf = requestAnimationFrame(frame);
   }
   function fail(){ document.getElementById("loading").style.display="none"; document.getElementById("error").style.display="block"; }
+  function thanks(){ document.getElementById("loading").style.display="none"; var d=document.getElementById("done"); if(d) d.style.display="block"; }
+  // A Tally form redirected here after a SUCCESSFUL submit (?done=...) but we could not
+  // resolve a token, e.g. the reader arrived via the course thank-you email (which carries
+  // no portal token) or in a browser without our localStorage. The submission already
+  // reached the backend, so reassure them instead of showing the "wrong link" error.
+  function failOrThanks(){ if(DONE && DONE_MAP[DONE]) thanks(); else fail(); }
 
   // Preview mode: name/email straight from the URL (no backend needed).
   var pn = qs("n"), pe = qs("e");
@@ -361,7 +373,7 @@
   }
 
   // Live mode: resolve the token via the backend.
-  if(!TOKEN){ fail(); return; }
+  if(!TOKEN){ failOrThanks(); return; }
   // Returning from a Tally form submit: optimistically tick that step and tell the backend.
   if(DONE && DONE_MAP[DONE]){
     try{ var st = localState(); st[DONE_MAP[DONE]] = true; saveLocal(st); }catch(e){}
@@ -383,7 +395,7 @@
         var s = _sig(d);
         if(!_booted || s !== _lastSig){ _booted = true; _lastSig = s; boot(d); }
       })
-      .catch(function(){ if(!_booted && !isReload) fail(); }); // ignore transient errors on background refresh
+      .catch(function(){ if(!_booted && !isReload) failOrThanks(); }); // ignore transient errors on background refresh
   }
 
   // Testers open the quiz and the forms in NEW tabs, so this page sits stale. Re-check
