@@ -1777,6 +1777,11 @@ const KIT_SUBSCRIBE_URL = 'https://app.kit.com/forms/' + KIT_FORM_ID + '/subscri
 // Build the exact Kit custom-field payload from the computed result. Mirrors renderResult()
 // so the email merge fields match the on-page result (incl. True Creator / Grounded Seeker
 // vitality variants and the multi-chapter past-wound bundles).
+// IANA timezone from the browser (e.g. "Australia/Sydney"); '' when unavailable.
+// Stored as the hw_tz Kit field so course emails can be sent at 8 AM local.
+function hwTz(){
+  try { return String(Intl.DateTimeFormat().resolvedOptions().timeZone || '').slice(0, 64); } catch(e){ return ''; }
+}
 function hwFields(){
   const r = computeResult();
   const s = r.scores;
@@ -1802,6 +1807,7 @@ function hwFields(){
   const ansVal = pred => { const i = questions.findIndex(pred); return (i >= 0 && answers[i]) ? answers[i].value : ''; };
   return {
     hw_archetype: r.archetype,
+    hw_tz: hwTz(),
     hw_welcome_subject: WELCOME_SUBJ[r.key],
     hw_share: share,
     hw_narrative: narrative,
@@ -1905,6 +1911,7 @@ function buildQuizRecord(){
     rec = {
       timestamp: new Date().toISOString(),
       email: _kitEmail || '',
+      tz: hwTz(),
       beta_token: _quizBetaToken(),
       archetype: r.archetype, archetype_key: r.key,
       score_clarity: s.C, score_agency: s.AG, score_alignment: s.AL, score_vitality: s.V,
