@@ -975,22 +975,37 @@ function _hwPhraseItem(key, isOrig){
     + '<div class="acc-body" hidden>' + _hwProfileCard(key, isOrig) + '</div>'
   + '</div>';
 }
+function _hwPhraseItems(keys){ return keys.map(function(k){ return _hwPhraseItem(k, false); }).join(''); }
+// The chooser always ends in the scored archetype (tagged "your original result").
+//  - Borderline result (has neighbours): show the 1-2 near archetypes, then a "show all types"
+//    fallback that reveals the rest, so a reader who rejects both neighbours is never stuck.
+//  - Clean result (no neighbours): there is no single obvious alternative, so list all 8 at once.
 function hwFitBlockHtml(r){
   var neighbours = r.neighbours || [];
-  var hasN = neighbours.length > 0;
-  var items = neighbours.map(function(n){ return _hwPhraseItem(n.key, false); }).join('') + _hwPhraseItem(r.key, true);
+  var neighbourKeys = neighbours.map(function(n){ return n.key; });
+  var origItem = _hwPhraseItem(r.key, true);
+  var restKeys = Object.keys(ARCH).filter(function(k){ return k !== r.key && neighbourKeys.indexOf(k) === -1; });
+  var itemsHtml, moreHtml = '';
+  if (neighbourKeys.length){
+    itemsHtml = _hwPhraseItems(neighbourKeys) + origItem;
+    moreHtml = '<div class="acc-more" id="hw-morewrap"><button class="ghost-btn" onclick="hwShowAll()">None of these? Show all types</button></div>'
+      + '<div id="hw-allrest" hidden>' + _hwPhraseItems(restKeys) + '</div>';
+  } else {
+    itemsHtml = _hwPhraseItems(restKeys) + origItem;
+  }
   return '<div class="fit" id="hw-fit">'
     + '<div id="hw-ask">'
       + '<p class="res-section-label">Does this sound like you?</p>'
       + '<div class="fit-opts">'
-        + (hasN ? '<button class="fit-btn" onclick="hwFit(\'notquite\')">Not quite</button>' : '')
-        + '<button class="fit-btn" onclick="hwFit(\'spot\')">' + (hasN ? 'Spot on' : 'Yes, show my next steps') + '</button>'
+        + '<button class="fit-btn" onclick="hwFit(\'notquite\')">Not quite</button>'
+        + '<button class="fit-btn" onclick="hwFit(\'spot\')">Spot on</button>'
       + '</div>'
       + '<p class="fit-hint" id="hw-hint">Confirm this to see the bonus chapter and your next steps.</p>'
     + '</div>'
     + '<div class="reveal" id="hw-chooser" hidden>'
       + '<p class="res-section-label">Which of these sounds most like you?</p>'
-      + items
+      + itemsHtml
+      + moreHtml
     + '</div>'
     + '<div class="confirmed" id="hw-confirmed" hidden><button class="ghost-btn" onclick="hwReopen()">Select a different archetype</button></div>'
   + '</div>';
@@ -1000,6 +1015,12 @@ function hwFit(mode){
   if (mode === 'spot'){ hwConfirm(_hwR.key); return; }
   var hint = document.getElementById('hw-hint'); if (hint) hint.hidden = true;
   var ch = document.getElementById('hw-chooser'); ch.hidden = false; _hwScroll(ch);
+}
+function hwShowAll(){
+  var rest = document.getElementById('hw-allrest'); if (rest) rest.hidden = false;
+  var wrap = document.getElementById('hw-morewrap'); if (wrap) wrap.style.display = 'none';
+  try { hwCap('fit_show_all_types', { archetype_key: _hwR && _hwR.key }); } catch(e){}
+  _hwScroll(rest);
 }
 function hwAcc(btn){
   var item = btn.parentNode, body = item.querySelector('.acc-body');

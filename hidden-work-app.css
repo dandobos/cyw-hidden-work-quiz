@@ -317,6 +317,7 @@
   .zone.fixed { color: var(--text-subtle); }
   .zone.updates { color: var(--a); }
   .acc-item { max-width: 600px; margin: 0 auto 10px; }
+  .acc-more { max-width: 600px; margin: 6px auto 14px; text-align: center; }
   .phrase-card { display: block; width: 100%; text-align: center; background: var(--card); border: 1px solid var(--border); padding: 18px 22px; cursor: pointer; transition: .15s; font-family: var(--heading); font-style: italic; font-size: 17px; color: var(--text-body); line-height: 1.45; }
   .phrase-card:hover { border-color: var(--text-primary); color: var(--text-primary); }
   .phrase-card .who { display: block; font-family: var(--sans); font-size: 9.5px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; color: var(--text-subtle); margin-bottom: 7px; }
