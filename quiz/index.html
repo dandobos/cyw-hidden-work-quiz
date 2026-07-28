@@ -803,6 +803,14 @@ function archIndef(key){
 function chapterLabelFor(plan){
   return plan.chapters.map(function(n){ return 'Chapter ' + n + ': ' + CH_TITLE[n]; }).join(', then ');
 }
+// The day-8 email bullets the chapters ONLY when there are two (Dan, 2026-07-28), so it needs
+// them as separate fields: Kit's Liquid has no split filter, and hw_chapter_label is one joined
+// string. hw_chapter_2 is blank for single-chapter readers, which is the email's branch test.
+// Both are in READING order, same as the label.
+function chapterPartsFor(plan){
+  var line = function(n){ return 'Chapter ' + n + ': ' + CH_TITLE[n]; };
+  return { one: line(plan.chapters[0]), two: plan.chapters.length > 1 ? line(plan.chapters[1]) : '' };
+}
 const SOFT_AWAKENED = "You have done much of the inner work already. If the past still bothers you, Chapter 2 is there for you. But the fastest path to progress is the system in Chapter 4.";
 const SOFT_GENERIC = "If a past experience still weighs on you, Chapter 2 may help.";
 // Supplement mode (strong wound, non-eligible key): Chapter 2 is delivered as a companion
@@ -1511,10 +1519,12 @@ function hwArchetypeFields(key){
     chapterWhy = am.amDrained ? AM_DRAINED_WHY : am.amFoothills ? AM_FOOTHILLS_WHY : WHY[key];
     if (plan.mode === 'supplement') chapterWhy += ' ' + suppNote(key);
   }
+  var parts = chapterPartsFor(plan);
   return {
     hw_archetype: ARCH[key].name, hw_archetype_indef: archIndef(key),
     hw_welcome_subject: WELCOME_SUBJ[key], hw_share: share, hw_narrative: narrative,
     hw_chapter_label: chapterLabel, hw_chapter_why: chapterWhy, hw_dl_label: dlLabel,
+    hw_chapter_1: parts.one, hw_chapter_2: parts.two,
     hw_dl_pdf: dlUrl(dlkey, 'pdf'), hw_dl_epub: dlUrl(dlkey, 'epub'), hw_dl_mp3: dlUrl(dlkey, 'mp3')
   };
 }
@@ -1888,6 +1898,8 @@ function hwFields(){
     hw_regret_desc: reg.desc,
     hw_chapter_label: chapterLabel,
     hw_chapter_why: chapterWhy,
+    hw_chapter_1: chapterPartsFor(r).one,
+    hw_chapter_2: chapterPartsFor(r).two,
     hw_dl_label: dlLabel,
     hw_dl_pdf: dlUrl(dlkey, 'pdf'),
     hw_dl_epub: dlUrl(dlkey, 'epub'),
