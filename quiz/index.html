@@ -716,7 +716,10 @@ const ARCH = {
   LLH: { name: 'The Grounded Seeker',       ch: 6 },
   LLL: { name: 'The Late Bloomer', ch: 1 }
 };
-// Low-agency types where a past wound could be the brake. Awakened Observer (HLH) excluded by design.
+// Low-agency types where a past wound is the brake: for these, Chapter 2 LEADS (sequence mode).
+// Since 2026-07-28 every other archetype with a strong wound answer also receives Chapter 2,
+// but second, after their own chapter (supplement mode). Awakened Observer (HLH) stays out of
+// the lead group by design (inner work already done); it gets the supplement with its own note.
 const WOUND_ELIGIBLE = ['HLL', 'LLH', 'LLL'];
 
 // Per-archetype subject line for Email 2 (welcome). Sent to Kit as the hw_welcome_subject
@@ -785,8 +788,28 @@ const SEQ_LINE = {
   LLL: "Start with Chapter 2. There is something unresolved from the past to address before you take action. Then move on to Chapter 1.",
   LLH: "Start with Chapter 2. There is something unresolved from the past to address before you take action. Then move on to Chapter 6."
 };
+// hw_archetype_indef: the archetype as an indefinite noun phrase ("a Late Bloomer",
+// "an Awakened Observer"), for sentences that read badly with the "The ..." form of
+// hw_archetype. Built here rather than in Liquid because Kit documents only a handful of
+// filters (capitalize, truncatewords, strip, url_encode, default) and not remove_first.
+function archIndef(key){
+  var n = ARCH[key].name.replace(/^The /, '');
+  return (/^[AEIOU]/.test(n) ? 'an ' : 'a ') + n;
+}
+// hw_chapter_label for the Kit emails. Sequence mode keeps READING order (Chapter 2 leads)
+// and carries the titles, so a two-chapter reader gets the same shape as the single-chapter
+// case instead of a bare "Chapters 1 and 2". Download filenames stay ascending to match the
+// hosted bundles, so this must not be reused for dlLabel or the URLs.
+function chapterLabelFor(plan){
+  return plan.chapters.map(function(n){ return 'Chapter ' + n + ': ' + CH_TITLE[n]; }).join(', then ');
+}
 const SOFT_AWAKENED = "You have done much of the inner work already. If the past still bothers you, Chapter 2 is there for you. But the fastest path to progress is the system in Chapter 4.";
 const SOFT_GENERIC = "If a past experience still weighs on you, Chapter 2 may help.";
+// Supplement mode (strong wound, non-eligible key): Chapter 2 is delivered as a companion
+// rather than the lead. Own chapter first; this note explains why Chapter 2 is in the bundle.
+const SUPP_GENERIC = "You said a painful experience from your past still holds you back. Chapter 2, The Unexpected Gifts Hidden in Your Struggles, is included in your download. Read it second.";
+const SUPP_AWAKENED = "You have done much of the inner work already, so your own chapter comes first. Chapter 2, The Unexpected Gifts Hidden in Your Struggles, is included for whatever still lingers from the past. Read it second.";
+function suppNote(key){ return key === 'HLH' ? SUPP_AWAKENED : SUPP_GENERIC; }
 
 // True Creator "praise gate": the full "rare one" narrative is earned only at genuinely high scores.
 // Below the bar the reader keeps the same clean label (The True Creator) but gets a direct
@@ -890,7 +913,13 @@ function chapterPlan(key, flag){
   if (flag === 'strong' && WOUND_ELIGIBLE.includes(key)){
     return { chapters:[2, base], mode:'sequence' };  // Chapter 2 (past wound) first, then the base chapter
   }
-  if (flag === 'strong' || flag === 'moderate') return { chapters:[base], mode:'soft' };
+  if (flag === 'strong'){
+    // 2026-07-28 (Dan): a strong wound answer now delivers Chapter 2 to EVERY archetype,
+    // not just the low-agency three. For readers already taking action the wound is not
+    // the brake, so their own chapter keeps the lead and Chapter 2 rides along second.
+    return { chapters:[base, 2], mode:'supplement' };
+  }
+  if (flag === 'moderate') return { chapters:[base], mode:'soft' };
   return { chapters:[base], mode:'default' };
 }
 function computeResult(){
@@ -1352,6 +1381,10 @@ function hwChapterHtml(key, s, flag){
   if (plan.mode === 'sequence'){
     chTitleHtml = '<ul class="res-chapter-list">' + plan.chapters.map(function(n){ return '<li>Chapter ' + n + ': ' + CH_TITLE[n] + '</li>'; }).join('') + '</ul>';
     chWhy = SEQ_LINE[key];
+  } else if (plan.mode === 'supplement'){
+    chTitleHtml = '<ul class="res-chapter-list">' + plan.chapters.map(function(n){ return '<li>Chapter ' + n + ': ' + CH_TITLE[n] + '</li>'; }).join('') + '</ul>';
+    chWhy = am.amDrained ? AM_DRAINED_WHY : am.amFoothills ? AM_FOOTHILLS_WHY : WHY[key];
+    chNote = suppNote(key);
   } else {
     var base = plan.chapters[0];
     chTitleHtml = 'Chapter ' + base + ': ' + CH_TITLE[base];
@@ -1360,7 +1393,7 @@ function hwChapterHtml(key, s, flag){
   }
   var ordered = plan.chapters.slice().sort(function(a,b){ return a - b; });
   var dlkey = ordered.join('_');
-  var label = (plan.mode === 'sequence') ? 'Download Chapters ' + ordered.join(' and ') + ' Free' : 'Download Chapter ' + plan.chapters[0] + ' Free';
+  var label = (plan.chapters.length > 1) ? 'Download Chapters ' + ordered.join(' and ') + ' Free' : 'Download Chapter ' + plan.chapters[0] + ' Free';
   return '<p class="zone updates">Your next steps</p>'
     + '<p class="res-section-label">The Next Step</p>'
     + '<div class="res-chapter">'
@@ -1468,19 +1501,19 @@ function hwArchetypeFields(key){
   var plan = chapterPlan(key, flag);
   var ordered = plan.chapters.slice().sort(function(a,b){ return a - b; });
   var dlkey = ordered.join('_');
-  var chapterLabel, dlLabel, chapterWhy;
+  var chapterLabel = chapterLabelFor(plan), dlLabel, chapterWhy;
   if (plan.mode === 'sequence'){
-    chapterLabel = 'Chapters ' + ordered.join(' and ');
     dlLabel = 'Download Chapters ' + ordered.join(' and ') + ' Free';
     chapterWhy = SEQ_LINE[key];
   } else {
     var base = plan.chapters[0];
-    chapterLabel = 'Chapter ' + base + ': ' + CH_TITLE[base];
-    dlLabel = 'Download Chapter ' + base + ' Free';
+    dlLabel = (plan.chapters.length > 1) ? 'Download Chapters ' + ordered.join(' and ') + ' Free' : 'Download Chapter ' + base + ' Free';
     chapterWhy = am.amDrained ? AM_DRAINED_WHY : am.amFoothills ? AM_FOOTHILLS_WHY : WHY[key];
+    if (plan.mode === 'supplement') chapterWhy += ' ' + suppNote(key);
   }
   return {
-    hw_archetype: ARCH[key].name, hw_welcome_subject: WELCOME_SUBJ[key], hw_share: share, hw_narrative: narrative,
+    hw_archetype: ARCH[key].name, hw_archetype_indef: archIndef(key),
+    hw_welcome_subject: WELCOME_SUBJ[key], hw_share: share, hw_narrative: narrative,
     hw_chapter_label: chapterLabel, hw_chapter_why: chapterWhy, hw_dl_label: dlLabel,
     hw_dl_pdf: dlUrl(dlkey, 'pdf'), hw_dl_epub: dlUrl(dlkey, 'epub'), hw_dl_mp3: dlUrl(dlkey, 'mp3')
   };
@@ -1663,6 +1696,11 @@ function renderResult(){
     chEyebrow = 'The Next Step';
     chTitleHtml = '<ul class="res-chapter-list">' + r.chapters.map(n => '<li>Chapter ' + n + ': ' + CH_TITLE[n] + '</li>').join('') + '</ul>';
     chWhy = SEQ_LINE[r.key];
+  } else if (r.mode === 'supplement'){
+    chEyebrow = 'The Next Step';
+    chTitleHtml = '<ul class="res-chapter-list">' + r.chapters.map(n => '<li>Chapter ' + n + ': ' + CH_TITLE[n] + '</li>').join('') + '</ul>';
+    chWhy = amDrained ? AM_DRAINED_WHY : amFoothills ? AM_FOOTHILLS_WHY : WHY[r.key];
+    chNote = suppNote(r.key);
   } else {
     const base = r.chapters[0];
     chEyebrow = 'The Next Step';
@@ -1815,20 +1853,20 @@ function hwFields(){
   const reg = r.regret, vit = r.vitality;
   const ordered = r.chapters.slice().sort((a,b)=>a-b);  // ascending => matches hosted bundle filenames
   const dlkey = ordered.join('_');
-  let chapterLabel, dlLabel, chapterWhy;
+  let chapterLabel = chapterLabelFor(r), dlLabel, chapterWhy;
   if (r.mode === 'sequence'){
-    chapterLabel = 'Chapters ' + ordered.join(' and ');
     dlLabel = 'Download Chapters ' + ordered.join(' and ') + ' Free';
     chapterWhy = SEQ_LINE[r.key];
   } else {
     const base = r.chapters[0];
-    chapterLabel = 'Chapter ' + base + ': ' + CH_TITLE[base];
-    dlLabel = 'Download Chapter ' + base + ' Free';
+    dlLabel = (r.chapters.length > 1) ? 'Download Chapters ' + ordered.join(' and ') + ' Free' : 'Download Chapter ' + base + ' Free';
     chapterWhy = amDrained ? AM_DRAINED_WHY : amFoothills ? AM_FOOTHILLS_WHY : WHY[r.key];
+    if (r.mode === 'supplement') chapterWhy += ' ' + suppNote(r.key);
   }
   const ansVal = pred => { const i = questions.findIndex(pred); return (i >= 0 && answers[i]) ? answers[i].value : ''; };
   return {
     hw_archetype: r.archetype,
+    hw_archetype_indef: archIndef(r.key),
     hw_tz: hwTz(),
     hw_welcome_subject: WELCOME_SUBJ[r.key],
     hw_share: share,
