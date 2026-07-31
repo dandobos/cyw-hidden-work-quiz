@@ -1,22 +1,236 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
-<title>The Choose Your Work Course</title>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>The 7-Day Choose Your Work Course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap">
 <style>
-  body { margin:0; background:#EFEDE8; font-family:'Iowan Old Style',Palatino,Georgia,serif; color:#0F0F0F;
-    display:flex; align-items:center; justify-content:center; min-height:100vh; text-align:center; padding:24px; }
-  .box { max-width:460px; }
-  h1 { font-weight:600; font-size:28px; margin:0 0 12px; }
-  p { font-size:16px; line-height:1.6; color:#3A3A3A; margin:0; }
-</style>
-</head>
-<body>
-  <div class="box">
-    <h1>The Choose Your Work Course</h1>
-    <p>The 7-day course is delivered by email, one day at a time. A web version isn&rsquo;t available right now.</p>
-  </div>
-</body>
-</html>
+:root{--heading:'Lora',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;
+--bg:#f7f5f1;--card:#fff;--border:#cfccc4;--border-soft:#e3e0d9;--text:#111;--body:#333;
+--subtle:#5a564e;--accent:#14638e;--accent-soft:#e3eef5;--accent-border:#bcd8e8;--clay:#b23a2e;}
+*{box-sizing:border-box} html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--sans);line-height:1.65;font-size:17px}
+.wrap{max-width:680px;margin:0 auto;padding:28px 20px 80px}
+header.top{text-align:center;padding:14px 0 6px}
+header.top h1{font-family:var(--heading);color:var(--text);font-size:clamp(26px,6vw,36px);line-height:1.2;margin:.2em 0}
+header.top p{color:var(--subtle);margin:0}
+.note{background:var(--accent-soft);border:1px solid var(--accent-border);border-radius:8px;
+padding:14px 16px;margin:20px 0;font-size:15px;color:#0f4e70}
+nav.days{position:sticky;top:0;z-index:5;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;
+background:rgba(247,245,241,.94);backdrop-filter:blur(6px);padding:10px 0;margin-bottom:8px;border-bottom:1px solid var(--border-soft)}
+nav.days a{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1px solid var(--border);
+color:var(--accent);text-decoration:none;font-weight:600;font-size:14px;background:#fff}
+nav.days a:hover,nav.days a:focus{background:var(--accent);color:#fff;border-color:var(--accent);outline:none}
+.day{background:var(--card);border:1px solid var(--border-soft);border-radius:12px;padding:26px 24px;margin:22px 0}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--clay);font-weight:700;margin:0 0 4px}
+.day h2{font-family:var(--heading);color:var(--text);font-size:clamp(22px,4.6vw,29px);line-height:1.25;margin:0 0 18px}
+.day h3{font-family:var(--heading);color:var(--text);font-size:19px;margin:26px 0 8px}
+.day p{margin:0 0 14px}
+.day ul{margin:0 0 14px;padding-left:22px}
+.day li{margin:0 0 7px}
+.mt{display:grid;gap:10px;margin:0 0 22px}
+.mt div{border-radius:8px;padding:13px 15px;font-size:16px}
+.mt .m{background:#faf3f2;border:1px solid #e8cdc9;color:#7d2c23}
+.mt .t{background:var(--accent-soft);border:1px solid var(--accent-border);color:#0f4e70}
+.mt span{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;opacity:.75;margin-bottom:3px}
+.cta{margin:18px 0}
+.cta a{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;
+padding:13px 22px;border-radius:8px;font-size:16px}
+.cta a:hover,.cta a:focus{background:#0f4e70;outline:none}
+.sign{font-family:var(--heading);color:var(--text);margin-top:24px}
+.refs{margin-top:18px;border-top:1px solid var(--border-soft);padding-top:12px}
+.refs summary{cursor:pointer;font-size:13px;color:var(--subtle);font-weight:600}
+.refs p{font-size:13px;color:var(--subtle);margin:8px 0 0}
+.finish{background:var(--card);border:2px solid var(--accent);border-radius:12px;padding:24px;text-align:center;margin-top:26px}
+.finish h2{font-family:var(--heading);color:var(--text);margin:0 0 8px;font-size:24px}
+.finish p{color:var(--subtle);margin:0 0 16px}
+</style></head><body>
+<div class="wrap">
+<header class="top">
+  <h1>7 Days to Choosing Your Work</h1>
+  <p>A step-by-step guide to choosing your work</p>
+</header>
+<div class="note"><b>Beta reader version.</b> This is the full course, all seven days on one page, so you can move through it at your own pace. Each day has a short activity. Once you have been through all seven, the feedback form is at the bottom.</div>
+<nav class="days" aria-label="Jump to day"><a href="#day1">1</a><a href="#day2">2</a><a href="#day3">3</a><a href="#day4">4</a><a href="#day5">5</a><a href="#day6">6</a><a href="#day7">7</a></nav>
+<section class="day" id="day1">
+  <p class="eyebrow">Day 1 of 7</p>
+  <h2>Why Discipline Is Not the Key to Success</h2>
+  <div class="mt"><div class="m"><span>The popular myth</span>Success comes from discipline.</div><div class="t"><span>The overlooked truth</span>Success comes from devotion.</div></div><h3>Luciano Pavarotti has the answer</h3>
+<p>Pavarotti was once asked by a reporter, “What do you do the night before a big opera? Do you socialize?” Pavarotti replied, “No, I stay home and rest my voice.”</p>
+<p>The reporter was impressed. “Wow! You’re so disciplined!”</p>
+<p>Pavarotti corrected him. “No,” he said. “It’s not discipline; it’s devotion.”</p>
+<p>Discipline is forcing yourself to do something you have to do. It feels like pushing a boulder uphill. Exhausting.</p>
+<p>In contrast, devotion is being attracted to what you are meant to do. It feels like you’re finally swimming with the current. Everything flows.</p>
+<p>Discover how to make time disappear.</p>
+<p class="cta"><a href="https://tally.so/r/w7A58R" target="_blank" rel="noopener">Do the 3 Minute Flow Finder &rarr;</a></p>
+<h3>How to win a Nobel Prize</h3>
+<p>When Richard Feynman was stuck in his physics career, he stopped trying to do “important” work. Instead, he found himself enjoying the way a plate wobbled in the air while he was relaxing in the cafeteria. Feynman thought it would be interesting to calculate its motion.</p>
+<p>His colleague asked, “What’s the importance of it?”</p>
+<p>“There’s no importance whatsoever!” Feynman replied. “I’m just doing it for the fun of it.”</p>
+<p>That playful exploration led to the work that won him a Nobel Prize.</p>
+<p>If you feel you need more discipline to be successful in your work, you are doing the wrong kind of work. Instead, choose work that is worthy of your devotion.</p>
+<p>Devotion makes discipline unnecessary.</p>
+<h3>Your Turn: The Flow Finder (3 Minutes)</h3>
+<p>Discover how to make time disappear.</p>
+<p class="cta"><a href="https://tally.so/r/w7A58R" target="_blank" rel="noopener">Do the 3 Minute Flow Finder &rarr;</a></p>
+<p>Once you finish, you’ll immediately receive two practical strategies to help you spend more time in flow.</p>
+<h3>Next up</h3>
+<p>The next email addresses Myth 2: If you’ve invested years into a career, it would be foolish to start something new and squander everything you’ve built. You’ll uncover why we continue on a path that doesn’t serve us and how to deal with the feeling, “I can’t throw away decades of work!”</p><p class="sign">See you tomorrow<br>Dan Dobos<br>Author of Choose Your Work</p><details class="refs"><summary>References</summary><p>Victoria Labalme, “Discipline vs. Devotion,” video, January 26, 2024, Victoria Labalme Communications, https://www.victorialabalme.com/discipline-vs-devotion/, 0:50.</p></details>
+</section><section class="day" id="day2">
+  <p class="eyebrow">Day 2 of 7</p>
+  <h2>When Does It Make Sense To Start Something New?</h2>
+  <div class="mt"><div class="m"><span>The popular myth</span>If you’ve invested years into a career, it would be foolish to start something new and squander everything you’ve built.</div><div class="t"><span>The overlooked truth</span>No matter how many years you’ve invested into a career, if it brings you angst, you owe it to yourself to make changes. You deserve peace of mind.</div></div><p>Why do we continue down paths that no longer serve us?</p>
+<p>I spent years of my life studying for an Engineering/Law degree. Halfway through, I knew in my gut that I would never become an engineer. But I kept going.</p>
+<p>Why? I didn&#x27;t want to admit to my friends and family that I had just wasted several years of my life.</p>
+<p>This is the sunk cost fallacy: continuing down a path that no longer serves us simply because we’ve already invested time, money, or effort into it.</p>
+<ul>
+<li>We stay in a job we hate because we’re close to a promotion.</li>
+<li>We don’t change careers because we have spent so long establishing our skills in our current profession.</li>
+<li>We cling to a business that drains us because of the years we’ve poured into it.</li>
+</ul>
+<p>It’s like refusing to leave a movie you are hating purely because you already paid for the ticket. Never a good idea.</p>
+<p>The sunk cost fallacy deceives you into allowing past choices to influence future decisions. See through its evil scheme.</p>
+<p>Identify the signs that your current path is no longer serving you.</p>
+<p class="cta"><a href="https://tally.so/r/3E27qX" target="_blank" rel="noopener">Identify Your Exit Signal in 3 minutes &rarr;</a></p>
+<p>What to do when you get the feeling, “I can’t throw away decades of work!”</p>
+<p>Consider Sarah, a corporate lawyer nineteen years into her career. Corner office. Six-figure salary. The respect of her peers.</p>
+<p>But every Sunday night, she felt a familiar dread creeping in. She discovered that yoga was the only thing that quieted her anxiety. While her colleagues talked about case law, she daydreamed about teaching wellness.</p>
+<p>“I can’t throw away two decades of work,” she told herself. “All that education, all those years would be totally wasted!”</p>
+<p>Then she watched a burned-out 62-year-old partner suffer a heart attack and die a week later. The stress and grueling hours came at a price. Another colleague her age was abruptly fired for “not being able to keep up.” Sarah realized that everyone leaves eventually. The only choice is how.</p>
+<p>She started teaching yoga on weekends while keeping her law job. She saved her money aggressively. She researched the wellness industry with the same rigor she brought to legal briefs.</p>
+<p>Eighteen months later, she opened her own studio.</p>
+<p>“People think I threw away my legal career,” Sarah says. “But I didn’t throw it away. Actually, I completed it. Those 19 years taught me discipline, business acumen, and how to serve clients. I use those skills every day. I just use them in work that makes me feel alive.”</p>
+<p>Sunk costs are in the past. Focus on what matters to you today.</p>
+<h3>Your Turn: The Exit Signal (3 Minutes)</h3>
+<p>Identify the signs that your current path is no longer serving you.</p>
+<p class="cta"><a href="https://tally.so/r/3E27qX" target="_blank" rel="noopener">Identify Your Exit Signal in 3 minutes &rarr;</a></p>
+<p>Once you finish, you’ll immediately receive three practical strategies so that you stop paying the sunk cost tax.</p>
+<h3>Next up</h3>
+<p>The next email addresses Myth 3: Regret arises from failing to achieve your goals. You’ll discover the danger of saying, “Now is not the right time.”</p><p class="sign">See you tomorrow<br>Dan Dobos<br>Author of Choose Your Work</p><details class="refs"><summary>References</summary><p>For a discussion on quit criteria, or “kill criteria” as Duke puts it, see her excellent book, Quit. Annie Duke, Quit: The Power of Knowing When to Walk Away (London: Ebury Edge, 2022), 115.</p></details>
+</section><section class="day" id="day3">
+  <p class="eyebrow">Day 3 of 7</p>
+  <h2>The Truth About Regret</h2>
+  <div class="mt"><div class="m"><span>The popular myth</span>Regret arises from failing to achieve your goals.</div><div class="t"><span>The overlooked truth</span>Regret arises from not acting on the things that deeply matter to you.</div></div><p>The danger of “Now is not the right time”</p>
+<p>Yesterday we discussed the sunk cost fallacy. Another sneaky way this fallacy deceives us is by causing us to say, “I know I need to make changes, but now is not the right time.”</p>
+<p>A 74-year-old woman once told me, “I spent more than 40 years waiting for the right moment. It never came. I didn’t write the novel. I just kept coming and going to my pointless job.”</p>
+<p>When most people get to the end of their lives, few look back to lament their failures. Instead, the regret you’re most likely to have is, “I wish I did the things that I always wanted to do.”</p>
+<p>Why don’t we do these things? One of the biggest reasons is that we don’t appreciate just how short life is.</p>
+<p>If you live to about 80, you only get about 4,000 weeks. In that time there are only so many:</p>
+<ul>
+<li>Projects that you can work on.</li>
+<li>Adventures you will go on.</li>
+<li>Meals with the people you love.</li>
+</ul>
+<p><em>Life seems infinite. But in reality, it is unforgivingly finite.</em></p>
+<p><em>In this finite stretch of time you have, there is never going to be a “right time.”</em></p>
+<p>So schedule a time tomorrow and start then.</p>
+<h3>Your Turn: The Regret Filter (3 Minutes)</h3>
+<p>Don’t get to 80 and regret that you never started the thing that mattered most to you.</p>
+<p class="cta"><a href="https://tally.so/r/3q91Ad" target="_blank" rel="noopener">Do the 3 Minute Regret Filter Now &rarr;</a></p>
+<p>Once you finish, you’ll immediately receive two practical strategies to help ensure that you do not live a life of regret.</p>
+<h3>Next up</h3>
+<p>The next email addresses Myth 4: I need to quit my job so that I can choose my work. You’ll discover how Michael started choosing his work right away and how you can do the same.</p><p class="sign">See you tomorrow<br>Dan Dobos<br>Author of Choose Your Work</p><details class="refs"><summary>References</summary><p>Bronnie Ware, The Top Five Regrets of the Dying: A Life Transformed by the Dearly Departing (Carlsbad, CA: Hay House, 2012).</p><p>Gallup’s 2025 report shows that in 2024, only 21% of employees were engaged in their work. Gallup, “State of the Global Workplace,” August 4, 2025, https://www.gallup.com/workplace/349484/state-of-the-global-workplace.aspx, 6.</p><p>A study by Circulation Research found that “myocardial infarctions occur with greatest incidence early on a Monday morning.” David J. Lefer, “Is There a Better Time of Day to Have a Heart Attack?,” Circulation Research 106, no. 3 (2010): 430–31, https://doi.org/10.1161/CIRCRESAHA.109.213652.</p></details>
+</section><section class="day" id="day4">
+  <p class="eyebrow">Day 4 of 7</p>
+  <h2>How to Choose Your Work Today</h2>
+  <div class="mt"><div class="m"><span>The popular myth</span>You must quit your job to choose your work.</div><div class="t"><span>The overlooked truth</span>You can keep your job and choose your work today.</div></div><h3>Michael’s story: From fast-food worker to graphic designer</h3>
+<p>Michael worked in a fast-food restaurant. He was 26, earning minimum wage, and felt like his creative strengths were going to waste.</p>
+<p>So he made a decision.</p>
+<p>Each night, he would spend one hour redesigning logos he saw on his commute. No clients. No feedback. Just him, his laptop, and a quiet belief in his ability to design.</p>
+<p>Then his car broke down…</p>
+<p>The repair wiped out his savings. He had to work extra shifts just to stay afloat. Most people would’ve stopped. Michael didn’t.</p>
+<p>He did five-minute sketches during lunch breaks. He recorded short insights on voice notes before bed. It wasn’t perfect — but it was something.</p>
+<p>He kept going.</p>
+<p>With time and practice, his designs improved. He posted them online. Small businesses started to notice. He got his first few clients. A year later, he left the restaurant for good.</p>
+<p>Not because of luck.</p>
+<p>Because of one hour a day.</p>
+<p><em>The fastest path to the life you want is a one-hour appointment in your calendar. Schedule it.</em></p>
+<p class="cta"><a href="https://tally.so/r/woqLZ1" target="_blank" rel="noopener">Schedule Your Hour of Possibility in 3 Minutes &rarr;</a></p>
+<p>Once you finish, you’ll immediately receive three practical strategies to help you make the most of this important hour.</p>
+<h3>Next up</h3>
+<p>The next email addresses Myth 5: Pursue the things that you’re good at. You’ll see how the curse of competence is draining your energy, and how to fix this situation.</p><p class="sign">See you tomorrow<br>Dan Dobos<br>Author of Choose Your Work</p>
+</section><section class="day" id="day5">
+  <p class="eyebrow">Day 5 of 7</p>
+  <h2>How to Overcome the Curse of Competence</h2>
+  <div class="mt"><div class="m"><span>The popular myth</span>Pursue the things that you’re good at.</div><div class="t"><span>The overlooked truth</span>Pursue the things that give you energy.</div></div><h3>Jeremy seems like he has it all…</h3>
+<p>Jeremy is a seasoned graphic designer with a polished portfolio and a steady stream of high-end clients. He works on luxury brand campaigns. His designs are flawless. His calendar is always full. His business is very profitable. On paper, he has reached the pinnacle of his profession.</p>
+<p>Alice, on the other hand, is just starting out. She creates illustrations and quirky layouts for small community projects and indie businesses. Her work still has rough edges, but she is utterly fascinated by it. So much so that she finds herself noticing street signs, color combinations in old magazines, and even the way album covers are laid out.</p>
+<p>One Friday evening, they sat down after a long day of work.</p>
+<p>Jeremy sighed and rubbed his temples.</p>
+<p>Alice asked, “Long day?”</p>
+<p>“Same as always,” he replied. “Deadlines. Edits. Client politics.”</p>
+<p>She paused. “Do you ever enjoy it?”</p>
+<p>Jeremy shrugged. “I’m good at it. It pays well. That’s something, right?”</p>
+<p>Alice smiled gently. “Yeah, but do you ever feel proud of what you’ve made?”</p>
+<p>Jeremy looked away. “Honestly? Not really. I just feel… tired.”</p>
+<p>There is a life waiting for you where your work gives you energy instead of draining it from you.</p>
+<p class="cta"><a href="https://tally.so/r/mRA9KK" target="_blank" rel="noopener">Create Your Energy Ledger in 5 minutes &rarr;</a></p>
+<p>Jeremy suffered from the curse of competence.</p>
+<p>He did what he was good at, but he was left feeling drained and unfulfilled.</p>
+<p>A strength is not accurately defined by what you are good at. Rather, a strength is something that makes you feel stronger. It’s an expression of your true self. A weakness makes you feel weaker, <strong><em>even when you are good at it.</em></strong></p>
+<p>For Alice, graphic design was a strength because it energized her. For Jeremy, graphic design was a weakness because it weakened him.</p>
+<p>Jeremy discovered that winning the wrong game only magnifies the inherent emptiness of playing it.</p>
+<p>Skills are transferable. Time is not. Now let’s apply your skills to work that energizes you.</p>
+<h3>Your Turn: The Energy Ledger (5 Minutes)</h3>
+<p>There is a life waiting for you where your work gives you energy instead of draining it from you.</p>
+<p class="cta"><a href="https://tally.so/r/mRA9KK" target="_blank" rel="noopener">Create Your Energy Ledger in 5 minutes &rarr;</a></p>
+<p>Once you finish, you’ll immediately receive three practical strategies to help you do the work that energizes you.</p>
+<h3>Next up</h3>
+<p>The next email addresses Myth 6: If it can’t be quantified it doesn’t matter. You’ll discover the quantification bias, and how it prevents you from making high-quality decisions.</p><p class="sign">See you tomorrow<br>Dan Dobos<br>Author of Choose Your Work</p><details class="refs"><summary>References</summary><p>The idea that a strength makes you feel stronger has been put forth by a range of eminent experts. For example, see Christopher Peterson and Martin E. P. Seligman, Character Strengths and Virtues: A Handbook and Classification (New York: Oxford University Press, 2004), 18.</p><p>Howard Gardner, Frames of Mind: The Theory of Multiple Intelligences (New York: Basic Books, 1983), 12.</p></details>
+</section><section class="day" id="day6">
+  <p class="eyebrow">Day 6 of 7</p>
+  <h2>Why You Get Fooled by Numbers</h2>
+  <div class="mt"><div class="m"><span>The popular myth</span>If it can’t be quantified, it doesn’t matter.</div><div class="t"><span>The overlooked truth</span>The most important things in the world cannot be quantified.</div></div><h3>How to think independently in a world obsessed with conformity</h3>
+<p>It’s important to understand the difference between your adapted self and your true self.</p>
+<p>Your adapted self conforms to cultural norms. Your true self honors your deepest aspirations.</p>
+<p>Your adapted self crafts just the right post for social media. Your true self knows your deepest truth and only wants to express it.</p>
+<p>Your adapted self dictates what you should do. Your true self gently encourages you to imagine what you could do.</p>
+<p>Your adapted self domesticates you to obtain external validation. Your true self seeks inner well-being.</p>
+<p>Your adapted self pursues increased status. Your true self seeks personal growth.</p>
+<p>At the end of the day, you need to make an important decision. Decide whether you want to feel happy at your core, or whether you merely want to appear to be happy. Is your appearance more important than your actual experience? If fulfillment is the priority, begin by examining the core of your being and ponder what really matters — what really matters to me? More likely than not, you will discover that the answer does not involve a new pair of expensive shoes or a shiny new car.</p>
+<p>Freedom is the ability to direct your energy to the things that matter.</p>
+<p>Experience the satisfaction of delivering real value.</p>
+<p class="cta"><a href="https://tally.so/r/w5JANP" target="_blank" rel="noopener">Identify Your True Self in 3 Minutes &rarr;</a></p>
+<h3>The quantification bias</h3>
+<p>Due to the influence of the adapted self, we are drawn to concrete accomplishments and quantifiable results because these are things that are immediately understood by others.</p>
+<p>“Executive Director” comes with clear status. But how you feel after you receive a thank-you card from a client cannot be measured.</p>
+<p>Having money in the bank is easily quantified. But the feeling of contentment is immeasurable.</p>
+<p>Likes on a post can be counted. But being genuinely seen by another person cannot be quantified.</p>
+<p>Quantifiable achievements are very reasonable goals worthy of your effort, if that’s what you desire. But if that’s all you focus on, you will miss out on something far greater. It’s like developing the perfect online presence on social media while neglecting to nurture genuine relationships offline.</p>
+<p>It is far more satisfying to create real value than to appear valuable.</p>
+<h3>Your Turn: The Invisible Treasure (3 Minutes)</h3>
+<p>Experience the satisfaction of delivering real value.</p>
+<p class="cta"><a href="https://tally.so/r/w5JANP" target="_blank" rel="noopener">Identify Your True Self in 3 Minutes &rarr;</a></p>
+<p>Once you finish, you’ll immediately receive three practical strategies to help you escape the quantification bias.</p>
+<h3>Next up</h3>
+<p>The next email addresses the final myth: Real success is financial success. You’ll discover why winning the lottery won’t solve your problems, even if it feels like it will.</p><p class="sign">See you tomorrow<br>Dan Dobos<br>Author of Choose Your Work</p>
+</section><section class="day" id="day7">
+  <p class="eyebrow">Day 7 of 7</p>
+  <h2>The Definition of Success</h2>
+  <div class="mt"><div class="m"><span>The popular myth</span>Real success is financial success.</div><div class="t"><span>The overlooked truth</span>Real success is living a meaningful life that fascinates and challenges you.</div></div><h3>From the edge of suicide to revolutionary inventor</h3>
+<p>In 1927, Buckminster Fuller stood at the edge of Lake Michigan, ready to end his life. He was 32, bankrupt, and drinking heavily. His business had failed. His daughter had died. He felt worthless.</p>
+<p>But standing there in the dark, something made him pause.</p>
+<p>Instead of taking his life, he decided to live as if he had already died. Being dead, he wouldn’t have to worry about himself and would be free to focus his energy on living as a representative of the universe. He decided to gift the rest of his life to one question:</p>
+<p><strong><em>“What is it on this planet that needs doing, that I know something about, that probably won’t happen unless I personally take responsibility for it?”</em></strong></p>
+<p>Buckminster Fuller went from contemplating suicide to inventing the geodesic dome and earning 28 patents. While most people hope to impact one field, Fuller went on to transform three: architecture, engineering, and environmentalism.</p>
+<p>The Fuller Question changed my life and it may well do the same for you.</p>
+<p class="cta"><a href="https://tally.so/r/wLer1z" target="_blank" rel="noopener">Answer the Fuller Question in 3 Minutes &rarr;</a></p>
+<h3>Why winning the lottery won’t solve your problems</h3>
+<p>Despite clear evidence from the likes of Fuller, we in the West have been sold the dream that winning the lottery would allow us to retire on an island and live a life of infinite leisure. The modern version of this dream is to work a four-hour day or even a four-hour week. It&#x27;s a clever sleight of hand that tricks us into believing financial abundance can mask a deep-seated void in well-being.</p>
+<p>The reality is that tackling problems that matter is a primal need — contentment is only possible once you have found a challenge that matters to you. It’s no different than any other essential need you have. If you do not exercise for a long time, your muscles begin to atrophy. If you receive endless praise, your capacity to improve is diminished. Growth is impossible in the absence of friction. Unbridled positivity invariably produces stagnation. Ignoring what matters to you feels painless at first. The eventual pain is far greater than any temporary difficulty you’d face from pursuing something meaningful.</p>
+<p>Reject the oversimplified versions of success fed to you on social media and define success in your own terms. True wealth cannot accurately be represented by numbers. It is found in doing things purely because they are worth doing. True wealth is the experience of choosing your work.</p>
+<h3>Your Turn: The Fuller Question (3 Minutes)</h3>
+<p>The Fuller Question changed my life and it may well do the same for you.</p>
+<p class="cta"><a href="https://tally.so/r/wLer1z" target="_blank" rel="noopener">Answer the Fuller Question in 3 Minutes &rarr;</a></p>
+<p>Once you finish, you’ll immediately receive three practical strategies to help you choose your work.</p>
+<p>Congratulations on completing this course. Tomorrow I will send you a short email that summarizes what we have covered.</p><p class="sign">See you tomorrow<br>Dan Dobos<br>Author of Choose Your Work</p><details class="refs"><summary>References</summary><p>“What is it on this planet that needs doing, that I know something about, that probably won’t happen unless I personally take responsibility for it?” Cited in Jon Kabat-Zinn, Wherever You Go, There You Are: Mindfulness Meditation in Everyday Life (New York: Hyperion, 1994), 150-51 (lightly edited for clarity).</p><p>Summary</p></details>
+</section>
+<div class="finish">
+  <h2>Finished all seven days?</h2>
+  <p>Your candid, specific feedback on the course is the last step.</p>
+  <p class="cta"><a href="https://tally.so/r/wgBx94" target="_blank" rel="noopener">Course feedback form &rarr;</a></p>
+</div>
+</div></body></html>
