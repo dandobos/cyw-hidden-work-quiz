@@ -9,8 +9,8 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap">
 <style>
 :root{--heading:'Lora',Georgia,serif;--sans:'Inter',-apple-system,sans-serif;
---bg:#f7f5f1;--card:#fff;--border:#cfccc4;--border-soft:#e3e0d9;--text:#111;--body:#333;
---subtle:#5a564e;--accent:#14638e;--accent-soft:#e3eef5;--accent-border:#bcd8e8;--clay:#b23a2e;}
+--bg:#f7f5f1;--card:#fff;--border:#cfccc4;--border-soft:#e3e0d9;--text:#1a2028;--body:#000;
+--subtle:#5a564e;--accent:#1a2028;--accent-soft:#f7f5f1;--accent-border:#d8d5ce;--eyebrow:#9a9a9a;}
 *{box-sizing:border-box} html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--body);font-family:var(--sans);line-height:1.65;font-size:17px}
 .wrap{max-width:680px;margin:0 auto;padding:28px 20px 80px}
@@ -18,28 +18,28 @@ header.top{text-align:center;padding:14px 0 6px}
 header.top h1{font-family:var(--heading);color:var(--text);font-size:clamp(26px,6vw,36px);line-height:1.2;margin:.2em 0}
 header.top p{color:var(--subtle);margin:0}
 .note{background:var(--accent-soft);border:1px solid var(--accent-border);border-radius:8px;
-padding:14px 16px;margin:20px 0;font-size:15px;color:#0f4e70}
+padding:14px 16px;margin:20px 0;font-size:15px;color:var(--subtle)}
 nav.days{position:sticky;top:0;z-index:5;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;
 background:rgba(247,245,241,.94);backdrop-filter:blur(6px);padding:10px 0;margin-bottom:8px;border-bottom:1px solid var(--border-soft)}
 nav.days a{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1px solid var(--border);
 color:var(--accent);text-decoration:none;font-weight:600;font-size:14px;background:#fff}
 nav.days a:hover,nav.days a:focus{background:var(--accent);color:#fff;border-color:var(--accent);outline:none}
 .day{background:var(--card);border:1px solid var(--border-soft);border-radius:12px;padding:26px 24px;margin:22px 0}
-.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--clay);font-weight:700;margin:0 0 4px}
+.eyebrow{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--eyebrow);font-weight:700;margin:0 0 4px}
 .day h2{font-family:var(--heading);color:var(--text);font-size:clamp(22px,4.6vw,29px);line-height:1.25;margin:0 0 18px}
 .day h3{font-family:var(--heading);color:var(--text);font-size:19px;margin:26px 0 8px}
 .day p{margin:0 0 14px}
 .day ul{margin:0 0 14px;padding-left:22px}
 .day li{margin:0 0 7px}
-.mt{display:grid;gap:10px;margin:0 0 22px}
-.mt div{border-radius:8px;padding:13px 15px;font-size:16px}
-.mt .m{background:#faf3f2;border:1px solid #e8cdc9;color:#7d2c23}
-.mt .t{background:var(--accent-soft);border:1px solid var(--accent-border);color:#0f4e70}
-.mt span{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;opacity:.75;margin-bottom:3px}
+.mt{display:grid;gap:0;margin:0 0 22px}
+.mt div{padding:15px 20px;font-size:16px}
+.mt .m{background:#f7f5f1;border:1px solid #d8d5ce;border-bottom:none;border-radius:11px 11px 0 0;color:#000;padding-bottom:7px}
+.mt .t{background:#f7f5f1;border:1px solid #d8d5ce;border-top:none;border-radius:0 0 11px 11px;color:#000}
+.mt span{display:block;font-size:16px;font-weight:700;color:var(--text);margin-bottom:3px}
 .cta{margin:18px 0}
-.cta a{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;
-padding:13px 22px;border-radius:8px;font-size:16px}
-.cta a:hover,.cta a:focus{background:#0f4e70;outline:none}
+.cta a{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:700;
+padding:15px 26px;border-radius:8px;font-size:12px;letter-spacing:2px;text-transform:uppercase}
+.cta a:hover,.cta a:focus{background:#000;outline:none}
 .sign{font-family:var(--heading);color:var(--text);margin-top:24px}
 .refs{margin-top:18px;border-top:1px solid var(--border-soft);padding-top:12px}
 .refs summary{cursor:pointer;font-size:13px;color:var(--subtle);font-weight:600}
