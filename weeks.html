@@ -123,7 +123,12 @@
 
     // pitch from width so 52 columns always fit; the card never grows past the
     // height that DEFAULT_ROWS rows take at this width, so a fixed embed holds it
-    var availW = canvas.parentElement.clientWidth - 16; // card padding
+    var availW = canvas.parentElement.clientWidth - 18; // card padding + 1px borders
+    // Guard: inside an iframe the first paint can happen before layout settles
+    // (clientWidth 0), which pinned a bogus canvas height and left the age labels
+    // detached from the grid (beta: Lisa-Marie, mobile). Skip and let the
+    // ResizeObserver below re-render once the container has a real width.
+    if (availW < 40) return;
     var widthPitch = availW / COLS;
     var capH = DEFAULT_ROWS * widthPitch;
     var pitch = Math.min(widthPitch, capH / m.rows);
@@ -145,9 +150,9 @@
       ctx.fill();
     }
 
-    // age labels every 5 years, aligned to grid rows (canvas sits 8px inside the
-    // card, below the week axis line)
-    var offset = gutter.parentElement.querySelector(".week-axis").offsetHeight + 4 + 8;
+    // age labels every 5 years, aligned to grid rows (canvas sits 8px padding +
+    // 1px border inside the card, below the week axis line)
+    var offset = gutter.parentElement.querySelector(".week-axis").offsetHeight + 4 + 9;
     var lab = "";
     for (var a = 0; a < m.rows; a += 5)
       lab += '<i style="top:' + (offset + a * pitch + pitch / 2) + 'px">' + a + "</i>";
@@ -161,7 +166,11 @@
   ageEl.addEventListener("input", render);
   expEl.addEventListener("input", render);
   render();
-  var t; window.addEventListener("resize", function(){ clearTimeout(t); t = setTimeout(render, 120); });
+  var t; function queueRender(){ clearTimeout(t); t = setTimeout(render, 120); }
+  window.addEventListener("resize", queueRender);
+  // Window resize never fires when only the CONTAINER changes size (iframe layout
+  // settling on mobile, embed width changes), so watch the container itself.
+  if (window.ResizeObserver) new ResizeObserver(queueRender).observe(canvas.parentElement);
 </script>
 </body>
 </html>

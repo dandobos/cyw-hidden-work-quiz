@@ -357,7 +357,10 @@
 
   /* Link-styled buttons keep their own text colour even when the theme
      colours a:hover (this was making the book CTA text vanish on hover). */
-  a.continue-btn, a.continue-btn:hover, a.continue-btn:focus { color: var(--card) !important; text-decoration: none !important; }
+  a.continue-btn, a.continue-btn:hover, a.continue-btn:focus, a.continue-btn:active, a.continue-btn:visited { color: var(--card) !important; text-decoration: none !important; }
+  /* Beta (Lisa-Marie): tapping the book CTA turned it black-on-black; the theme
+     also colours a:active and a:visited, so pin those states too. */
+  a.wc-cta, a.wc-cta:hover, a.wc-cta:focus, a.wc-cta:active, a.wc-cta:visited { color: #fff !important; text-decoration: none !important; }
   .res-dl-btn, .res-dl-btn:visited { color: var(--text-primary) !important; }
   .res-dl-btn:hover  { color: var(--accent) !important; }
   .sbtn, .sbtn:hover, .sbtn:visited { color: var(--text-primary) !important; }
