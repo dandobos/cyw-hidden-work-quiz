@@ -646,7 +646,7 @@ function renderIntro() {
       }).join('')
       + '</div>';
     desc = 'Answer the same 30 quick questions and see where you and your friend match and differ.';
-    begin = 'Find your pattern';
+    begin = 'Find Your Pattern';
     stats = '';
   }
   return '<p class="intro-eyebrow">The Choose Your Work Quiz</p>'
@@ -1126,7 +1126,7 @@ function wcCardHtml(r, drained){
     return '<div class="wc-cell'+(p===short?' me':'')+'"><span class="d"></span>'+p+'</div>';
   }).join('');
   return '<div class="wc" id="wc-card"><div class="wc-bar"></div>'
-    + '<div class="wc-dlrow"><button class="wc-dl-btn" title="Download and share your card" onclick="viralSaveImage()"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 4v10m0 0l-3.5-3.5M12 14l3.5-3.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Download &amp; share</span></button></div>'
+    + '<div class="wc-dlrow"><button class="wc-dl-btn" title="Download and Share Your Card" onclick="viralSaveImage()"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 4v10m0 0l-3.5-3.5M12 14l3.5-3.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Download &amp; Share</span></button></div>'
     + '<p class="wc-ey">The Choose Your Work Quiz</p>'
     + '<h2 class="wc-name">I am '+art+' <b>'+short+'</b></h2>'
     + '<p class="wc-claim">“'+(drained ? AM_DRAINED_SHARE : SHARE_CLAIM[r.key])+'”</p>'
@@ -1134,7 +1134,7 @@ function wcCardHtml(r, drained){
     + '<div class="wc-list">'+items+'</div>'
     + '<div class="wc-divh"><span>Which of the 8 Work Personalities are you?</span></div>'
     + '<div class="wc-grid">'+cells+'</div>'
-    + '<div class="foot-live"><a class="wc-cta" href="#hw-book-cta" onclick="hwCardCtaDown(event)">Discover your Work Personality</a><p class="wc-src">A free 3-minute career quiz for people who want more from their work<br>dandobos.com/choose-your-work-quiz</p></div>'
+    + '<div class="foot-live"><a class="wc-cta" href="#hw-book-cta" onclick="hwCardCtaDown(event)">Discover Your Work Personality</a><p class="wc-src">A free 3-minute career quiz for people who want more from their work<br>dandobos.com/choose-your-work-quiz</p></div>'
     + '</div>';
 }
 const SHARE_HEADLINE = {
@@ -1169,7 +1169,7 @@ function shareLoopHtml(r, s){
         + '<div class="share-btns">'
           + '<button class="sbtn native" onclick="viralNativeShare()"><span class="g">↗</span>Share</button>'
           + '<a class="sbtn share-wa" data-link="'+p.link+'" target="_blank" rel="noopener" onclick="hwShareClick(\'whatsapp\')" href="https://wa.me/?text='+e(fMsg+' '+p.link)+'"><span class="g g-wa">w</span>WhatsApp</a>'
-          + '<button class="sbtn" onclick="viralCopyLink()"><span class="g g-cp">⧉</span>Copy info</button>'
+          + '<button class="sbtn" onclick="viralCopyLink()"><span class="g g-cp">⧉</span>Copy Info</button>'
         + '</div>'
       + '</div>'
       + '<div class="seg-body" data-m="socials" style="display:none">'
@@ -1240,7 +1240,7 @@ function viralSaveStory(){
   mid.appendChild(clone);
   var bot=document.createElement('div');
   bot.style.cssText='text-align:center;color:#fff;font-family:\'Inter\',sans-serif;';
-  bot.innerHTML='<p style="font-size:30px;font-weight:600;margin:0 0 8px">Find your pattern</p><p style="font-size:26px;opacity:.85;margin:0;letter-spacing:.5px">dandobos.com/choose-your-work-quiz</p>';
+  bot.innerHTML='<p style="font-size:30px;font-weight:600;margin:0 0 8px">Find Your Pattern</p><p style="font-size:26px;opacity:.85;margin:0;letter-spacing:.5px">dandobos.com/choose-your-work-quiz</p>';
   wrap.appendChild(top); wrap.appendChild(mid); wrap.appendChild(bot);
   document.body.appendChild(wrap);
   function cleanup(){ if(wrap.parentNode) wrap.parentNode.removeChild(wrap); }
@@ -1750,7 +1750,7 @@ function renderNeedQuiz() {
   return '<p class="intro-eyebrow">The Choose Your Work Quiz</p>'
     + '<h1 class="intro-title">Please complete the quiz first</h1>'
     + '<p class="intro-desc">Take the quiz to get your result. Once you have finished, you can open it here to share it.</p>'
-    + '<button class="continue-btn" onclick="startQuiz()">Start the quiz</button>';
+    + '<button class="continue-btn" onclick="startQuiz()">Start the Quiz</button>';
 }
 // Resume gate: shown on load when a durable in-progress quiz is found, so a crash,
 // refresh, or accidental close never silently drops the reader back at the intro.
@@ -1763,7 +1763,7 @@ function renderResume() {
     + '<h1 class="intro-title">Welcome back</h1>'
     + '<p class="intro-desc">' + where + ' Pick up right where you left off; your answers are saved.</p>'
     + '<button class="continue-btn" onclick="resumeQuiz()">Resume the quiz</button>'
-    + '<div style="text-align:center;margin-top:18px"><button class="ghost-btn" onclick="startOver()">Start over</button></div>';
+    + '<div style="text-align:center;margin-top:18px"><button class="ghost-btn" onclick="startOver()">Start Over</button></div>';
 }
 function resumeQuiz() {
   if (!_resumeTarget) { screen = 'question'; qIdx = 0; }

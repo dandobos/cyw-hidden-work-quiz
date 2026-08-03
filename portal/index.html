@@ -188,17 +188,17 @@
     var STEPS = [
       { key:"quiz", n:1, kind:"action", title:"Take the quiz", time:"Duration: about 7 minutes",
         desc:"Please do this on your phone.",
-        btn:{label:"Open the quiz", href:quizUrl(false), accent:true} },
+        btn:{label:"Open the Quiz", href:quizUrl(false), accent:true} },
       { key:"quiz_feedback", n:2, kind:"form", title:"Quiz feedback form", time:"Duration: about 7 minutes",
         desc:"Be candid and specific.<br><span style=\"color:var(--accent);font-weight:700\">&#10003;</span> “The third question was confusing because…”<br><span style=\"color:var(--clay);font-weight:700\">&#10007;</span> “it was great.”<br><br>Please flag anything slow, ineffective or not working on your device.",
-        btn:{label:"Open the quiz feedback form", href:withId(FORM.quiz,name,email)} },
+        btn:{label:"Open the Quiz Feedback Form", href:withId(FORM.quiz,name,email)} },
       { key:"sharing_feedback", n:3, kind:"form", title:"Share it", time:"Duration: about 7 minutes",
         desc:"1. Open your result and use the share options there."
-             +"<br><a class=\"btn accent inline\" href=\""+quizUrl(true)+"\" target=\"_blank\" rel=\"noopener\">Open my result to share</a>"
+             +"<br><a class=\"btn accent inline\" href=\""+quizUrl(true)+"\" target=\"_blank\" rel=\"noopener\">Open My Result to Share</a>"
              +"<br>2. Send it to a friend."
              +"<br>3. Send it to yourself and go through it as a first-time receiver would."
              +"<br>4. Fill in the sharing feedback form."
-             +"<br><a class=\"btn inline\" href=\""+withId(FORM.sharing,name,email)+"\" target=\"_blank\" rel=\"noopener\">Open the sharing form</a>",
+             +"<br><a class=\"btn inline\" href=\""+withId(FORM.sharing,name,email)+"\" target=\"_blank\" rel=\"noopener\">Open the Sharing Form</a>",
         btn:null },
       { key:"course", n:4, kind:"course", title:"The 7-day email course", time:"Duration: 10 min per day for 7 days",
         desc:"Each day brings a new email with something insightful to read and a practical activity."
@@ -207,7 +207,7 @@
         btn:null },
       { key:"course_feedback", n:5, kind:"form", title:"Course feedback form", time:"Duration: about 7 minutes",
         desc:"Once you have been through all seven days, share your candid and specific feedback.",
-        btn:{label:"Open the email course feedback form", href:withId(FORM.course,name,email)} }
+        btn:{label:"Open the Email Course Feedback Form", href:withId(FORM.course,name,email)} }
     ];
 
     // map a step key to the server-side (Notion) progress flag
@@ -234,7 +234,7 @@
       if(!done && s.btn){
         actions = '<div class="row"><a class="btn '+(s.btn.accent?"accent":"")+'" href="'+s.btn.href+'" target="_blank" rel="noopener">'+esc(s.btn.label)+'</a></div>';
       } else if(done){
-        actions = '<div class="row"><span class="time">Completed</span>' + (s.btn ? ' &middot; <a class="markdone" href="'+s.btn.href+'" target="_blank" rel="noopener">open again</a>' : '') + '</div>';
+        actions = '<div class="row"><span class="time">Completed</span>' + (s.btn ? ' &middot; <a class="markdone" href="'+s.btn.href+'" target="_blank" rel="noopener">Open Again</a>' : '') + '</div>';
       } else if(s.kind==="course"){
         actions = '<div class="time">Arrives by email, one day at a time</div>';
       }
