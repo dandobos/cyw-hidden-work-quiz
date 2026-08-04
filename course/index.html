@@ -246,10 +246,13 @@ padding:15px 26px;border-radius:8px;font-size:12px;letter-spacing:2px;text-trans
 (function(){
   /* Day progress shading: past / today / future. Current day comes from ?day=N
      (also stored) or localStorage cyw_course_day; defaults to 1. */
-  var m=location.search.match(/[?&]day=([1-7])\b/), cur;
-  if(m){cur=+m[1];try{localStorage.setItem('cyw_course_day',m[1]);}catch(e){}}
-  else{try{cur=+localStorage.getItem('cyw_course_day')||1;}catch(e){cur=1;}}
+  /* The reader's day is the HIGHER of the ?day=N in the link they arrived on and
+     their stored progress, so opening an older day's email never demotes them. */
+  var m=location.search.match(/[?&]day=([1-7])\b/), stored=1, cur;
+  try{stored=+localStorage.getItem('cyw_course_day')||1;}catch(e){}
+  cur=Math.max(m?+m[1]:1, stored);
   if(cur<1||cur>7)cur=1;
+  try{localStorage.setItem('cyw_course_day',String(cur));}catch(e){}
   var tip=document.getElementById('daytip');
   document.querySelectorAll('nav.days a').forEach(function(a,i){
     var d=i+1;
