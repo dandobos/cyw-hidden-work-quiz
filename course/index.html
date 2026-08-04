@@ -64,7 +64,6 @@ padding:15px 26px;border-radius:8px;font-size:12px;letter-spacing:2px;text-trans
   <h1>7 Days to Choose Your Work</h1>
   <p>A step-by-step guide to choosing your work</p>
 </header>
-<div class="note" id="betanote"><b>Beta reader version.</b> This is the full course. Use the day tabs to move through it at your own pace; every day is open to you. Each day has a short activity. After Day 7, the feedback form is on that tab.</div>
 <nav class="days" aria-label="Course days" role="tablist"><a href="#day1">Day 1</a><a href="#day2">Day 2</a><a href="#day3">Day 3</a><a href="#day4">Day 4</a><a href="#day5">Day 5</a><a href="#day6">Day 6</a><a href="#day7">Day 7</a></nav>
 <section class="day" id="day1">
   <p class="eyebrow">Day 1 of 7</p>
@@ -259,8 +258,9 @@ padding:15px 26px;border-radius:8px;font-size:12px;letter-spacing:2px;text-trans
   var mMail=qs.match(/[?&]cemail=([^&]+)/);
   var stored=0; try{stored=+localStorage.getItem('cyw_course_day')||0;}catch(e){}
   var paramDay=mDay?+mDay[1]:0;
-  var CUR = (paramDay||stored) ? Math.max(paramDay,stored) : 8;  /* 8 = stateless, all open */
-  if(CUR<8){try{localStorage.setItem('cyw_course_day',String(Math.max(paramDay,stored)));}catch(e){}}
+  var PREVIEW=/[?&]preview=1\b/.test(qs);  /* internal-only: every tab open, looks identical, writes nothing */
+  var CUR = PREVIEW ? 8 : Math.max(paramDay,stored,1);
+  if(!PREVIEW&&(paramDay||stored)){try{localStorage.setItem('cyw_course_day',String(Math.max(paramDay,stored)));}catch(e){}}
 
   var tabs=[].slice.call(document.querySelectorAll('nav.days a'));
   var secs=[]; for(var i=1;i<=7;i++)secs.push(document.getElementById('day'+i));
@@ -304,7 +304,7 @@ padding:15px 26px;border-radius:8px;font-size:12px;letter-spacing:2px;text-trans
 
   /* Cross-device state: the email links carry ?cemail=; the backend answers with
      the reader's real day (and stores their browser timezone on first contact). */
-  if(mMail){
+  if(mMail&&!PREVIEW){
     var tz=''; try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';}catch(e){}
     fetch('https://beta-portal-production-df48.up.railway.app/course-state?cemail='+mMail[1]+(tz?'&tz='+encodeURIComponent(tz):''))
       .then(function(r){return r.json();})
