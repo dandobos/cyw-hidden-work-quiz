@@ -226,7 +226,11 @@ function renderIntro() {
       + '<p class="inv-name">' + ARCH[_invite.key].name + '</p>'
       + '<p class="inv-claim">&ldquo;' + VIRAL[_invite.key].claim + '&rdquo;</p>'
       + '</div>';
-    invitePatterns = '<div class="inv-pattern-grid">'
+    // Beta feedback (Lisa-Marie, 2026-07-09; actioned 2026-08-04): the pattern grid sat
+    // between the friend card and the CTA, reading like buttons to press first. The CTA
+    // now follows the card directly; the grid is secondary context under its own label.
+    invitePatterns = '<p class="inv-grid-lbl">The 8 Work Personalities</p>'
+      + '<div class="inv-pattern-grid">'
       + [['True Creator','#3D7A6E'],['High Achiever','#B8902F'],['Awakened Observer','#1E5F8C'],['Restless Visionary','#A85A3D'],['Restless Explorer','#C2722F'],['Tireless Driver','#B23A2E'],['Grounded Seeker','#557C9E'],['Late Bloomer','#6B6B6B']].map(function(p){
         return '<div class="inv-pattern-pill"><i style="background:' + p[1] + '"></i>' + p[0] + '</div>';
       }).join('')
@@ -240,10 +244,10 @@ function renderIntro() {
     + '<h1 class="intro-title">' + title + '</h1>'
     + tagline
     + invCard
-    + invitePatterns
     + '<p class="intro-desc">' + desc + '</p>'
     + stats
-    + '<button class="continue-btn" onclick="startQuiz()">' + begin + '</button>';
+    + '<button class="continue-btn" onclick="startQuiz()">' + begin + '</button>'
+    + invitePatterns;
 }
 function renderQuestion() {
   const q = questions[qIdx];

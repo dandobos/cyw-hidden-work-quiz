@@ -91,7 +91,8 @@
   .inv-spectrum span:nth-child(6) { background: #B23A2E; }
   .inv-spectrum span:nth-child(7) { background: #557C9E; }
   .inv-spectrum span:nth-child(8) { background: #6B6B6B; }
-  .inv-pattern-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; max-width: 520px; margin: -4px auto 28px; }
+  .inv-pattern-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; max-width: 520px; margin: 0 auto 28px; }
+  .inv-grid-lbl { font-family: var(--sans); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-subtle); font-weight: 600; text-align: center; margin: 40px 0 12px; }
   .inv-pattern-pill { display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: var(--sans); font-size: 12px; font-weight: 600; line-height: 1.2; color: var(--text-body); letter-spacing: 0; }
   .inv-pattern-pill i { width: 8px; height: 8px; border-radius: 50%; flex: none; }
   .gate-title { font-family: var(--heading); font-size: 40px; font-weight: 400; text-align: center; margin: 0 0 20px; letter-spacing: -0.5px; line-height: 1.15; }
@@ -379,11 +380,14 @@
      Re-assert normal wrapping — and break-word so a long token can't overflow —
      on every text-bearing quiz control. No-op on the standalone /quiz/ page. */
   #page button, #page a.continue-btn, #page .option, #page .rate-btn,
-  #page .word-tile, #page .res-dl-btn, #page .sbtn, #page .ghost-btn {
+  #page .word-tile, #page .res-dl-btn, #page .sbtn, #page .ghost-btn,
+  #page a.wc-cta {
     white-space: normal !important;
     overflow-wrap: break-word;
     word-break: break-word;
   }
+  /* Beta (Lisa-Marie): the card CTA is an <a>, so it was missing from the list above;
+     the theme's nowrap made its label overflow the card into the source line below. */
 
   @media (max-width: 600px) {
     .intro-title { font-size: 40px !important; }
