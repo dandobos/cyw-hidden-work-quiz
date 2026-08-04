@@ -86,6 +86,16 @@
   .invited-intro-page .intro-desc { margin-bottom: 32px; }
   /* Category + audience line for cold share-link arrivals (beta feedback: Taylor, 2026-07-09) */
   .intro-tagline { font-family: var(--heading); font-style: italic; font-size: 16.5px; line-height: 1.5; color: var(--text-body); text-align: center; margin: -8px auto 22px; max-width: 340px; }
+  .inv-from { font-family: var(--sans); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--a); font-weight: 600; text-align: center; margin: -4px 0 14px; }
+  .pb-note-label { font-family: var(--sans); font-size: 12px; font-weight: 600; color: var(--text-primary); text-align: left; margin: 0 0 6px; }
+  .pb-note { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-family: var(--heading); font-size: 16px; color: var(--text-primary); min-height: 58px; resize: vertical; outline: none; margin-bottom: 14px; }
+  .pb-note:focus { border-color: var(--accent); }
+  .pb-note::placeholder { color: var(--text-subtle); font-style: italic; }
+  .pb-name-row { display: flex; align-items: center; gap: 10px; margin: 0 0 14px; }
+  .pb-name-row label { font-family: var(--sans); font-size: 12px; font-weight: 600; color: var(--text-primary); white-space: nowrap; }
+  .pb-name { flex: 1; min-width: 0; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; font-family: var(--heading); font-size: 15px; color: var(--text-primary); outline: none; }
+  .pb-name:focus { border-color: var(--accent); }
+  .pb-name-hint { font-family: var(--sans); font-size: 11px; color: var(--text-muted); margin: -8px 0 14px; }
   .intro-title { font-family: var(--heading); font-size: 56px; font-weight: 400; text-align: center; margin: 0 0 24px; letter-spacing: -1px; line-height: 1.05; }
   .intro-desc { font-family: var(--heading); font-style: italic; font-size: 19px; color: var(--text-body); text-align: center; line-height: 1.5; max-width: 520px; margin: 0 auto 48px; }
   .intro-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 520px; margin: 0 auto 48px; }
@@ -637,13 +647,17 @@ function renderIntro() {
   var begin = 'Begin';
   var stats = '';  // stat blocks (30 / ~7 / 8) removed from the intro, 2026-07-20
   if (invited){
-    title = 'There are <span class="inv-title-key">8 Work Personalities.</span> Which one is yours?';
+    // Compare-led headline + sender attribution (share-flow decisions 6 and 7, 2026-08-04).
+    var invName = _invite.from ? esc(_invite.from) : '';
+    var invArch = ARCH[_invite.key].name.replace(/^The\s+/, '');
+    title = (invName || 'Your friend') + ' got <span class="inv-title-key">' + invArch + '.</span> What would you get?';
     // Beta feedback (Taylor, 2026-07-09): a cold recipient can't tell it's a career quiz
     // or who it's for. Name the category + audience before the friend card.
-    tagline = '<p class="intro-tagline">A free 3-minute career quiz for people who want more from their work.</p>';
+    tagline = '<p class="intro-tagline">A free 7-minute career quiz for people who want more from their work.</p>';
+    if (invName) tagline = '<p class="inv-from">' + invName + ' sent you this</p>' + tagline;
     inviteSpectrum = '<div class="inv-spectrum" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>';
     invCard = '<div class="inv-card">'
-      + '<p class="inv-ey">Your friend came out as</p>'
+      + '<p class="inv-ey">' + (invName ? invName + ' came out as' : 'Your friend came out as') + '</p>'
       + '<p class="inv-name">' + ARCH[_invite.key].name + '</p>'
       + '<p class="inv-claim">&ldquo;' + VIRAL[_invite.key].claim + '&rdquo;</p>'
       + '</div>';
@@ -1015,6 +1029,9 @@ function parseInviteFromUrl(){
     // no PII. Lets us credit this visit back to the sharer without fingerprinting scores.
     var ref = (q.get('ref') || '').slice(0, 48);
     if (/^[A-Za-z0-9_-]{2,48}$/.test(ref)) inv.ref = ref;
+    // Sender's first name (share-flow decision 7). Strict allowlist; rendered escaped.
+    var from = (q.get('from') || '').slice(0, 24).trim();
+    if (/^[A-Za-z][A-Za-z' -]{0,23}$/.test(from)) inv.from = from;
     return inv;
   } catch(e){ return null; }
 }
@@ -1052,7 +1069,10 @@ const SHARE_CHALLENGE_TITLE = 'Help a friend choose their work';
 const SHARE_CHALLENGE_BODY = 'They will get their own pattern, then you can compare where you match and where you do not.';
 const SHARE_CHALLENGE_MESSAGE = 'Want to compare Work Personalities? Take the Choose Your Work Quiz and see: ';
 var _share = null;
-function viralShareText(r){ return 'Hey! I just did the Choose Your Work Quiz, a free 3-minute career quiz for people who want more from their work. It pins down how you really relate to your work, and what to do next. I came out as the ' + r.archetype.replace(/^The\s+/, '') + '. There are 8 Work Personalities. Which one are you?'; }
+// Default share message (Dan's copy, share-flow decision 2, 2026-08-04): leads with the
+// sender's result and the compare promise, then the time claim. The link follows after a
+// blank line (never a bare URL mid-sentence).
+function viralShareText(r){ return 'I got ' + r.archetype.replace(/^The\s+/, '') + " on the Choose Your Work Quiz. I wonder what you'd get? It maps the pattern behind how you choose work, and only takes around 7 minutes... then it shows us both side by side at the end."; }
 // Per-sharer referral id, computed once. Beta testers get their stable portal token;
 // everyone else a per-share-session random id. Registered as a super property so the
 // sharer's own share_clicked events carry it, and embedded in every share link.
@@ -1145,7 +1165,7 @@ function wcCardHtml(r, drained){
     + '<div class="wc-list">'+items+'</div>'
     + '<div class="wc-divh"><span>Which of the 8 Work Personalities are you?</span></div>'
     + '<div class="wc-grid">'+cells+'</div>'
-    + '<div class="foot-live"><a class="wc-cta" href="#hw-book-cta" onclick="hwCardCtaDown(event)">Discover Your Work Personality</a><p class="wc-src">A free 3-minute career quiz for people who want more from their work<br>dandobos.com/choose-your-work-quiz</p></div>'
+    + '<div class="foot-live"><a class="wc-cta" href="#hw-book-cta" onclick="hwCardCtaDown(event)">Discover Your Work Personality</a><p class="wc-src">A free 7-minute career quiz for people who want more from their work<br>dandobos.com/choose-your-work-quiz</p></div>'
     + '</div>';
 }
 const SHARE_HEADLINE = {
@@ -1158,10 +1178,16 @@ const SHARE_HEADLINE = {
   LLH:"Who else in your circle is a Grounded Seeker?",
   LLL:"Who else in your circle is a Late Bloomer?"
 };
+// Sender first name for landing attribution (share-flow decision 7). Kept in localStorage
+// so it survives revisits; appended to share links as &from= and greeted on the landing.
+function hwSenderName(){ try { var n = (localStorage.getItem('hw_sender_name') || '').slice(0, 24).trim(); return /^[A-Za-z][A-Za-z' -]{0,23}$/.test(n) ? n : ''; } catch(e){ return ''; } }
+function hwLinkWithFrom(base){ var n = hwSenderName(); return n ? base + '&from=' + encodeURIComponent(n) : base; }
 function shareLoopHtml(r, s){
   var p=sharePayload(r, s), e=encodeURIComponent;
-  var fMsg = 'Hey! I just did the Choose Your Work Quiz, a free 3-minute career quiz for people who want more from their work. It pins down how you really relate to your work, and what to do next. I came out as the ' + r.archetype.replace(/^The\s+/, '') + '. There are 8 Work Personalities. Which one are you?';
-  p.text = fMsg;         // every share action sends this message, followed by the link
+  var fMsg = viralShareText(r);
+  p.baseLink = p.link;
+  p.link = hwLinkWithFrom(p.baseLink);
+  p.text = fMsg;         // every share action sends this message; the link follows a blank line
   _share = p;
   return '<div class="res-divider"></div>'
     + '<p class="res-section-label">Share Your Work Personality Card With a Friend or Colleague</p>'
@@ -1175,11 +1201,15 @@ function shareLoopHtml(r, s){
         + '<button class="seg-btn" data-m="save">Save Image for Yourself</button>'
       + '</div>'
       + '<div class="seg-body" data-m="friend">'
+        + '<p class="pb-note-label">Add a personal note (optional but helpful!)</p>'
+        + '<textarea class="pb-note" placeholder="Hey. I thought of you when I got my result..." oninput="hwNoteInput(this)"></textarea>'
+        + '<div class="pb-name-row"><label for="pb-name">Your first name</label><input class="pb-name" id="pb-name" maxlength="24" value="' + esc(hwSenderName()) + '" oninput="hwNameInput(this)"></div>'
+        + '<p class="pb-name-hint">Optional. The page your friend opens will greet them with your name and result.</p>'
         + '<p class="pb-edit-hint">✎ Edit this message before you send it</p>'
         + '<div class="preview"><span class="quo">“</span><span class="msg" contenteditable="true" role="textbox" spellcheck="true" oninput="viralEditMsg(this)">' + fMsg + '</span><span class="quo">”</span></div>'
         + '<div class="share-btns">'
           + '<button class="sbtn native" onclick="viralNativeShare()"><span class="g">↗</span>Share</button>'
-          + '<a class="sbtn share-wa" data-link="'+p.link+'" target="_blank" rel="noopener" onclick="hwShareClick(\'whatsapp\')" href="https://wa.me/?text='+e(fMsg+' '+p.link)+'"><span class="g g-wa">w</span>WhatsApp</a>'
+          + '<a class="sbtn share-wa" data-link="'+p.baseLink+'" target="_blank" rel="noopener" onclick="hwShareClick(\'whatsapp\')" href="https://wa.me/?text='+e(fMsg+'\n\n'+p.link)+'"><span class="g g-wa">w</span>WhatsApp</a>'
           + '<button class="sbtn" onclick="viralCopyLink()"><span class="g g-cp">⧉</span>Copy Info</button>'
         + '</div>'
       + '</div>'
@@ -1198,13 +1228,36 @@ function shareLoopHtml(r, s){
     + '</div>';
 }
 function viralToast(msg){ var t=document.getElementById('share-toast'); if(!t){ t=document.createElement('div'); t.id='share-toast'; t.className='share-toast'; document.body.appendChild(t); } t.textContent=msg; t.classList.add('on'); clearTimeout(t._t); t._t=setTimeout(function(){ t.classList.remove('on'); },1900); }
-function viralShareString(){ return (_share && _share.text ? _share.text + ' ' : '') + (_share ? _share.link : ''); }
+// Outgoing message assembly: personal note (if any), then the message, then the link on
+// its own line. _share.note is set by the note box; _share.text by the editable message.
+var _shareNote = '';
+function hwOutgoingText(){ return (_shareNote ? _shareNote + '\n\n' : '') + ((_share && _share.text) || ''); }
+function viralShareString(){ return hwOutgoingText() + (_share ? '\n\n' + _share.link : ''); }
+function hwRebuildShareLinks(box){
+  if (!_share) return;
+  var e = encodeURIComponent;
+  _share.link = hwLinkWithFrom(_share.baseLink || _share.link);
+  box = box || document.querySelector('.panelbox');
+  if (!box) return;
+  var t = hwOutgoingText();
+  var wa = box.querySelector('a.share-wa, a[href*="wa.me"]');
+  if (wa) wa.href = 'https://wa.me/?text=' + e(t + '\n\n' + _share.link);
+  var tw = box.querySelector('a.share-tw, a[href*="twitter.com"]');
+  if (tw) tw.href = 'https://twitter.com/intent/tweet?text=' + e(t) + '&url=' + e(_share.link);
+}
+function hwNoteInput(el){ _shareNote = (el.value || '').slice(0, 400).trim(); hwRebuildShareLinks(el.closest && el.closest('.panelbox')); }
+function hwNameInput(el){
+  var n = (el.value || '').slice(0, 24).trim();
+  if (n && !/^[A-Za-z][A-Za-z' -]{0,23}$/.test(n)) n = n.replace(/[^A-Za-z' -]/g, '').slice(0, 24);
+  try { localStorage.setItem('hw_sender_name', n); } catch(e){}
+  hwRebuildShareLinks(el.closest && el.closest('.panelbox'));
+}
 function hwShareClick(ch){ hwCap('share_clicked', { channel: ch, archetype_key: (_share && _share.key) || null }); }
 function viralCopyLink(){ if(!_share) return; hwShareClick('copy'); var u=viralShareString(); (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(function(){ viralToast('Copied'); }).catch(function(){ viralToast(u); }); }
 function viralSocial(url, channel){ if(!_share) return; hwShareClick(channel||'social'); var u=viralShareString(); if(navigator.clipboard){ navigator.clipboard.writeText(u).then(function(){ viralToast('Message copied, paste it into your post'); }).catch(function(){}); } window.open(url,'_blank','noopener'); }
 function viralInstagram(){ if(!_share) return; hwShareClick('instagram'); var u=viralShareString(); (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(function(){ viralToast('Message copied, paste it into Instagram'); }).catch(function(){ viralToast(u); }); }
-function viralNativeShare(){ if(!_share) return; hwShareClick('native'); if(navigator.share){ navigator.share({ title:'The Choose Your Work Quiz', text:_share.text, url:_share.link }).catch(function(){}); } else { viralCopyLink(); } }
-function viralEditMsg(el){ var t=(el.textContent||'').replace(/\s+/g,' ').trim(); if(_share) _share.text=t; var box=el.closest&&el.closest('.panelbox'); if(!box) return; var e=encodeURIComponent; var wa=box.querySelector('a.share-wa, a[href*="wa.me"]'); if(wa){ var lw=wa.getAttribute('data-link')||''; wa.href='https://wa.me/?text='+e(t+(lw?' '+lw:'')); } var tw=box.querySelector('a.share-tw, a[href*="twitter.com"]'); if(tw){ var lt=tw.getAttribute('data-link')||''; tw.href='https://twitter.com/intent/tweet?text='+e(t)+(lt?'&url='+e(lt):''); } }
+function viralNativeShare(){ if(!_share) return; hwShareClick('native'); if(navigator.share){ navigator.share({ title:'The Choose Your Work Quiz', text:hwOutgoingText(), url:_share.link }).catch(function(){}); } else { viralCopyLink(); } }
+function viralEditMsg(el){ var t=(el.textContent||'').replace(/\s+/g,' ').trim(); if(_share) _share.text=t; hwRebuildShareLinks(el.closest&&el.closest('.panelbox')); }
 function viralSaveImage(){
   var el=document.getElementById('wc-card');
   if(!el||typeof html2canvas==='undefined'){ viralToast('Image tool still loading, try again in a moment'); return; }
@@ -1213,7 +1266,7 @@ function viralSaveImage(){
   // Render a clone with the download footer (Discover prompt + URL as the CTA), no corner icon.
   var clone=el.cloneNode(true); clone.removeAttribute('id');
   var cc=clone.querySelector('.wc-dlrow'); if(cc) cc.parentNode.removeChild(cc);
-  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><p class="dl-tag">A free 3-minute career quiz for people who want more from their work</p><span class="dl-url">dandobos.com/choose-your-work-quiz</span></div>';
+  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><p class="dl-tag">A free 7-minute career quiz for people who want more from their work</p><span class="dl-url">dandobos.com/choose-your-work-quiz</span></div>';
   clone.style.position='fixed'; clone.style.left='-9999px'; clone.style.top='0'; clone.style.width=el.offsetWidth+'px';
   document.body.appendChild(clone);
   function cleanup(){ if(clone.parentNode) clone.parentNode.removeChild(clone); }
@@ -1246,7 +1299,7 @@ function viralSaveStory(){
   var mid=document.createElement('div');
   var clone=el.cloneNode(true); clone.removeAttribute('id');
   var cc=clone.querySelector('.wc-dlrow'); if(cc) cc.parentNode.removeChild(cc);
-  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><p class="dl-tag">A free 3-minute career quiz for people who want more from their work</p><span class="dl-url">dandobos.com/choose-your-work-quiz</span></div>';
+  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><p class="dl-tag">A free 7-minute career quiz for people who want more from their work</p><span class="dl-url">dandobos.com/choose-your-work-quiz</span></div>';
   clone.style.width='860px'; clone.style.boxShadow='0 30px 80px rgba(0,0,0,.35)'; clone.style.borderRadius='6px';
   mid.appendChild(clone);
   var bot=document.createElement('div');

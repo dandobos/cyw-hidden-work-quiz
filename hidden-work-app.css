@@ -75,6 +75,16 @@
   .invited-intro-page .intro-desc { margin-bottom: 32px; }
   /* Category + audience line for cold share-link arrivals (beta feedback: Taylor, 2026-07-09) */
   .intro-tagline { font-family: var(--heading); font-style: italic; font-size: 16.5px; line-height: 1.5; color: var(--text-body); text-align: center; margin: -8px auto 22px; max-width: 340px; }
+  .inv-from { font-family: var(--sans); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--a); font-weight: 600; text-align: center; margin: -4px 0 14px; }
+  .pb-note-label { font-family: var(--sans); font-size: 12px; font-weight: 600; color: var(--text-primary); text-align: left; margin: 0 0 6px; }
+  .pb-note { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-family: var(--heading); font-size: 16px; color: var(--text-primary); min-height: 58px; resize: vertical; outline: none; margin-bottom: 14px; }
+  .pb-note:focus { border-color: var(--accent); }
+  .pb-note::placeholder { color: var(--text-subtle); font-style: italic; }
+  .pb-name-row { display: flex; align-items: center; gap: 10px; margin: 0 0 14px; }
+  .pb-name-row label { font-family: var(--sans); font-size: 12px; font-weight: 600; color: var(--text-primary); white-space: nowrap; }
+  .pb-name { flex: 1; min-width: 0; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; font-family: var(--heading); font-size: 15px; color: var(--text-primary); outline: none; }
+  .pb-name:focus { border-color: var(--accent); }
+  .pb-name-hint { font-family: var(--sans); font-size: 11px; color: var(--text-muted); margin: -8px 0 14px; }
   .intro-title { font-family: var(--heading); font-size: 56px; font-weight: 400; text-align: center; margin: 0 0 24px; letter-spacing: -1px; line-height: 1.05; }
   .intro-desc { font-family: var(--heading); font-style: italic; font-size: 19px; color: var(--text-body); text-align: center; line-height: 1.5; max-width: 520px; margin: 0 auto 48px; }
   .intro-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 520px; margin: 0 auto 48px; }
