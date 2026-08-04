@@ -19,15 +19,20 @@ header.top h1{font-family:var(--heading);color:var(--text);font-size:clamp(26px,
 header.top p{color:var(--subtle);margin:0}
 .note{background:var(--accent-soft);border:1px solid var(--accent-border);border-radius:8px;
 padding:14px 16px;margin:20px 0;font-size:15px;color:var(--subtle)}
-nav.days{position:sticky;top:0;z-index:5;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;
+nav.days{position:sticky;top:0;z-index:5;display:flex;gap:5px;justify-content:center;flex-wrap:wrap;
 background:rgba(247,245,241,.94);backdrop-filter:blur(6px);padding:10px 0;margin-bottom:8px;border-bottom:1px solid var(--border-soft)}
-nav.days a{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1px solid var(--border);
-color:var(--accent);text-decoration:none;font-weight:600;font-size:14px;background:#fff;position:relative}
-nav.days a:hover,nav.days a:focus{background:var(--accent);color:#fff;border-color:var(--accent);outline:none}
-nav.days a.past{background:#e3e0d9;border-color:#cfccc4;color:var(--subtle)}
+nav.days a{display:grid;place-items:center;min-width:64px;height:36px;border-radius:8px;border:1px solid var(--border);
+color:var(--accent);text-decoration:none;font-weight:600;font-size:13.5px;background:#fff;padding:0 10px;position:relative}
+nav.days a:hover,nav.days a:focus{border-color:var(--accent);outline:none}
+nav.days a.past{background:#e3e0d9;border-color:#cfccc4;color:#5a564e}
 nav.days a.today{background:var(--accent);border-color:var(--accent);color:#fff}
-nav.days a.future{background:#fff;border-color:var(--border-soft);color:#b5b0a6;cursor:default}
-nav.days a.future:hover,nav.days a.future:focus{background:#fff;color:#b5b0a6;border-color:var(--border-soft)}
+nav.days a.future{background:#fff;border-color:var(--border-soft);color:#b5b0a6}
+nav.days a.on{outline:2px solid var(--accent);outline-offset:1px}
+nav.days a.future.on{outline-color:#b5b0a6}
+.teaser{background:#f2f0ec;border:1.5px dashed var(--border);border-radius:12px;padding:34px 24px;margin:22px 0;text-align:center}
+.teaser .eyebrow{color:#b5b0a6}
+.teaser h2{font-family:var(--heading);color:#8d877c;font-size:clamp(20px,4.2vw,26px);margin:2px 0 10px}
+.teaser p{color:#8d877c;font-size:14.5px;margin:0}
 #daytip{position:fixed;z-index:20;max-width:240px;background:var(--accent);color:#fff;font-size:12.5px;line-height:1.45;
 padding:8px 11px;border-radius:8px;pointer-events:none;opacity:0;transition:opacity .12s;text-align:center}
 .day{background:var(--card);border:1px solid var(--border-soft);border-radius:12px;padding:26px 24px;margin:22px 0}
@@ -59,8 +64,8 @@ padding:15px 26px;border-radius:8px;font-size:12px;letter-spacing:2px;text-trans
   <h1>7 Days to Choose Your Work</h1>
   <p>A step-by-step guide to choosing your work</p>
 </header>
-<div class="note"><b>Beta reader version.</b> This is the full course, all seven days on one page, so you can move through it at your own pace. Each day has a short activity. Once you have been through all seven, the feedback form is at the bottom.</div>
-<nav class="days" aria-label="Jump to day"><a href="#day1">1</a><a href="#day2">2</a><a href="#day3">3</a><a href="#day4">4</a><a href="#day5">5</a><a href="#day6">6</a><a href="#day7">7</a></nav>
+<div class="note" id="betanote"><b>Beta reader version.</b> This is the full course. Use the day tabs to move through it at your own pace; every day is open to you. Each day has a short activity. After Day 7, the feedback form is on that tab.</div>
+<nav class="days" aria-label="Course days" role="tablist"><a href="#day1">Day 1</a><a href="#day2">Day 2</a><a href="#day3">Day 3</a><a href="#day4">Day 4</a><a href="#day5">Day 5</a><a href="#day6">Day 6</a><a href="#day7">Day 7</a></nav>
 <section class="day" id="day1">
   <p class="eyebrow">Day 1 of 7</p>
   <h2>Why Discipline Is Not the Key to Success</h2>
@@ -244,32 +249,73 @@ padding:15px 26px;border-radius:8px;font-size:12px;letter-spacing:2px;text-trans
 <div id="daytip" role="tooltip"></div>
 <script>
 (function(){
-  /* Day progress shading: past / today / future. Current day comes from ?day=N
-     (also stored) or localStorage cyw_course_day; defaults to 1. */
-  /* The reader's day is the HIGHER of the ?day=N in the link they arrived on and
-     their stored progress, so opening an older day's email never demotes them. */
-  var m=location.search.match(/[?&]day=([1-7])\b/), stored=1, cur;
-  try{stored=+localStorage.getItem('cyw_course_day')||1;}catch(e){}
-  cur=Math.max(m?+m[1]:1, stored);
-  if(cur<1||cur>7)cur=1;
-  try{localStorage.setItem('cyw_course_day',String(cur));}catch(e){}
+  /* Tabbed gated course (Dan's design, 4 Aug): one day per tab; the tab you land
+     on is the day you are up to. Past tabs stay open, future tabs show a locked
+     teaser. Day state, in priority order: backend (?cemail= lookup, cross-device),
+     then max(?day=N, stored). A visitor with NO signals at all (beta readers,
+     direct links) gets every tab unlocked, keeping the beta promise. */
+  var qs=location.search;
+  var mDay=qs.match(/[?&]day=([1-7])\b/);
+  var mMail=qs.match(/[?&]cemail=([^&]+)/);
+  var stored=0; try{stored=+localStorage.getItem('cyw_course_day')||0;}catch(e){}
+  var paramDay=mDay?+mDay[1]:0;
+  var CUR = (paramDay||stored) ? Math.max(paramDay,stored) : 8;  /* 8 = stateless, all open */
+  if(CUR<8){try{localStorage.setItem('cyw_course_day',String(Math.max(paramDay,stored)));}catch(e){}}
+
+  var tabs=[].slice.call(document.querySelectorAll('nav.days a'));
+  var secs=[]; for(var i=1;i<=7;i++)secs.push(document.getElementById('day'+i));
+  var finish=document.querySelector('.finish');
   var tip=document.getElementById('daytip');
-  document.querySelectorAll('nav.days a').forEach(function(a,i){
-    var d=i+1;
-    a.classList.add(d<cur?'past':d===cur?'today':'future');
-    if(d>cur){
-      a.setAttribute('aria-disabled','true');
-      a.addEventListener('click',function(e){e.preventDefault();});
-      a.addEventListener('mouseenter',function(){
-        tip.textContent='You will have access to Day '+d+' once you have completed Day '+cur+'.';
-        var r=a.getBoundingClientRect();
-        tip.style.opacity='1';
-        tip.style.left=Math.max(8,Math.min(window.innerWidth-tip.offsetWidth-8,r.left+r.width/2-120))+'px';
-        tip.style.top=(r.bottom+8)+'px';
-      });
-      a.addEventListener('mouseleave',function(){tip.style.opacity='0';});
+  var teasers={};
+
+  function titleOf(d){var h=secs[d-1].querySelector('h2');return h?h.textContent:'Day '+d;}
+  function teaserFor(d){
+    if(teasers[d])return teasers[d];
+    var t=document.createElement('div');t.className='teaser';
+    var chain=(CUR>=1&&CUR<=7)?(d===CUR+1?'Unlocks when you complete Day '+CUR+'\u2019s activity.':'Unlocks when you complete Days '+CUR+' to '+(d-1)+'\u2019s activities, one per day.'):'';
+    t.innerHTML='<p class="eyebrow">Day '+d+' of 7</p><h2>'+titleOf(d)+'</h2><p>\uD83D\uDD12 '+chain+'</p>';
+    secs[d-1].parentNode.insertBefore(t,secs[d-1]); teasers[d]=t; return t;
+  }
+  function show(d){
+    for(var i=1;i<=7;i++){
+      var locked=i>CUR;
+      secs[i-1].style.display=(i===d&&!locked)?'':'none';
+      if(teasers[i])teasers[i].style.display='none';
+      if(i===d&&locked)teaserFor(i).style.display='';
+      tabs[i-1].className=(i<CUR?'past':i===CUR?'today':CUR>7?'':'future')+(i===d?' on':'');
     }
+    if(finish)finish.style.display=(d===7&&CUR>=7)?'':'none';
+  }
+  var active=Math.min(CUR>7?1:CUR,7);
+  if(paramDay)active=Math.min(CUR>7?paramDay:CUR,7);
+  tabs.forEach(function(a,idx){
+    a.addEventListener('click',function(e){e.preventDefault();show(idx+1);window.scrollTo(0,0);});
+    a.addEventListener('mouseenter',function(){
+      if(idx+1<=CUR)return;
+      tip.textContent='You will have access to Day '+(idx+1)+' once you have completed Day '+CUR+'.';
+      var r=a.getBoundingClientRect();
+      tip.style.opacity='1';
+      tip.style.left=Math.max(8,Math.min(window.innerWidth-tip.offsetWidth-8,r.left+r.width/2-120))+'px';
+      tip.style.top=(r.bottom+8)+'px';
+    });
+    a.addEventListener('mouseleave',function(){tip.style.opacity='0';});
   });
+  show(active);
+
+  /* Cross-device state: the email links carry ?cemail=; the backend answers with
+     the reader's real day (and stores their browser timezone on first contact). */
+  if(mMail){
+    var tz=''; try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';}catch(e){}
+    fetch('https://beta-portal-production-df48.up.railway.app/course-state?cemail='+mMail[1]+(tz?'&tz='+encodeURIComponent(tz):''))
+      .then(function(r){return r.json();})
+      .then(function(st){
+        if(!st||!st.ok||!st.day)return;
+        var d=Math.max(1,Math.min(7,st.day));
+        if(d!==CUR){CUR=d;try{localStorage.setItem('cyw_course_day',String(d));}catch(e){}
+          Object.keys(teasers).forEach(function(k){teasers[k].remove();});teasers={};
+          show(Math.min(paramDay||d,d)===d?d:Math.min(paramDay||d,d));}
+      }).catch(function(){});
+  }
 })();
 </script>
 </body></html>
