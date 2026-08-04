@@ -10,11 +10,11 @@ var tip=document.createElement("div");tip.id="daytip";tip.setAttribute("role","t
      then max(?day=N, stored). A visitor with NO signals at all (beta readers,
      direct links) gets every tab unlocked, keeping the beta promise. */
   var qs=location.search;
-  var mDay=qs.match(/[?&]day=([1-7])\b/);
+  var mDay=qs.match(/[?&]c?day=([1-7])\b/);
   var mMail=qs.match(/[?&]cemail=([^&]+)/);
   var stored=0; try{stored=+localStorage.getItem('cyw_course_day')||0;}catch(e){}
   var paramDay=mDay?+mDay[1]:0;
-  var PREVIEW=/[?&]preview=1\b/.test(qs);  /* internal-only: every tab open, looks identical, writes nothing */
+  var PREVIEW=/[?&](?:cpv|preview)=1\b/.test(qs);  /* internal-only: every tab open, looks identical, writes nothing */
   var CUR = PREVIEW ? 8 : Math.max(paramDay,stored,1);
   if(!PREVIEW&&(paramDay||stored)){try{localStorage.setItem('cyw_course_day',String(Math.max(paramDay,stored)));}catch(e){}}
 
