@@ -579,8 +579,8 @@ function clearState(){ try{ localStorage.removeItem(STATE_KEY); }catch(e){} }
 // result page (with the share card), instead of the intro. Arriving via a friend's
 // share link (?type=) counts as a fresh visit and does NOT restore this.
 const RESULT_KEY = 'hw_quiz_result_v2';
-function saveResult(){ try{ localStorage.setItem(RESULT_KEY, JSON.stringify({answers, activityNames, activityScores, textVal, rankState, rankTouched, rankConfirmPending})); }catch(e){} }
-function loadResult(){ try{ var r = localStorage.getItem(RESULT_KEY); if(!r) return false; var st = JSON.parse(r); if(!st || !st.answers) return false; answers=st.answers; activityNames=st.activityNames||['','','']; activityScores=st.activityScores||[null,null,null]; textVal=st.textVal||''; rankState=st.rankState||{}; rankTouched=st.rankTouched||{}; rankConfirmPending=st.rankConfirmPending||{}; return true; }catch(e){ return false; } }
+function saveResult(){ try{ localStorage.setItem(RESULT_KEY, JSON.stringify({answers, activityNames, activityScores, textVal, rankState, rankTouched, rankConfirmPending, email: (typeof _kitEmail !== 'undefined' && _kitEmail) || ''})); }catch(e){} }
+function loadResult(){ try{ var r = localStorage.getItem(RESULT_KEY); if(!r) return false; var st = JSON.parse(r); if(!st || !st.answers) return false; answers=st.answers; activityNames=st.activityNames||['','','']; activityScores=st.activityScores||[null,null,null]; textVal=st.textVal||''; rankState=st.rankState||{}; rankTouched=st.rankTouched||{}; rankConfirmPending=st.rankConfirmPending||{}; if (st.email && EMAIL_RE.test(st.email)) _kitEmail = st.email; return true; }catch(e){ return false; } }
 function clearResult(){ try{ localStorage.removeItem(RESULT_KEY); }catch(e){} }
 
 // ===== PostHog instrumentation (no-op if PostHog is not loaded) =====
@@ -1650,7 +1650,7 @@ const CHECKLISTS = {
     `Tell someone you trust the target, so exploring moves towards a specific destination.`
   ] },
   LHL: { note: `You have serious horsepower but it's sometimes aimed at work that drains you. This is the curse of competence.`, items: [
-    `Write the task you're great at but that quietly drains you.`,
+    `Write down a task you're great at but that quietly drains you.`,
     `Name one activity that energizes you more than the above task.`,
     `Redirect 30 minutes of your drive this week from the draining work to the energizing one. Put 30 minutes in your calendar for this energizing activity.`,
     `Tell someone you trust that you're pointing your engine somewhere new, so you don't drift back.`
