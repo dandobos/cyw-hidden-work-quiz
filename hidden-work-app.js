@@ -179,6 +179,16 @@ function resultLink(){ var t = resultToken(); return t ? RESULT_LINK_BASE + t : 
 // back button all just work). Held back a few seconds because the sheet log that backs
 // /r/ is fired at the same moment, and a reload before it lands would find nothing.
 // Same-origin only: the standalone GitHub Pages /quiz/ copy stays where it is.
+// Dan's rulings 2026-08-05/06: his line, his wording, in two places. Once as a strip
+// above everything on arrival (approach 1), and once at the head of the diagnosis, which
+// only unfolds when the reader confirms the archetype fits (approach 4). By then the
+// first strip has scrolled away and a lot of new content sits "below", so it restates
+// rather than repeats. Only shown when we actually sent the email: a result restored
+// from a personal link has no address, so it never claims something it cannot know.
+function hwEmailedNote(){
+  var sent = (typeof _kitEmail !== 'undefined' && _kitEmail && EMAIL_RE.test(_kitEmail));
+  return sent ? '<p class="res-emailed">All info below has been emailed to you</p>' : '';
+}
 var _addrSwapped = false;
 function hwSwapAddress(){
   if (_addrSwapped || _fromLink || _invite) return;
@@ -1391,10 +1401,12 @@ function renderResult(){
     if (r.mode === 'soft') chNote = (r.key === 'HLH') ? SOFT_AWAKENED : SOFT_GENERIC;
   }
 
-  return '<div id="hw-top">' + hwTopHtml(r.key, s) + '</div>'
+  return hwEmailedNote()
+    + '<div id="hw-top">' + hwTopHtml(r.key, s) + '</div>'
     + '<div class="res-divider"></div>'
     + hwFitBlockHtml(r)
     + '<div id="hw-below" hidden>'
+      + hwEmailedNote()
       + '<div class="res-divider"></div>'
       + '<p class="zone fixed">Your diagnosis &middot; from your answers</p>'
       + '<p class="res-section-label">Where You Sit on the Three Dimensions</p>'

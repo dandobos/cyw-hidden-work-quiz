@@ -183,6 +183,8 @@
   .res-dl-btn:hover { border-color: var(--accent); color: var(--accent); }
   .res-note { font-family: var(--heading); font-style: italic; font-size: 15px; color: var(--text-muted); line-height: 1.55; margin-top: 18px; padding-top: 18px; border-top: 1px dashed var(--border); }
   .res-savenote { font-family: var(--sans); font-size: 13px; color: var(--text-muted); line-height: 1.5; max-width: 600px; margin: 18px auto 0; }
+  .res-emailed { font-family: var(--sans); font-size: 13px; color: var(--text-body); line-height: 1.5; background: var(--inner); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; max-width: 600px; margin: 0 auto 22px; text-align: center; }
+  #hw-below .res-emailed { margin-top: 4px; }
   .res-book-text { font-family: var(--heading); font-size: 17px; color: var(--text-body); line-height: 1.55; max-width: 500px; margin: 0 auto 22px; text-align: center; }
   .res-book-head { font-family: var(--heading); font-size: 23px; font-weight: 600; color: var(--text-primary); line-height: 1.3; max-width: 540px; margin: 0 auto 16px; text-align: center; }
   .res-bookend { font-family: var(--heading); font-style: italic; font-size: 15px; color: var(--text-muted); text-align: center; margin-top: 38px; }
@@ -611,6 +613,16 @@ function resultLink(){ var t = resultToken(); return t ? RESULT_LINK_BASE + t : 
 // back button all just work). Held back a few seconds because the sheet log that backs
 // /r/ is fired at the same moment, and a reload before it lands would find nothing.
 // Same-origin only: the standalone GitHub Pages /quiz/ copy stays where it is.
+// Dan's rulings 2026-08-05/06: his line, his wording, in two places. Once as a strip
+// above everything on arrival (approach 1), and once at the head of the diagnosis, which
+// only unfolds when the reader confirms the archetype fits (approach 4). By then the
+// first strip has scrolled away and a lot of new content sits "below", so it restates
+// rather than repeats. Only shown when we actually sent the email: a result restored
+// from a personal link has no address, so it never claims something it cannot know.
+function hwEmailedNote(){
+  var sent = (typeof _kitEmail !== 'undefined' && _kitEmail && EMAIL_RE.test(_kitEmail));
+  return sent ? '<p class="res-emailed">All info below has been emailed to you</p>' : '';
+}
 var _addrSwapped = false;
 function hwSwapAddress(){
   if (_addrSwapped || _fromLink || _invite) return;
@@ -1823,10 +1835,12 @@ function renderResult(){
     if (r.mode === 'soft') chNote = (r.key === 'HLH') ? SOFT_AWAKENED : SOFT_GENERIC;
   }
 
-  return '<div id="hw-top">' + hwTopHtml(r.key, s) + '</div>'
+  return hwEmailedNote()
+    + '<div id="hw-top">' + hwTopHtml(r.key, s) + '</div>'
     + '<div class="res-divider"></div>'
     + hwFitBlockHtml(r)
     + '<div id="hw-below" hidden>'
+      + hwEmailedNote()
       + '<div class="res-divider"></div>'
       + '<p class="zone fixed">Your diagnosis &middot; from your answers</p>'
       + '<p class="res-section-label">Where You Sit on the Three Dimensions</p>'

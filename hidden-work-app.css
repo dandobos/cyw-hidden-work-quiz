@@ -172,6 +172,8 @@
   .res-dl-btn:hover { border-color: var(--accent); color: var(--accent); }
   .res-note { font-family: var(--heading); font-style: italic; font-size: 15px; color: var(--text-muted); line-height: 1.55; margin-top: 18px; padding-top: 18px; border-top: 1px dashed var(--border); }
   .res-savenote { font-family: var(--sans); font-size: 13px; color: var(--text-muted); line-height: 1.5; max-width: 600px; margin: 18px auto 0; }
+  .res-emailed { font-family: var(--sans); font-size: 13px; color: var(--text-body); line-height: 1.5; background: var(--inner); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; max-width: 600px; margin: 0 auto 22px; text-align: center; }
+  #hw-below .res-emailed { margin-top: 4px; }
   .res-book-text { font-family: var(--heading); font-size: 17px; color: var(--text-body); line-height: 1.55; max-width: 500px; margin: 0 auto 22px; text-align: center; }
   .res-book-head { font-family: var(--heading); font-size: 23px; font-weight: 600; color: var(--text-primary); line-height: 1.3; max-width: 540px; margin: 0 auto 16px; text-align: center; }
   .res-bookend { font-family: var(--heading); font-style: italic; font-size: 15px; color: var(--text-muted); text-align: center; margin-top: 38px; }
