@@ -174,6 +174,21 @@ function mintResultToken(){
 }
 function resultToken(){ try { return localStorage.getItem(TOKEN_KEY) || ''; } catch(e){ return ''; } }
 function resultLink(){ var t = resultToken(); return t ? RESULT_LINK_BASE + t : ''; }
+// Dan's ruling 2026-08-05: swap the address bar rather than add a card, so the thing
+// already in the reader's address bar IS the keepsake (bookmark, copy, share to self,
+// back button all just work). Held back a few seconds because the sheet log that backs
+// /r/ is fired at the same moment, and a reload before it lands would find nothing.
+// Same-origin only: the standalone GitHub Pages /quiz/ copy stays where it is.
+var _addrSwapped = false;
+function hwSwapAddress(){
+  if (_addrSwapped || _fromLink || _invite) return;
+  var t = resultToken(); if (!t) return;
+  if (location.hostname !== 'dandobos.com') return;
+  _addrSwapped = true;
+  setTimeout(function(){
+    try { history.replaceState(null, '', '/r/?rt=' + t); hwCap('result_address_swapped', {}); } catch(e){}
+  }, 4000);
+}
 
 // ===== PostHog instrumentation (no-op if PostHog is not loaded) =====
 function hwCap(name, props){ try{ if(window.posthog && posthog.capture){ posthog.capture(name, props || {}); } }catch(e){} }
@@ -1036,7 +1051,8 @@ function hwTopHtml(key, s){
   return '<p class="res-eyebrow">Your Work Personality</p>'
     + '<h1 class="res-name">' + ARCH[key].name + '</h1>'
     + '<p class="res-share">' + share + '</p>'
-    + '<div class="res-narrative">' + narrHtml(narr) + '</div>';
+    + '<div class="res-narrative">' + narrHtml(narr) + '</div>'
+    + (resultToken() ? '<p class="res-savenote">Save this page for future reference.</p>' : '');
 }
 function hwChapterHtml(key, s, flag){
   var plan = chapterPlan(key, flag);
@@ -1444,6 +1460,7 @@ function render(keepScroll) {
   pageEl.className = 'page';
   if (screen === 'intro' && _invite && ARCH[_invite.key]) pageEl.classList.add('invited-intro-page');
   pageEl.innerHTML = html;
+  if (screen === 'complete') hwSwapAddress();
   advancing = false;
   inputReadyAt = Date.now() + 350;
   saveState();

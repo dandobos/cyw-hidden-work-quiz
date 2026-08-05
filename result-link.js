@@ -45,9 +45,28 @@
 
   screenMsg('Opening your result', 'One moment.', false);
 
+  function loadApp() {
+    var s = document.createElement('script');
+    s.src = APP + '?v=' + encodeURIComponent(window.__HW_APP_V || 'live');
+    s.onerror = function () {
+      screenMsg('We could not load your result page',
+        'Something went wrong on our side. Please try again in a moment.', false);
+    };
+    document.body.appendChild(s);
+  }
+
+  // The quiz swaps the address bar to this link seconds after a reader finishes, while
+  // the sheet log that backs the lookup is still in flight. On the reader's own device
+  // their finished result is in localStorage, so fall back to that rather than telling
+  // someone their brand new result does not exist. The app self-restores from it.
+  function ownResultStored() {
+    try { return !!localStorage.getItem('hw_quiz_result_v2'); } catch (e) { return false; }
+  }
+
   var done = false;
   function failed() {
     if (done) return; done = true;
+    if (ownResultStored()) { loadApp(); return; }
     screenMsg('We could not open that result',
       'The link may be mistyped, or the result behind it may predate saved links. ' +
       'Your full result is also in the email we sent you when you finished the quiz.', true);
@@ -62,13 +81,7 @@
       if (!d || !d.answers || !Object.keys(d.answers).length) throw new Error('empty');
       done = true;
       window.__HW_RESTORE = { answers: d.answers, token: d.token, taken: d.taken };
-      var s = document.createElement('script');
-      s.src = APP + '?v=' + encodeURIComponent(window.__HW_APP_V || 'live');
-      s.onerror = function () {
-        screenMsg('We could not load your result page',
-          'Something went wrong on our side. Please try again in a moment.', false);
-      };
-      document.body.appendChild(s);
+      loadApp();
     })
     .catch(failed);
 })();
