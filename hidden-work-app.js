@@ -150,7 +150,30 @@ function clearState(){ try{ localStorage.removeItem(STATE_KEY); }catch(e){} }
 const RESULT_KEY = 'hw_quiz_result_v2';
 function saveResult(){ try{ localStorage.setItem(RESULT_KEY, JSON.stringify({answers, activityNames, activityScores, textVal, rankState, rankTouched, rankConfirmPending, email: (typeof _kitEmail !== 'undefined' && _kitEmail) || ''})); }catch(e){} }
 function loadResult(){ try{ var r = localStorage.getItem(RESULT_KEY); if(!r) return false; var st = JSON.parse(r); if(!st || !st.answers) return false; answers=st.answers; activityNames=st.activityNames||['','','']; activityScores=st.activityScores||[null,null,null]; textVal=st.textVal||''; rankState=st.rankState||{}; rankTouched=st.rankTouched||{}; rankConfirmPending=st.rankConfirmPending||{}; if (st.email && EMAIL_RE.test(st.email)) _kitEmail = st.email; return true; }catch(e){ return false; } }
-function clearResult(){ try{ localStorage.removeItem(RESULT_KEY); }catch(e){} }
+function clearResult(){ try{ localStorage.removeItem(RESULT_KEY); localStorage.removeItem(TOKEN_KEY); }catch(e){} }
+
+// ---- Permanent personal result link ------------------------------------
+// Every completion mints a token. It travels three ways: to Kit as
+// hw_result_token (so the result email can print the address), to the backend
+// with the sheet log (so /result/<token> can rebuild the answers), and into
+// localStorage (so a browser-restored result still knows its own address).
+// A retake mints a fresh token, so an old link keeps showing the old result.
+const TOKEN_KEY = 'hw_result_token_v1';
+const RESULT_LINK_BASE = 'https://dandobos.com/r/?rt=';
+function mintResultToken(){
+  var a = 'abcdefghijkmnopqrstuvwxyz23456789', t = '';   // no l/1/0/o: readable when typed out
+  try {
+    var b = new Uint8Array(10);
+    (window.crypto || window.msCrypto).getRandomValues(b);
+    for (var i = 0; i < b.length; i++) t += a.charAt(b[i] % a.length);
+  } catch(e){
+    for (var j = 0; j < 10; j++) t += a.charAt(Math.floor(Math.random() * a.length));
+  }
+  try { localStorage.setItem(TOKEN_KEY, t); } catch(e){}
+  return t;
+}
+function resultToken(){ try { return localStorage.getItem(TOKEN_KEY) || ''; } catch(e){ return ''; } }
+function resultLink(){ var t = resultToken(); return t ? RESULT_LINK_BASE + t : ''; }
 
 // ===== PostHog instrumentation (no-op if PostHog is not loaded) =====
 function hwCap(name, props){ try{ if(window.posthog && posthog.capture){ posthog.capture(name, props || {}); } }catch(e){} }
@@ -1509,6 +1532,7 @@ function hwFields(){
   const ansVal = pred => { const i = questions.findIndex(pred); return (i >= 0 && answers[i]) ? answers[i].value : ''; };
   return {
     hw_archetype: r.archetype,
+    hw_result_token: resultToken(),
     hw_archetype_indef: archIndef(r.key),
     hw_tz: hwTz(),
     hw_welcome_subject: WELCOME_SUBJ[r.key],
@@ -1568,6 +1592,7 @@ function submitGate(){
   }
   if (err) err.style.display = 'none';
   _submitting = true; _kitEmail = email;
+  mintResultToken();   // before hwFields() and the sheet log, so both carry the same token
   const btn = document.getElementById('hw-gate-btn');
   if (btn){ btn.disabled = true; btn.textContent = 'Sending…'; }
   let done = false;
@@ -1616,6 +1641,7 @@ function buildQuizRecord(){
     rec = {
       timestamp: new Date().toISOString(),
       email: _kitEmail || '',
+      result_token: resultToken(),
       tz: hwTz(),
       beta_token: _quizBetaToken(),
       archetype: r.archetype, archetype_key: r.key,
@@ -1683,8 +1709,25 @@ document.addEventListener('click', function(e){
 // An unfinished quiz saved in durable storage: show the resume gate instead of
 // silently dropping the reader mid-quiz (or, after a crash, back at the intro).
 // Invited visits (?type=) are always a fresh start and never auto-resume.
-var _resumed = false;
-if (!_invite && loadState()) {
+// A permanent personal result link (/r/?rt=<token>) hands us the saved answers on
+// window.__HW_RESTORE before this script loads. That wins over everything else: no
+// resume gate, no share-invite handling, and nothing is written back to this
+// browser's storage, so opening someone else's link never overwrites your own result.
+var _fromLink = false;
+if (window.__HW_RESTORE && window.__HW_RESTORE.answers) {
+  try {
+    answers = window.__HW_RESTORE.answers;
+    if (window.__HW_RESTORE.email) _kitEmail = window.__HW_RESTORE.email;
+    computeResult();
+    screen = 'complete';
+    _fromLink = true;
+    saveResult = function(){};       // read-only view of a saved result
+    saveState  = function(){};
+    hwCap('result_link_opened', { token: window.__HW_RESTORE.token || null });
+  } catch(e){ _fromLink = false; }
+}
+var _resumed = _fromLink;
+if (!_fromLink && !_invite && loadState()) {
   _resumeTarget = { screen: screen, qIdx: qIdx };
   screen = 'resume';
   _resumed = true;
@@ -1700,5 +1743,5 @@ if (!_resumed && !_invite) {
 // "complete the quiz first" notice instead of dropping them into the intro.
 try { if (new URLSearchParams(location.search).get('result') === '1' && screen === 'intro') screen = 'needquiz'; } catch(e){}
 hwTimingLoad();
-if (_resumed) hwCap('quiz_resumed', { screen: screen });
+if (_resumed && !_fromLink) hwCap('quiz_resumed', { screen: screen });
 render();
