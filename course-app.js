@@ -12,6 +12,13 @@ host.innerHTML="<div class=\"wrap\">\n<header class=\"top\">\n  <h1>7 Days to Ch
   var mDay=qs.match(/[?&]c?day=([1-7])\b/);
   var mMail=qs.match(/[?&]cemail=([^&]+)/);
   var stored=0; try{stored=+localStorage.getItem('cyw_course_day')||0;}catch(e){}
+  /* Carry the reader's email into the activity pages (Dan, 5 Aug): the
+     course-actions pages forward their query string into the Tally embed, whose
+     hidden cemail field matches the completion to the right reader and hides the
+     typed email question. Without ?cemail= the links stay plain, as before. */
+  if(mMail){[].forEach.call(document.querySelectorAll('a[href^="https://dandobos.com/course-actions/"]'),function(a){
+    a.href+=(a.href.indexOf('?')>-1?'&':'?')+'cemail='+mMail[1];
+  });}
   var paramDay=mDay?+mDay[1]:0;
   var PREVIEW=/[?&](?:cpv|preview)=1\b/.test(qs);
   var CUR = PREVIEW ? 8 : Math.max(paramDay,stored,1);
