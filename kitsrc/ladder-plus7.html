@@ -206,19 +206,21 @@
                       </td>
                     </tr>
                     <tr>
-                      <td align="center" style="font-size:0px;padding:12px 0 8px;word-break:break-word;">
+                      <td align="center" style="font-size:0px;padding:12px 0 14px;word-break:break-word;">
                         <div style="font-family:Inter,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:400;line-height:20px;text-align:center;color:#000000;"><a href="http://dandobos.com/" style="color:#000000;text-decoration:underline;">dandobos.com</a></div>
                       </td>
                     </tr>
                     <tr>
-                      <td align="center" style="font-size:0px;padding:2px 0 12px;word-break:break-word;">
-                        <div style="font-family:Inter,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:10px;font-weight:400;line-height:14px;text-align:center;color:#000000;">PO Box 1176, Elwood VIC 3184<br /><br />
-                          <a href="{{ unsubscribe_url }}" style="color:#000000;text-decoration:underline;">Unsubscribe</a>
+                      <td align="center" style="font-size:0px;padding:4px 24px 18px;word-break:break-word;">
+                        <div style="font-family:Inter,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;font-weight:400;line-height:18px;text-align:center;color:#6f6f6f;"><span style="display:block;margin:0 0 10px;">{% if subscriber.hw_archetype != blank %}You&rsquo;re receiving this email because you took the Choose Your Work Quiz.{% else %}You&rsquo;re receiving this email because you signed up for the 7-day <em>Choose Your Work</em> course.{% endif %} If you&rsquo;d rather not receive it, you can <a href="{{ unsubscribe_url }}" style="color:#6f6f6f;text-decoration:underline;">unsubscribe</a>.</span>
+                          <span style="display:block;margin:0 0 10px;">To keep these emails landing in your inbox, please add hello@dandobos.com to your address book or safe sender list.</span>
+                          <span style="display:block;margin:0 0 10px;">Update your subscription preferences: {% if subscriber.hw_stop_token != blank %}<a href="https://dandobos.com/course-stop/{{ subscriber.hw_stop_token }}" style="color:#6f6f6f;text-decoration:underline;">stop these course emails</a>, {% endif %}<a href="{{ unsubscribe_url }}" style="color:#6f6f6f;text-decoration:underline;">unsubscribe from all emails</a> (including future news about the book), or <a href="{{ subscriber_preferences_url }}" style="color:#6f6f6f;text-decoration:underline;">manage your subscriber profile</a>.</span>
+                          <span style="display:block;margin:0;">Readers of <em>Choose Your Work</em>: <a href="https://dandobos.com/thank-you-page-bonus-resources/" style="color:#6f6f6f;text-decoration:underline;">your bonus downloads are here</a>.</span>
                         </div>
                       </td>
                     </tr>
                     <tr>
-                      <td align="center" style="font-size:0px;padding:12px 0 26px;word-break:break-word;">
+                      <td align="center" style="font-size:0px;padding:4px 0 14px;word-break:break-word;">
                         <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
                           <tbody>
                             <tr>
@@ -228,6 +230,11 @@
                             </tr>
                           </tbody>
                         </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="center" style="font-size:0px;padding:0 0 26px;word-break:break-word;">
+                        <div style="font-family:Inter,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:10px;font-weight:400;line-height:14px;text-align:center;color:#8a8a8a;">PO Box 1176, Elwood VIC 3184</div>
                       </td>
                     </tr>
                   </tbody>
