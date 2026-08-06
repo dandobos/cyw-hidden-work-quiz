@@ -621,7 +621,7 @@ function resultLink(){ var t = resultToken(); return t ? RESULT_LINK_BASE + t : 
 // from a personal link has no address, so it never claims something it cannot know.
 function hwEmailedNote(){
   var sent = (typeof _kitEmail !== 'undefined' && _kitEmail && EMAIL_RE.test(_kitEmail));
-  return sent ? '<p class="res-emailed">All info below has been emailed to you</p>' : '';
+  return sent ? '<p class="res-emailed">Your result has been emailed to you</p>' : '';
 }
 var _addrSwapped = false;
 function hwSwapAddress(){
