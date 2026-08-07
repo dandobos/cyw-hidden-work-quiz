@@ -171,6 +171,7 @@
   .res-dl-btn { flex: 1 1 0; min-width: 110px; text-align: center; padding: 12px 14px; background: var(--card); border: 1px solid var(--border); font-family: var(--sans); font-size: 14px; font-weight: 600; color: var(--text-primary); text-decoration: none; cursor: pointer; transition: border-color 0.15s, color 0.15s; }
   .res-dl-btn:hover { border-color: var(--accent); color: var(--accent); }
   .res-note { font-family: var(--heading); font-style: italic; font-size: 15px; color: var(--text-muted); line-height: 1.55; margin-top: 18px; padding-top: 18px; border-top: 1px dashed var(--border); }
+  .res-chapter-desc { display: block; font-family: var(--heading); font-style: italic; font-weight: 400; font-size: 14px; color: var(--text-muted); line-height: 1.5; margin: 2px 0 0; }
   .res-savenote { font-family: var(--sans); font-size: 13px; color: var(--text-muted); line-height: 1.5; max-width: 600px; margin: 18px auto 0; }
   .res-emailed { font-family: var(--sans); font-size: 13px; color: var(--text-body); line-height: 1.5; background: var(--inner); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; max-width: 600px; margin: 0 auto 22px; text-align: center; }
   #hw-below .res-emailed { margin-top: 4px; }

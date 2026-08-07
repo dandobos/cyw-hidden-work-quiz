@@ -425,6 +425,27 @@ const CH_TITLE = {
   9: "You Don't Really Want to Lie on the Beach All Day",
   10: "Next Steps to a Fulfilling Life"
 };
+// The book's own Contents description per chapter (Dan approved verbatim, 7 Aug).
+// Shown under every chapter title: result page, result email, final email, PDFs.
+const CH_DESC = {
+  1: "Why do so many people experience a deep sense of regret at the end of their lives?",
+  2: "How to extract insights from your greatest challenges so they become pathways for growth.",
+  3: "Why your focus on comfort is ruining your life and obscuring the true metrics of success.",
+  4: "The one hour that changes everything.",
+  5: "Why does conforming to the herd hamper your personal growth?",
+  6: "The unexpected path to extraordinary achievement.",
+  7: "How to tap into your intuition to reach the next level of growth.",
+  8: "Why traditional education may undervalue your greatest strength and what to do about it.",
+  9: "What is more valuable than $100 million in cold hard cash?"
+};
+// The three Kit fields that carry the descriptions (blank-guarded in the templates,
+// so subscribers from before 7 Aug render exactly as they always did).
+function chapterDescsFor(plan){
+  var d = function(n){ return CH_DESC[n] || ''; };
+  return { subs: plan.chapters.map(d).filter(Boolean).join('\n'),
+           one: d(plan.chapters[0]),
+           two: plan.chapters.length > 1 ? d(plan.chapters[1]) : '' };
+}
 const SEQ_LINE = {
   HLL: "Start with Chapter 2. There is something unresolved from the past to address before you take action. Then move on to Chapter 3.",
   LLL: "Start with Chapter 2. There is something unresolved from the past to address before you take action. Then move on to Chapter 1.",
@@ -1068,16 +1089,19 @@ function hwChapterHtml(key, s, flag){
   var plan = chapterPlan(key, flag);
   var am = _hwAmFlags(key, s);
   var chTitleHtml, chWhy, chNote = '';
+  var chLi = function(n){ return '<li>Chapter ' + n + ': ' + CH_TITLE[n]
+    + (CH_DESC[n] ? '<span class="res-chapter-desc">' + CH_DESC[n] + '</span>' : '') + '</li>'; };
   if (plan.mode === 'sequence'){
-    chTitleHtml = '<ul class="res-chapter-list">' + plan.chapters.map(function(n){ return '<li>Chapter ' + n + ': ' + CH_TITLE[n] + '</li>'; }).join('') + '</ul>';
+    chTitleHtml = '<ul class="res-chapter-list">' + plan.chapters.map(chLi).join('') + '</ul>';
     chWhy = SEQ_LINE[key];
   } else if (plan.mode === 'supplement'){
-    chTitleHtml = '<ul class="res-chapter-list">' + plan.chapters.map(function(n){ return '<li>Chapter ' + n + ': ' + CH_TITLE[n] + '</li>'; }).join('') + '</ul>';
+    chTitleHtml = '<ul class="res-chapter-list">' + plan.chapters.map(chLi).join('') + '</ul>';
     chWhy = am.amDrained ? AM_DRAINED_WHY : am.amFoothills ? AM_FOOTHILLS_WHY : WHY[key];
     chNote = suppNote(key);
   } else {
     var base = plan.chapters[0];
-    chTitleHtml = 'Chapter ' + base + ': ' + CH_TITLE[base];
+    chTitleHtml = 'Chapter ' + base + ': ' + CH_TITLE[base]
+      + (CH_DESC[base] ? '<span class="res-chapter-desc">' + CH_DESC[base] + '</span>' : '');
     chWhy = am.amDrained ? AM_DRAINED_WHY : am.amFoothills ? AM_FOOTHILLS_WHY : WHY[key];
     if (plan.mode === 'soft') chNote = (key === 'HLH') ? SOFT_AWAKENED : SOFT_GENERIC;
   }
@@ -1207,6 +1231,9 @@ function hwArchetypeFields(key){
     hw_welcome_subject: WELCOME_SUBJ[key], hw_share: share, hw_narrative: narrative,
     hw_chapter_label: chapterLabel, hw_chapter_why: chapterWhy, hw_dl_label: dlLabel,
     hw_chapter_1: parts.one, hw_chapter_2: parts.two,
+    hw_chapter_subs: chapterDescsFor(plan).subs,
+    hw_chapter_desc_1: chapterDescsFor(plan).one,
+    hw_chapter_desc_2: chapterDescsFor(plan).two,
     hw_dl_pdf: dlUrl(dlkey, 'pdf'), hw_dl_epub: dlUrl(dlkey, 'epub'), hw_dl_mp3: dlUrl(dlkey, 'mp3')
   };
 }
@@ -1586,6 +1613,9 @@ function hwFields(){
     hw_chapter_why: chapterWhy,
     hw_chapter_1: chapterPartsFor(r).one,
     hw_chapter_2: chapterPartsFor(r).two,
+    hw_chapter_subs: chapterDescsFor(r).subs,
+    hw_chapter_desc_1: chapterDescsFor(r).one,
+    hw_chapter_desc_2: chapterDescsFor(r).two,
     hw_dl_label: dlLabel,
     hw_dl_pdf: dlUrl(dlkey, 'pdf'),
     hw_dl_epub: dlUrl(dlkey, 'epub'),
