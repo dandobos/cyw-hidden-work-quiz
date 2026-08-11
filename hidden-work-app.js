@@ -394,13 +394,13 @@ const SHARE = {
 // The page renders these via narrHtml(); the same string flows to Kit's hw_narrative, where
 // newline_to_br keeps each line readable in the email. Variant narratives further down stay prose.
 const NARR = {
-  HHH: "You are one of the rare ones. This is the result of deliberate choices that few people ever make.\n• You know what your real work is, and you are doing it.\n• The work is truly yours, chosen by you.\n• Your clarity and your actions point the same direction.\n• Your work gives you energy.\nTHE RISK: At this altitude, comfort can quietly shrink your ambition.\nTHE QUESTION: You have found your work. Can you make it world-class?",
-  HHL: "You are very good at what you do, and you know exactly what you are aiming at. Everyone can see your skill, drive, and results. The only problem is that the summit you are climbing was never really yours.\n• Somewhere in the past, your ambitions were handed to you by what others expected or admired.\n• So you execute brilliantly against a target your true self never chose.\n• The more you have achieved, the more you have invested, which is exactly what makes turning so hard.\n• This is one of the hardest places to acknowledge, because everything looks like success.\nTHE CHALLENGE: Winning the wrong game feels hollow after a while.\nTHE NEXT STEP: The clarity and drive you already have will serve you once they are pointed at work that is actually yours.",
+  HHH: "You are one of the rare ones. This is the result of deliberate choices that few people ever make.\n• You know what your real work is, and you are doing it.\n• The work is truly yours, chosen by you.\n• Your clarity and your actions point the same direction.\n• Your work gives you energy.\nTHE RISK: At this altitude, comfort can shrink your ambition.\nTHE QUESTION: You have found your work. Can you make it world-class?",
+  HHL: "You are very good at what you do, and you know exactly what you are aiming at. Everyone can see your skill, drive, and results. The only problem is that the summit you are climbing was never really yours.\n• Somewhere in the past, your ambitions were handed to you by what others expected or admired.\n• So you execute brilliantly against a target your true self never chose.\n• The more you have achieved, the more you have invested, which is exactly what makes changing so hard.\n• This is one of the hardest places to acknowledge, because everything looks like success.\nTHE CHALLENGE: Winning the wrong game feels hollow after a while.\nTHE NEXT STEP: The clarity and drive you already have will serve you once you are doing work that is actually your own.",
   HLH: "Something has shifted. You have done the inner work most people put off, and you can see your real work clearly.\n• You know where you are going.\n• The noise of other people's expectations has gone quiet.\n• You make your own decisions.\nTHE CHALLENGE: What you do not have yet is a system. Clarity without action leads to drifting.\nTHE NEXT STEP: Reflection and insight have done their job. Now it is time to take action: start the 1-1-1 rule this week. Spend one hour a day, on one project, in one location.",
   HLL: "You can see it clearly. You know what your real work is, maybe you have known for years. Despite this, you seem to be standing still, inside a life built around someone else's expectations. What holds you there:\n• The title, the salary, the years you have already put in.\n• The weight of what the people closest to you would think.\n• How much you have already invested.\nTHE CHALLENGE: This can feel painful because you already have the clarity. Knowing what to do turned out to be only half the journey.\nTHE NEXT STEP: Come up with at least three intensely emotional reasons to move forward. Then develop an escape plan. Stop watching and start moving toward the place you've always known is right for you.",
   LHH: "You have energy and you have momentum. The good news is that you have already mastered the hardest parts:\n• You are true to yourself.\n• You take action and do not wait around.\nTHE CHALLENGE: The one thing missing is a target. You are moving fast and well, though much of that motion is escape from what you do not want. Moving toward something you truly desire is the missing piece.\nTHE NEXT STEP: Let the work choose you. Loosen your grip on things and notice what quietly draws you in. What speaks to your true self?",
   LHL: "You have serious horsepower. You move fast, you push hard, and you are used to powering through resistance. The problem is the engine is running on grit:\n• There is no clear target, and no sense that the work is even your own.\n• You are working hard at something chosen by your ambition and your training. Your true self had little say in it.\n• This is why you sometimes feel drained.\nTHE CHALLENGE: You are skilled at getting things done. What is missing is a direction worth all that drive.\nTHE NEXT STEP: Channel your talent into work that matters to you.",
-  LLH: "You know who you are:\n• You perform for no one.\n• The life you live is your own.\n• What's missing is motion: the shape of your real work is still coming into focus, so you stay where you are.\nTHE RISK: Being at peace can quietly become an excuse to stay put.\nTHE NEXT STEP: You have the character. What you are missing is action: take more of it, even if you don't exactly know where it will lead.",
+  LLH: "You know who you are:\n• You perform for no one.\n• The life you live is your own.\n• What's missing is motion: the shape of your real work is still coming into focus, so you stay where you are.\nTHE RISK: Being at peace can become an excuse to stay put.\nTHE NEXT STEP: You have the character. What you are missing is action: take more of it, even if you don't exactly know where it will lead.",
   LLL: "From the outside, your life looks fine. Maybe even good. There is a paycheck, a routine, people who would call you successful. And yet there is a small, persistent pebble in your emotional shoe that you have been trying to ignore:\n• You do not know what your real work is.\n• You are unsure what to do next.\n• The life you are living does not feel like your own.\nTHE RISK: You are suffering in comfort, and yet it feels easy to not change anything. You already know something is off.\nTHE NEXT STEP: Be willing to look directly at it, and then start to make changes."
 };
 const WHY = {
@@ -410,7 +410,7 @@ const WHY = {
   HLL: "You can see your real work clearly, but you're held in place by a set of situations that are not yours.",
   LHH: "You're true to yourself and taking action. This chapter helps you move toward a clear target.",
   LHL: "You're driving hard, and the work takes more from you than it gives back. This is the curse of competence.",
-  LLH: "You're grounded in who you are but not yet moving. This chapter surfaces direction through play and exploration.",
+  LLH: "You're grounded in who you are but not yet moving. This chapter will help you find your direction.",
   LLL: "The work begins with confronting the whole pattern and recognizing that there is a way forward."
 };
 const CH_TITLE = {
@@ -1264,9 +1264,9 @@ const CHECKLIST_HHH_DRAINED = { note: `You have chosen your work, but it drains 
   `Block 60 minutes in your calendar for the part that energizes you, before anything reactive. Protect it like a meeting. What day and time did you choose?`
 ] };
 const CHECKLISTS = {
-  HHH: { note: `The focus is on scale, not repair. The risk is comfort quietly shrinking your ambition.`, items: [
+  HHH: { note: `The focus is on scale, not repair. The risk is comfort shrinking your ambition.`, items: [
     `Write one sentence: what would make your work **world-class**, not just good?`,
-    `Name the comfortable routine quietly capping your ambition. Then describe one way to interrupt it this week.`,
+    `Name the comfortable routine that is shrinking your ambition. Then describe one way to interrupt it this week.`,
     `Block 60 minutes in your calendar either today or tomorrow for that world-class version. Do this session before anything reactive. What day and time did you choose?`
   ] },
   HHL: { note: `You have high clarity and drive, but you're possibly winning the wrong game. Choose work that fits the real you.`, items: [
@@ -1295,10 +1295,10 @@ const CHECKLISTS = {
     `Tell someone you trust about your new target, so your exploring moves towards a specific destination. Who will you speak to?`
   ] },
   LHL: { note: `You have serious horsepower but it's sometimes aimed at work that drains you. This is the curse of competence.`, items: [
-    `Write down a task you're great at even though it quietly drains you.`,
+    `Write down a task you're great at that still drains you.`,
     `Name one activity that energizes you more than the above task.`,
     `Redirect 30 minutes of your energy this week from the draining work to the energizing one. Block 30 minutes in your calendar for this energizing activity. What day and time did you choose?`,
-    `Tell someone you trust that you're pointing your engine somewhere new, so you don't drift back. Who will you speak to?`
+    `Tell someone you trust that you're going somewhere new, so you don't drift back. Who will you speak to?`
   ] },
   LLH: { note: `You are at peace with who you are, but your momentum is lacking. Use play to move you forward.`, items: [
     `Write three things you'd happily do this week just because they pull you in. No outcome required.`,
@@ -1310,7 +1310,7 @@ const CHECKLISTS = {
     `Write down your thoughts about the quiet "something's off" feeling.`,
     `What is causing everything to look fine but deep down it feels wrong? Just write down the first thoughts that come to mind.`,
     `Block in your calendar 30 minutes to take one small action this week that your old self never would do. What day and time did you choose?`,
-    `Tell someone you trust the thing you're done ignoring, so it can no longer hide in the silence. Who will you speak to?`
+    `Tell someone you trust the thing you're done ignoring, so it is no longer only in your head. Who will you speak to?`
   ] }
 };
 var _fmQuestions = [];
