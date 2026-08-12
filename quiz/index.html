@@ -1108,6 +1108,22 @@ function parseInviteFromUrl(){
     return inv;
   } catch(e){ return null; }
 }
+// A REFERRER link (an association newsletter, a directory listing, a podcast show note)
+// carries ref with NO type, so parseInviteFromUrl() rejects the whole URL and the ref is
+// lost. Read it separately here, and keep it OUT of _invite on purpose: "invited",
+// "from_share" and landed_from_share all read _invite, and a visit from a partner is not
+// a share from a friend. Same validation as the share path.
+const PARTNER_REF_KEY = 'hw_ref';
+function parsePartnerRef(){
+  try {
+    var r = (new URLSearchParams(location.search).get('ref') || '').slice(0, 48);
+    return /^[A-Za-z0-9_-]{2,48}$/.test(r) ? r : null;
+  } catch(e){ return null; }
+}
+var _partnerRef = parsePartnerRef();
+if (_partnerRef){ try { sessionStorage.setItem(PARTNER_REF_KEY, _partnerRef); } catch(e){} }
+else { try { _partnerRef = sessionStorage.getItem(PARTNER_REF_KEY) || null; } catch(e){ _partnerRef = null; } }
+
 var _invite = parseInviteFromUrl();
 if (_invite){
   try { sessionStorage.setItem(INVITE_KEY, JSON.stringify(_invite)); } catch(e){}
@@ -1116,9 +1132,11 @@ if (_invite){
   try { _invite = JSON.parse(sessionStorage.getItem(INVITE_KEY) || 'null'); } catch(e){ _invite = null; }
   if (_invite && !ARCH[_invite.key]) _invite = null;
 }
-// Register the sharer's ref as a super property so this visitor's quiz_started and
-// quiz_completed inherit it (single-page app + memory persistence keeps it in-session).
-try { if (_invite && _invite.ref && window.posthog && posthog.register) posthog.register({ referred_by: _invite.ref }); } catch(e){}
+// The referral id for this visit, from a friend's share link or from a partner link.
+// Registered as a super property so quiz_started and quiz_completed inherit it
+// (single-page app + memory persistence keeps it in-session).
+var _refId = (_invite && _invite.ref) || _partnerRef || null;
+try { if (_refId && window.posthog && posthog.register) posthog.register({ referred_by: _refId }); } catch(e){}
 
 // ================= RESULT PAGE =================
 // ===== VIRAL SHARE LOOP =====
@@ -2106,7 +2124,7 @@ function submitGate(){
         past_wound: !!(r.flag && r.flag !== 'none'),
         kit_ok: !!confirmed,
         invited: !!_invite, invite_type: _invite ? _invite.key : null, invite_has_scores: !!(_invite && _invite.scores),
-        referred_by: (_invite && _invite.ref) || null,
+        referred_by: _refId,
         duration_seconds: d.duration_seconds, active_seconds: d.active_seconds
       });
     } catch(e){}
