@@ -1,0 +1,23 @@
+<!--
+  Saved-result footer row for Kit template 5328527 ("Hidden Work Results") ONLY.
+  Dan approved this line on 2026-08-05 (approach 1 of the five placements) and re-confirmed
+  it on 2026-08-11 after the 7 August house-footer rollout looked like it may have removed it.
+
+  WHERE IT GOES: inside the footer's inner 600px table in footer-plain.html, as a new <tr>
+  immediately AFTER the "dandobos.com" row and BEFORE the housekeeping/unsubscribe row.
+
+  DO NOT add this to footer-plain.html itself or to any other template. It is specific to the
+  quiz result email, because it depends on hw_result_token, which only quiz takers have.
+
+  The Liquid guard is COMMENT-WRAPPED on purpose: a bare {% if %} between <tr> rows gets
+  foster-parented out of the table by html5 parsers and tears the footer apart. Liquid runs
+  before html parsing, so the tags still execute inside the comment.
+  See the kit-template-liquid-and-extraction memory.
+-->
+<!-- {% if subscriber.hw_result_token != blank %} -->
+<tr>
+  <td align="center" style="padding:0 24px 14px;font-family:Inter,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;font-weight:400;line-height:18px;color:#6f6f6f;">
+    Your saved result: <a href="https://dandobos.com/r/?rt={{ subscriber.hw_result_token }}" style="color:#6f6f6f;text-decoration:underline;">dandobos.com/r/?rt={{ subscriber.hw_result_token }}</a>
+  </td>
+</tr>
+<!-- {% endif %} -->

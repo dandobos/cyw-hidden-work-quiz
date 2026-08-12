@@ -43,6 +43,9 @@ padding:8px 11px;border-radius:8px;pointer-events:none;opacity:0;transition:opac
 padding:15px 26px;border-radius:8px;font-size:12px;letter-spacing:2px;text-transform:uppercase}
 #cyw-course .cta a:hover,#cyw-course .cta a:focus{background:#000;outline:none}
 #cyw-course .sign{font-family:var(--heading);color:var(--text);margin-top:24px}
+/* The book title in the sign-off matches the emails: the reader's own text
+   colour with a plain underline, never browser blue (Dan, 12 Aug). */
+#cyw-course .sign a{color:inherit;text-decoration:underline}
 #cyw-course .refs{margin-top:18px;border-top:1px solid var(--border-soft);padding-top:12px}
 #cyw-course .refs summary{cursor:pointer;font-size:13px;color:var(--subtle);font-weight:600}
 #cyw-course .refs p{font-size:13px;color:var(--subtle);margin:8px 0 0}
