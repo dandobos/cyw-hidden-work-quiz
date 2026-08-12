@@ -509,7 +509,7 @@ const DS_HIGH_V_NARR = "You know who you are. Your work energizes you. But that 
 // ===== Chapter download wiring =====
 // Files are hosted on the unlisted cyw-hidden-work-quiz GitHub Pages site (noindex).
 // key is a single chapter ('3') or a bundle ('1_2' -> Chapters 1 and 2).
-const DL_BASE = 'https://dandobos.github.io/cyw-hidden-work-quiz/cyw/';
+const DL_BASE = 'https://my.dandobos.com/cyw/';
 function dlUrl(key, fmt){
   var stem = (String(key).indexOf('_') >= 0)
     ? 'Choose_Your_Work_Chapters_' + String(key).split('_').join('_and_')
@@ -1688,7 +1688,7 @@ function submitGate(){
 // Every completed quiz is appended as one row to the "Hidden Work Quiz Responses"
 // Google Sheet via the beta-portal backend (/quiz-log). Fire-and-forget; a failed
 // log never affects the reader's result.
-var SHEET_LOG_URL = 'https://beta-portal-production-df48.up.railway.app/quiz-log';
+var SHEET_LOG_URL = 'https://my.dandobos.com/quiz-log';
 var _sheetLogged = false;
 function _quizBetaToken(){
   try { var t = (new URLSearchParams(location.search).get('hwbt') || '').slice(0, 64); return (t && t.indexOf('{{') === -1) ? t : ''; } catch(e){ return ''; }
@@ -1733,7 +1733,7 @@ function logQuizToSheet(){
 // Beta: when a tester arrives from the portal (?hwbt=<token>), tell the backend the
 // quiz is done so their "Quiz taken" ticks in Notion automatically. Public visitors
 // have no token, so nothing fires. (Separate from the PostHog tagging above.)
-var BETA_BACKEND = 'https://beta-portal-production-df48.up.railway.app';
+var BETA_BACKEND = 'https://my.dandobos.com';
 var _betaPinged = false;
 function pingBetaQuizDone(){
   var tok = _quizBetaToken();
