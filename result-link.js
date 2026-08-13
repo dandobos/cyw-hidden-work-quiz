@@ -14,7 +14,7 @@
  * Loaded by the WordPress page at dandobos.com/r/ (see project notes).
  */
 (function () {
-  var API = 'https://beta-portal-production-df48.up.railway.app/result/';
+  var API = 'https://my.dandobos.com/result/';
   var APP = 'https://dandobos.github.io/cyw-hidden-work-quiz/hidden-work-app.js';
   var page = document.getElementById('page');
   if (!page) return;
