@@ -191,7 +191,6 @@ function clearResult(){ try{ localStorage.removeItem(RESULT_KEY); localStorage.r
 // localStorage (so a browser-restored result still knows its own address).
 // A retake mints a fresh token, so an old link keeps showing the old result.
 const TOKEN_KEY = 'hw_result_token_v1';
-const RESULT_LINK_BASE = 'https://dandobos.com/r/?rt=';
 function mintResultToken(){
   var a = 'abcdefghijkmnopqrstuvwxyz23456789', t = '';   // no l/1/0/o: readable when typed out
   try {
@@ -205,12 +204,14 @@ function mintResultToken(){
   return t;
 }
 function resultToken(){ try { return localStorage.getItem(TOKEN_KEY) || ''; } catch(e){ return ''; } }
-function resultLink(){ var t = resultToken(); return t ? RESULT_LINK_BASE + t : ''; }
 // Dan's ruling 2026-08-05: swap the address bar rather than add a card, so the thing
 // already in the reader's address bar IS the keepsake (bookmark, copy, share to self,
 // back button all just work). Held back a few seconds because the sheet log that backs
 // /r/ is fired at the same moment, and a reload before it lands would find nothing.
 // Same-origin only: the standalone GitHub Pages /quiz/ copy stays where it is.
+// The swap runs on EVERY visit that lands on a completed result, browser restores
+// included, so the address bar always holds the permanent link; the event fires
+// once per browser so revisits do not inflate the count (item 7, 2026-08-13).
 // Dan's rulings 2026-08-05/06: his line, his wording, in two places. Once as a strip
 // above everything on arrival (approach 1), and once at the head of the diagnosis, which
 // only unfolds when the reader confirms the archetype fits (approach 4). By then the
@@ -228,7 +229,13 @@ function hwSwapAddress(){
   if (location.hostname !== 'dandobos.com') return;
   _addrSwapped = true;
   setTimeout(function(){
-    try { history.replaceState(null, '', '/r/?rt=' + t); hwCap('result_address_swapped', {}); } catch(e){}
+    try {
+      history.replaceState(null, '', '/r/?rt=' + t);
+      if (!localStorage.getItem('hw_addr_swap_ev_v1')) {
+        localStorage.setItem('hw_addr_swap_ev_v1', '1');
+        hwCap('result_address_swapped', {});
+      }
+    } catch(e){}
   }, 4000);
 }
 
@@ -255,15 +262,7 @@ function sectionProgress() {
   const sec = currentSection();
   const activeIdx = SECTION_ORDER.findIndex(s => s.key === sec);
   if (activeIdx === -1) return { show: false };
-  const same = questions.filter(q => q.section === sec && q.type !== 'activity_rate');
-  let idxInSection = same.findIndex(q => q === questions[qIdx]);
-  if (idxInSection === -1) {
-    // activity_rate is excluded from the count; it shares its step with the preceding
-    // activity_name, so borrow that question's position instead of resetting to 1.
-    for (let j = qIdx - 1; j >= 0; j--) { const p = same.indexOf(questions[j]); if (p !== -1) { idxInSection = p; break; } }
-  }
-  return { show: true, activeIdx, sectionName: SECTION_ORDER[activeIdx].name,
-    posInSection: idxInSection >= 0 ? idxInSection + 1 : 1, totalInSection: same.length };
+  return { show: true, activeIdx };
 }
 function renderStepper(activeIdx) {
   return '<div class="stepper">' + SECTION_ORDER.map((s, i) => {
@@ -516,15 +515,15 @@ function suppNote(key){ return key === 'HLH' ? SUPP_AWAKENED : SUPP_GENERIC; }
 
 // True Creator "praise gate": the full "rare one" narrative is earned only at genuinely high scores.
 // Below the bar the reader keeps the same clean label (The True Creator) but gets a direct
-// "foothills" read instead of the celebration. (DRAFT COPY, pending review.)
+// "foothills" read instead of the celebration. (Copy reviewed by Dan, 2026-08-13.)
 const AM_FULL_REQ = s => (s.AL >= 75 && s.C >= 65 && s.AG >= 65 && s.V >= 60);
-const AM_FOOTHILLS_SHARE = "I'm close to work that's fully mine. Now to close the gap.";
+const AM_FOOTHILLS_SHARE = "I'm close to work that's fully mine. I just need to close the gap.";
 const AM_FOOTHILLS_WHY = "You're in a good position, so this chapter is about building from that strength while you close the gap.";
 function amFoothillsNarr(s){
   const base = "You're clear about what matters, you're taking action, and your work is reasonably aligned. That puts you in a good position. But there is still work to do.";
   const m = Math.min(s.C, s.AG, s.AL);
   let tail;
-  if (s.AL === m) tail = " The area where you can improve is alignment. A real part of what you do is there because others expect it, and the work you'd choose is still waiting for that space.";
+  if (s.AL === m) tail = " The area where you can improve is alignment. Part of what you do seems to be there because others expect it, and the work you'd choose is still waiting for you.";
   else if (s.C === m) tail = " The area where you can improve is clarity. The specific shape of your work could be clearer.";
   else tail = " The area where you can improve is agency. You know what you need to do, but you could be taking more action.";
   return base + tail;
@@ -668,7 +667,11 @@ function computeResult(){
       const alt = key.split(''); alt[AXIS_POS[axis]] = flipHL(alt[AXIS_POS[axis]]);
       const nk = alt.join('');
       return { axis: axis, key: nk, name: ARCH[nk].name };
-    });
+    })
+    // A gated HHH reader's borderline flip regenerates HHH, and the chooser must
+    // not offer back the label the gate removed (Dan, 2026-08-13). "Show all
+    // types" still lists The True Creator; only the automatic suggestion is cut.
+    .filter(n => !(tcGated && n.key === 'HHH'));
   const neighbour    = neighbours.length ? neighbours[0].name : null;
   const neighbourKey = neighbours.length ? neighbours[0].key  : null;
   return { scores:s, key, tcGated, archetype:ARCH[key].name, regret:regretFor(s),
@@ -752,10 +755,6 @@ const SHARE_BASE = 'https://dandobos.com/choose-your-work-quiz/';
 // og:image + title, then redirects into the quiz (?type=KEY, forwarding &hws=). So a shared
 // link unfurls as the archetype card in WhatsApp/iMessage instead of the generic page.
 const SHARE_SLUG = { HHH:'true-creator', HHL:'high-achiever', HLH:'awakened-observer', HLL:'restless-visionary', LHH:'restless-explorer', LHL:'tireless-driver', LLH:'grounded-seeker', LLL:'late-bloomer' };
-const SHARE_COMPARE_PROMPT = 'Want to compare patterns with someone?';
-const SHARE_CHALLENGE_TITLE = 'Help a friend choose their work';
-const SHARE_CHALLENGE_BODY = 'They will get their own pattern, then you can compare where you match and where you do not.';
-const SHARE_CHALLENGE_MESSAGE = 'Want to compare Work Personalities? Take the Choose Your Work Quiz and see: ';
 var _share = null;
 // Default share message (Dan's copy, share-flow decision 2, 2026-08-04): leads with the
 // sender's result and the compare promise, then the time claim. The link follows after a
@@ -798,14 +797,6 @@ function sharePayload(r, s){
     text: viralShareText(r),
     dims: shareDimensionData(s)
   };
-}
-function shareCardDims(s){
-  return shareDimensionData(s).map(function(d){
-    var sc=d.score, v=shareVerdict(d), pos=Math.min(92,Math.max(8,sc));
-    return '<div class="sc-dd-row"><div class="sc-dd-top"><span class="sc-dd-label">'+d.name+'</span><span class="sc-dd-verdict" style="color:'+d.color+'">'+v+'</span></div>'
-      + '<div class="sc-dd-track"><div class="sc-dd-fill" style="width:'+sc+'%;background:'+d.color+'"></div>'
-      + '<div class="sc-dd-circle" style="left:'+pos+'%;border-color:'+d.color+';color:'+d.color+'">'+sc+'</div></div></div>';
-  }).join('');
 }
 // ===== new share card (wc): per-pattern claim + strengths, "look-good" framing =====
 const SHARE_CLAIM = {
@@ -904,8 +895,8 @@ function shareLoopHtml(r, s){
       + '<div class="seg-body" data-m="socials" style="display:none">'
         + '<div class="share-btns">'
           + '<a class="sbtn share-tw" data-link="'+p.link+'" target="_blank" rel="noopener" onclick="hwShareClick(\'x\')" href="https://twitter.com/intent/tweet?text='+e(fMsg)+'&url='+e(p.link)+'"><span class="g g-x">X</span>Post</a>'
-          + '<button class="sbtn" onclick="viralSocial(\'https://www.linkedin.com/sharing/share-offsite/?url='+e(p.link)+'\',\'linkedin\')"><span class="g g-li">in</span>LinkedIn</button>'
-          + '<button class="sbtn" onclick="viralSocial(\'https://www.facebook.com/sharer/sharer.php?u='+e(p.link)+'\',\'facebook\')"><span class="g g-fb">f</span>Facebook</button>'
+          + '<button class="sbtn share-li" onclick="viralSocial(\'https://www.linkedin.com/sharing/share-offsite/?url='+e(p.link)+'\',\'linkedin\')"><span class="g g-li">in</span>LinkedIn</button>'
+          + '<button class="sbtn share-fb" onclick="viralSocial(\'https://www.facebook.com/sharer/sharer.php?u='+e(p.link)+'\',\'facebook\')"><span class="g g-fb">f</span>Facebook</button>'
           + '<button class="sbtn" onclick="viralInstagram()"><span class="g g-ig">ig</span>Instagram</button>'
         + '</div>'
       + '</div>'
@@ -932,6 +923,12 @@ function hwRebuildShareLinks(box){
   if (wa) wa.href = 'https://wa.me/?text=' + e(t + '\n\n' + _share.link);
   var tw = box.querySelector('a.share-tw, a[href*="twitter.com"]');
   if (tw) tw.href = 'https://twitter.com/intent/tweet?text=' + e(t) + '&url=' + e(_share.link);
+  // LinkedIn and Facebook bake the link into their onclick at render time, so a
+  // name typed after render must be written back here too (item 1b, 2026-08-13).
+  var li = box.querySelector('button.share-li');
+  if (li) li.setAttribute('onclick', "viralSocial('https://www.linkedin.com/sharing/share-offsite/?url=" + e(_share.link) + "','linkedin')");
+  var fb = box.querySelector('button.share-fb');
+  if (fb) fb.setAttribute('onclick', "viralSocial('https://www.facebook.com/sharer/sharer.php?u=" + e(_share.link) + "','facebook')");
 }
 function hwNoteInput(el){ _shareNote = (el.value || '').slice(0, 400).trim(); hwRebuildShareLinks(el.closest && el.closest('.panelbox')); }
 function hwNameInput(el){
@@ -1008,7 +1005,6 @@ function viralSaveStory(){
     },'image/png');
   }).catch(function(){ cleanup(); viralToast('Could not create image, please screenshot the card'); });
 }
-function viralChallenge(){ if(!_share) return; hwShareClick('challenge'); var msg=SHARE_CHALLENGE_MESSAGE+_share.link; if(navigator.share){ navigator.share({ title:'The Choose Your Work Quiz', text:msg, url:_share.link }).catch(function(){}); } else { (navigator.clipboard?navigator.clipboard.writeText(msg):Promise.reject()).then(function(){ viralToast('Invite copied, paste it to a friend'); }).catch(function(){ window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank'); }); } }
 
 // ===== compare with the friend who invited you (closes the share loop) =====
 // Renders only when an invite is present. With scores (&s=) it draws You/Them bars;
@@ -1274,6 +1270,9 @@ function hwArchetypeFields(key){
     dlLabel = (plan.chapters.length > 1) ? 'Download Chapters ' + ordered.join(' and ') + ' Free' : 'Download Chapter ' + base + ' Free';
     chapterWhy = am.amDrained ? AM_DRAINED_WHY : am.amFoothills ? AM_FOOTHILLS_WHY : WHY[key];
     if (plan.mode === 'supplement') chapterWhy += ' ' + suppNote(key);
+    // Soft mode: the page's chapter card shows this line, so the email's must
+    // too (item 4, 2026-08-13).
+    else if (plan.mode === 'soft') chapterWhy += ' ' + ((key === 'HLH') ? SOFT_AWAKENED : SOFT_GENERIC);
   }
   var parts = chapterPartsFor(plan);
   return {
@@ -1448,7 +1447,6 @@ function renderResult(){
   const word = (answers[0] && answers[0].label) ? answers[0].label : 'that word';
   // True Creator keeps its label, but the full "rare one" copy is gated; below the bar -> "foothills" voice.
   const amDrained = (r.key === 'HHH' && s.C >= 65 && s.AG >= 65 && s.AL >= 75 && s.V < 60);
-  const amFoothills = (r.key === 'HHH' && !AM_FULL_REQ(s) && !amDrained);
 
   const DIM = [
     { key:'C',  name:'Clarity',   color:'#1E5F8C', lo:'Searching', hi:'Focused',  score:s.C },
@@ -1475,25 +1473,6 @@ function renderResult(){
   // regret meter (4 segments, Low -> High, active one coloured)
   const reg = r.regret;
   const segs = [0,1,2,3].map(i => '<div class="res-regret-seg" style="' + (i <= reg.idx ? 'background:' + reg.color : '') + '"></div>').join('');
-
-  // chapter block
-  let chEyebrow, chTitleHtml, chWhy, chNote = '';
-  if (r.mode === 'sequence'){
-    chEyebrow = 'The Next Step';
-    chTitleHtml = '<ul class="res-chapter-list">' + r.chapters.map(n => '<li>Chapter ' + n + ': ' + CH_TITLE[n] + '</li>').join('') + '</ul>';
-    chWhy = SEQ_LINE[r.key];
-  } else if (r.mode === 'supplement'){
-    chEyebrow = 'The Next Step';
-    chTitleHtml = '<ul class="res-chapter-list">' + r.chapters.map(n => '<li>Chapter ' + n + ': ' + CH_TITLE[n] + '</li>').join('') + '</ul>';
-    chWhy = amDrained ? AM_DRAINED_WHY : amFoothills ? AM_FOOTHILLS_WHY : WHY[r.key];
-    chNote = suppNote(r.key);
-  } else {
-    const base = r.chapters[0];
-    chEyebrow = 'The Next Step';
-    chTitleHtml = 'Chapter ' + base + ': ' + CH_TITLE[base];
-    chWhy = amDrained ? AM_DRAINED_WHY : amFoothills ? AM_FOOTHILLS_WHY : WHY[r.key];
-    if (r.mode === 'soft') chNote = (r.key === 'HLH') ? SOFT_AWAKENED : SOFT_GENERIC;
-  }
 
   return hwEmailedNote()
     + '<div id="hw-top">' + hwTopHtml(r.key, s) + '</div>'
@@ -1537,8 +1516,13 @@ function renderResume() {
   var where = (_resumeTarget && _resumeTarget.screen === 'gate')
     ? 'You were at the final step.'
     : 'You were on question ' + (((_resumeTarget && _resumeTarget.qIdx) || 0) + 1) + ' of ' + TOTAL_Q + '.';
+  // The portal's "Open my result" adds ?result=1; mid-quiz there is no result
+  // yet, so say so instead of leaving the ask unanswered (item 6, 2026-08-13).
+  var noRes = '';
+  try { if (new URLSearchParams(location.search).get('result') === '1') noRes = '<p class="intro-desc">You have not finished this quiz yet, so there is no result to open.</p>'; } catch(e){}
   return '<p class="intro-eyebrow">The Choose Your Work Quiz</p>'
     + '<h1 class="intro-title">Welcome back</h1>'
+    + noRes
     + '<p class="intro-desc">' + where + ' Pick up right where you left off; your answers are saved.</p>'
     + '<button class="continue-btn" onclick="resumeQuiz()">Resume the quiz</button>'
     + '<div style="text-align:center;margin-top:18px"><button class="ghost-btn" onclick="startOver()">Start Over</button></div>';
@@ -1572,7 +1556,7 @@ function render(keepScroll) {
   saveState();
   if (!keepScroll) window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-function startQuiz() { clearState(); _submitting=false; _submitted=false; _kitConfirmed=false; _kitEmail=''; hwTimingStart(); hwCap('quiz_started', { total_questions: TOTAL_Q }); screen = 'question'; qIdx = 0; render(); }
+function startQuiz() { clearState(); _submitting=false; _submitted=false; _kitEmail=''; hwTimingStart(); hwCap('quiz_started', { total_questions: TOTAL_Q }); screen = 'question'; qIdx = 0; render(); }
 function selectChoice(i) {
   if (advancing || Date.now() < inputReadyAt) return;
   const q = questions[qIdx];
@@ -1651,6 +1635,9 @@ function hwFields(){
     dlLabel = (r.chapters.length > 1) ? 'Download Chapters ' + ordered.join(' and ') + ' Free' : 'Download Chapter ' + base + ' Free';
     chapterWhy = amDrained ? AM_DRAINED_WHY : amFoothills ? AM_FOOTHILLS_WHY : WHY[r.key];
     if (r.mode === 'supplement') chapterWhy += ' ' + suppNote(r.key);
+    // Soft mode: keep the email's chapter card in step with the page's
+    // (item 4, 2026-08-13).
+    else if (r.mode === 'soft') chapterWhy += ' ' + ((r.key === 'HLH') ? SOFT_AWAKENED : SOFT_GENERIC);
   }
   const ansVal = pred => { const i = questions.findIndex(pred); return (i >= 0 && answers[i]) ? answers[i].value : ''; };
   const act = hwActivities();
@@ -1728,7 +1715,7 @@ function submitToKit(email, fields){
   });
 }
 
-let _submitting = false, _submitted = false, _kitEmail = '', _kitConfirmed = false;
+let _submitting = false, _submitted = false, _kitEmail = '';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 function submitGate(){
   if (_submitting || _submitted) return;                       // double-submit guard
@@ -1749,7 +1736,7 @@ function submitGate(){
   let done = false;
   const proceed = confirmed => {                               // never trap the reader
     if (done) return; done = true;
-    _submitting = false; _submitted = true; _kitConfirmed = !!confirmed;
+    _submitting = false; _submitted = true;
     try {
       hwTimingStep();
       var r = computeResult(), d = hwDurations();
@@ -1840,15 +1827,7 @@ function pingBetaQuizDone(){
 }
 
 function showResult() { screen='complete'; clearState(); saveResult(); pingBetaQuizDone(); render(); }
-function restart() { clearResult(); clearState(); _submitting=false; _submitted=false; _kitConfirmed=false; _kitEmail=''; screen='intro'; qIdx=0; answers={}; activityNames=['','','']; activityScores=[null,null,null]; textVal=''; rankState={}; rankTouched={}; rankConfirmPending={}; render(); }
-function toggleNeighbour(i) {
-  var el = document.getElementById('neighbour-profile-' + i); if (!el) return;
-  var open = (el.style.display === 'none');
-  el.style.display = open ? 'block' : 'none';
-  if (open) { try { hwCap('neighbour_opened'); } catch(e){} }
-  var lk = document.querySelectorAll('.res-borderline-link')[i];
-  if (lk) { lk.textContent = lk.textContent.replace(open ? '(show profile)' : '(hide profile)', open ? '(hide profile)' : '(show profile)'); }
-}
+function restart() { clearResult(); clearState(); _submitting=false; _submitted=false; _kitEmail=''; screen='intro'; qIdx=0; answers={}; activityNames=['','','']; activityScores=[null,null,null]; textVal=''; rankState={}; rankTouched={}; rankConfirmPending={}; render(); }
 // segmented share control: show one set of actions at a time
 document.addEventListener('click', function(e){
   var b = e.target.closest && e.target.closest('.seg-btn'); if(!b) return;
@@ -1868,7 +1847,6 @@ var _fromLink = false;
 if (window.__HW_RESTORE && window.__HW_RESTORE.answers) {
   try {
     answers = window.__HW_RESTORE.answers;
-    if (window.__HW_RESTORE.email) _kitEmail = window.__HW_RESTORE.email;
     computeResult();
     screen = 'complete';
     _fromLink = true;
