@@ -143,6 +143,8 @@
   .rc-eyebrow { font-family: var(--sans); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin: 0 0 5px; }
   .rc-title { font-family: var(--heading); font-size: 22px; font-weight: 600; color: var(--text-primary); line-height: 1.2; margin: 0 0 5px; }
   .rc-sub { font-family: var(--heading); font-style: italic; font-size: 15px; color: var(--text-body); line-height: 1.5; margin: 0 0 16px; }
+  /* The reader's own buried idea, printed above the prompts so the moves have a target. Dan's ruling 13 Aug. */
+  .rc-buried { font-family: var(--heading); font-size: 15px; color: var(--text-primary); line-height: 1.5; margin: -8px 0 16px; }
   .rc-item { display: flex; gap: 13px; align-items: flex-start; padding: 12px 0; border-top: 1px solid var(--inner); cursor: pointer; }
   .rc-item:first-of-type { border-top: 0; padding-top: 2px; }
   .rc-cb { flex: 0 0 20px; width: 20px; height: 20px; margin: 2px 0 0; cursor: pointer; }

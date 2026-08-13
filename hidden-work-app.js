@@ -1332,6 +1332,16 @@ const CHECKLISTS = {
   ] }
 };
 var _fmQuestions = [];
+// The buried idea the reader typed near the end of the quiz, read straight from
+// the answer set so a restored result (a personal result link) prints it too.
+// Returns '' when there is nothing to print, and every caller must handle that.
+function hwBuriedIdea(){
+  try {
+    var i = questions.findIndex(function(q){ return q.type === 'freetext' && q.section === 'X'; });
+    return (i >= 0 && answers[i]) ? String(answers[i].value || '').trim() : '';
+  } catch(e){ return ''; }
+}
+var HW_COUNT_WORD = { 3: 'three', 4: 'four', 5: 'five', 6: 'six' };
 function checklistHtml(key, drained){
   var c = (key === 'HHH' && drained) ? CHECKLIST_HHH_DRAINED : CHECKLISTS[key]; if (!c) return '';
   var accent = (typeof VIRAL !== 'undefined' && VIRAL[key] && VIRAL[key].accent) || '#3D7A6E';
@@ -1344,10 +1354,17 @@ function checklistHtml(key, drained){
   }).join('');
   var emailRow = (typeof _kitEmail !== 'undefined' && _kitEmail) ? ''
     : '<input class="email-input" id="fm-email" type="email" name="email" autocomplete="email" aria-label="Your email address" placeholder="your@email.com" style="margin:10px 0 0;"/>';
+  var bi = hwBuriedIdea();
+  var nWord = HW_COUNT_WORD[c.items.length];
+  var buriedLine = bi
+    ? '<p class="rc-buried">A minute ago you named the thing you have never given yourself permission to start: &ldquo;'
+      + esc(bi) + '&rdquo;. ' + (nWord ? 'These ' + nWord + ' moves' : 'These moves') + ' are how you start it.</p>'
+    : '';
   return '<div class="res-checklist" style="border-left-color:' + accent + '">'
     + '<p class="rc-eyebrow" style="color:' + accent + '">Your First Moves</p>'
     + '<p class="rc-title">Apply this to your work this week</p>'
     + '<p class="rc-sub">' + c.note + '</p>'
+    + buriedLine
     + items
     + emailRow
     + '<button type="button" class="continue-btn rc-send" id="fm-btn" onclick="hwFirstMovesSend()">Email Me My Responses</button>'

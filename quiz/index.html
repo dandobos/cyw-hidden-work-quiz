@@ -154,6 +154,8 @@
   .rc-eyebrow { font-family: var(--sans); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin: 0 0 5px; }
   .rc-title { font-family: var(--heading); font-size: 22px; font-weight: 600; color: var(--text-primary); line-height: 1.2; margin: 0 0 5px; }
   .rc-sub { font-family: var(--heading); font-style: italic; font-size: 15px; color: var(--text-body); line-height: 1.5; margin: 0 0 16px; }
+  /* The reader's own buried idea, printed above the prompts so the moves have a target. Dan's ruling 13 Aug. */
+  .rc-buried { font-family: var(--heading); font-size: 15px; color: var(--text-primary); line-height: 1.5; margin: -8px 0 16px; }
   .rc-item { display: flex; gap: 13px; align-items: flex-start; padding: 12px 0; border-top: 1px solid var(--inner); cursor: pointer; }
   .rc-item:first-of-type { border-top: 0; padding-top: 2px; }
   .rc-cb { flex: 0 0 20px; width: 20px; height: 20px; margin: 2px 0 0; cursor: pointer; }
@@ -1767,6 +1769,16 @@ const CHECKLISTS = {
   ] }
 };
 var _fmQuestions = [];
+// The buried idea the reader typed near the end of the quiz, read straight from
+// the answer set so a restored result (a personal result link) prints it too.
+// Returns '' when there is nothing to print, and every caller must handle that.
+function hwBuriedIdea(){
+  try {
+    var i = questions.findIndex(function(q){ return q.type === 'freetext' && q.section === 'X'; });
+    return (i >= 0 && answers[i]) ? String(answers[i].value || '').trim() : '';
+  } catch(e){ return ''; }
+}
+var HW_COUNT_WORD = { 3: 'three', 4: 'four', 5: 'five', 6: 'six' };
 function checklistHtml(key, drained){
   var c = (key === 'HHH' && drained) ? CHECKLIST_HHH_DRAINED : CHECKLISTS[key]; if (!c) return '';
   var accent = (typeof VIRAL !== 'undefined' && VIRAL[key] && VIRAL[key].accent) || '#3D7A6E';
@@ -1779,10 +1791,17 @@ function checklistHtml(key, drained){
   }).join('');
   var emailRow = (typeof _kitEmail !== 'undefined' && _kitEmail) ? ''
     : '<input class="email-input" id="fm-email" type="email" name="email" autocomplete="email" aria-label="Your email address" placeholder="your@email.com" style="margin:10px 0 0;"/>';
+  var bi = hwBuriedIdea();
+  var nWord = HW_COUNT_WORD[c.items.length];
+  var buriedLine = bi
+    ? '<p class="rc-buried">A minute ago you named the thing you have never given yourself permission to start: &ldquo;'
+      + esc(bi) + '&rdquo;. ' + (nWord ? 'These ' + nWord + ' moves' : 'These moves') + ' are how you start it.</p>'
+    : '';
   return '<div class="res-checklist" style="border-left-color:' + accent + '">'
     + '<p class="rc-eyebrow" style="color:' + accent + '">Your First Moves</p>'
     + '<p class="rc-title">Apply this to your work this week</p>'
     + '<p class="rc-sub">' + c.note + '</p>'
+    + buriedLine
     + items
     + emailRow
     + '<button type="button" class="continue-btn rc-send" id="fm-btn" onclick="hwFirstMovesSend()">Email Me My Responses</button>'
