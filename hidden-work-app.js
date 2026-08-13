@@ -22,6 +22,38 @@
       posthog.identify('beta:' + _hwbt, { hw_beta: true, hw_beta_token: _hwbt });  // per-tester person
     }
   } catch (e) {}
+  // Person-side marker with a fallback chain: setPersonProperties is in the snippet's
+  // stub list today, but if a future snippet drops it, fall back to people.set, then to
+  // a raw $set capture. All three end up as person properties in PostHog.
+  function _hwMarkPerson(props){
+    try {
+      if (typeof posthog.setPersonProperties === 'function') { posthog.setPersonProperties(props); }
+      else if (posthog.people && typeof posthog.people.set === 'function') { posthog.people.set(props); }
+      else if (typeof posthog.capture === 'function') { posthog.capture('$set', { $set: props }); }
+    } catch (e) {}
+  }
+  try {
+    var _hwqs = new URLSearchParams(location.search);
+    // Internal-traffic flag (Dan and Claude sessions). Opening any quiz page once with
+    // ?internal=1 marks the whole browser via localStorage. PostHog persistence here is
+    // 'memory' (a fresh anonymous person on every load), so the mark is re-registered on
+    // EVERY load, event-side and person-side; PostHog's "internal and test users" filter
+    // can then hide this traffic from the real numbers.
+    if (_hwqs.get('internal') === '1') { try { localStorage.setItem('hw_internal', '1'); } catch (e) {} }
+    var _hwInternal = false;
+    try { _hwInternal = (localStorage.getItem('hw_internal') === '1'); } catch (e) {}
+    if (_hwInternal) {
+      posthog.register({ $internal_or_test_user: true });
+      _hwMarkPerson({ $internal_or_test_user: true });
+    }
+    // Beta round: portal quiz links carry &hwbr=2 (round 2). Same URL-param mechanism as
+    // the hwbt beta token above; only the current round's value is accepted.
+    var _hwbr = _hwqs.get('hwbr');
+    if (_hwbr === '2') {
+      posthog.register({ beta_round: _hwbr });
+      _hwMarkPerson({ beta_round: _hwbr });
+    }
+  } catch (e) {}
 })();
 ;
 // THE HIDDEN WORK v2: four dimensions: Vitality, Alignment, Clarity, Agency
