@@ -2058,6 +2058,7 @@ function hwFields(){
     if (r.mode === 'supplement') chapterWhy += ' ' + suppNote(r.key);
   }
   const ansVal = pred => { const i = questions.findIndex(pred); return (i >= 0 && answers[i]) ? answers[i].value : ''; };
+  const act = hwActivities();
   return {
     hw_archetype: r.archetype,
     hw_result_token: resultToken(),
@@ -2094,8 +2095,32 @@ function hwFields(){
     hw_dl_mp3: dlUrl(dlkey, 'mp3'),
     buried_idea: ansVal(q => q.type === 'freetext' && q.section === 'X'),
     career_stage: ansVal(q => q.section === 'X' && /career\?/.test(q.text || '')),
-    role_type: ansVal(q => q.section === 'X' && /role type/.test(q.text || ''))
+    role_type: ansVal(q => q.section === 'X' && /role type/.test(q.text || '')),
+    hw_drainer: act.drainer,
+    hw_energiser: act.energiser
   };
+}
+
+// The two activities Day 5 talks about, from the three the reader named and rated.
+// The scale has no neutral point (0/30 drain, 70/100 energize), so a field is left
+// EMPTY rather than filled with a best guess: an empty hw_drainer means nothing they
+// are praised for drains them, and Day 5 branches on exactly that (Dan, 13 Aug).
+// Ties keep the first activity, which is the order the reader typed them in.
+function hwActivities(){
+  var out = { drainer: '', energiser: '' };
+  try {
+    var lo = null, hi = null;
+    for (var i = 0; i < 3; i++){
+      var name = String((activityNames && activityNames[i]) || '').trim();
+      var score = (activityScores && activityScores[i]);
+      if (!name || typeof score !== 'number') continue;
+      if (lo === null || score < activityScores[lo]) lo = i;
+      if (hi === null || score > activityScores[hi]) hi = i;
+    }
+    if (lo !== null && activityScores[lo] <= 30) out.drainer = String(activityNames[lo]).trim();
+    if (hi !== null && activityScores[hi] >= 70) out.energiser = String(activityNames[hi]).trim();
+  } catch(e){}
+  return out;
 }
 
 function submitToKit(email, fields){
