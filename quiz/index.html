@@ -771,11 +771,14 @@ function renderIntro() {
   // Invited visitors (arriving via a friend's share link) get the friend's pattern up
   // front and a compare promise; everyone else gets the standard intro.
   var invited = _invite && ARCH[_invite.key];
-  // Dan's line breaks, 2026-08-13. The same four lines hold at every width: at 40px
-  // the longest of them ("You are Meant to Do") still fits a 390px phone, so
-  // "Work Personality" never splits and no breakpoint override is needed.
+  // Dan's line breaks, 2026-08-13. All four lines hold from tablet width up. On a
+  // phone the content column is only 294px, and the last line needs 305px even at
+  // 34px, so it wraps; Dan's rule for that case is to keep the phone's own wrapping
+  // as long as "Work Personality" stays whole, which it does. The nbsp in "to Do"
+  // only stops the phone leaving "Do" alone on a fifth line; at any width where the
+  // line fits, it does nothing.
   var title = 'Discover Your<br>Work Personality<br>'
-            + 'Choose the Work<br>You are Meant to Do';
+            + 'Choose the Work<br>You are Meant to&nbsp;Do';
   var inviteSpectrum = '';
   var invCard = '';
   var invitePatterns = '';
