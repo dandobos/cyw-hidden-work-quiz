@@ -114,7 +114,7 @@
     <div id="steps"></div>
 
     <div class="note" id="course-note" style="display:none">
-      Your 7-day email course arrives by email, one message a day. Please actually do each day's small activity and take a moment to reflect. Come back here for the final feedback form once you have been through all seven days.
+      Your 7-day email course arrives by email, one message a day. Please actually do each day's small activity and take a moment to reflect. Come back here for the final feedback form once you have been through all seven days. Please read at least one day's email on your phone, and open the PDF of your answers there too. If anything looks wrong on the phone, say so in the course feedback form.
     </div>
 
     <div class="foot">
@@ -188,7 +188,7 @@
 
     var STEPS = [
       { key:"quiz", n:1, kind:"action", title:"Take the quiz", time:"Duration: about 7 minutes",
-        desc:"Please do this on your phone.",
+        desc:"Please do this on your phone. Afterwards, a result email arrives. Please open its “View Your Saved Result” link and check it shows your result.",
         btn:{label:"Open the Quiz", href:quizUrl(false), accent:true} },
       { key:"quiz_feedback", n:2, kind:"form", title:"Quiz feedback form", time:"Duration: about 7 minutes",
         desc:"Be candid and specific.<br><span style=\"color:var(--accent);font-weight:700\">&#10003;</span> “The third question was confusing because…”<br><span style=\"color:var(--clay);font-weight:700\">&#10007;</span> “it was great.”<br><br>Please flag anything slow, ineffective or not working on your device.",
@@ -203,7 +203,7 @@
         btn:null },
       { key:"course", n:4, kind:"course", title:"The 7-day email course", time:"Duration: 10 min per day for 7 days",
         desc:"Each day brings a new email with something insightful to read and a practical activity."
-             +"<br><br>Emails not arriving, or would you rather read ahead? All seven days are here:"
+             +"<br><br>If the emails are not arriving, please message Dan."
              ,
         btn:null },
       { key:"course_feedback", n:5, kind:"form", title:"Course feedback form", time:"Duration: about 7 minutes",
