@@ -106,6 +106,24 @@ host.innerHTML="<div class=\"wrap\">\n<header class=\"top\">\n  <h1>7 Days to Ch
   paintAll();
   show(active);
 
+  /* Day 3 names the reader's own buried idea. Dan's sentence keeps its wording and
+     gains a colon tight against "you", then their words in quotes (his ruling,
+     13 Aug: "should be you: not you :"). textContent only, so what a reader typed
+     can never become markup, and a reader with no stored idea keeps the full stop. */
+  function nameBuriedIdea(idea){
+    try{
+      var t=String(idea||'').trim(); if(!t)return;
+      var d3=document.getElementById('day3'); if(!d3)return;
+      var ps=d3.getElementsByTagName('p');
+      for(var i=0;i<ps.length;i++){
+        var s=ps[i].textContent||'';
+        if(s.indexOf('get to 80')===-1)continue;
+        ps[i].textContent=s.replace(/\.\s*$/,'')+': “'+t+'”';
+        return;
+      }
+    }catch(e){}
+  }
+
   /* Cross-device state + the reader's own responses for the trail expanders.
      The email links carry ?cemail=; the backend answers with the real day,
      archetype, and the saved response boxes (and stores hw_tz on first contact). */
@@ -117,6 +135,7 @@ host.innerHTML="<div class=\"wrap\">\n<header class=\"top\">\n  <h1>7 Days to Ch
         if(!st||!st.ok)return;
         if(st.archetype){ARCH=st.archetype;var a=document.getElementById('cparch');a.textContent=ARCH;document.getElementById('cpstrip').removeAttribute('hidden');}
         if(st.responses)RESP=st.responses;
+        if(st.buried_idea)nameBuriedIdea(st.buried_idea);
         if(st.day){
           var d=Math.max(1,Math.min(7,st.day));
           if(d!==CUR){CUR=d;try{localStorage.setItem('cyw_course_day',String(d));}catch(e){}
