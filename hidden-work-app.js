@@ -286,7 +286,11 @@ function renderIntro() {
   // Invited visitors (arriving via a friend's share link) get the friend's pattern up
   // front and a compare promise; everyone else gets the standard intro.
   var invited = _invite && ARCH[_invite.key];
-  var title = 'Discover your Work Personality. Choose the Work You Are Meant to Do.';
+  // Dan's line breaks, 2026-08-13. The same four lines hold at every width: at 40px
+  // the longest of them ("You are Meant to Do") still fits a 390px phone, so
+  // "Work Personality" never splits and no breakpoint override is needed.
+  var title = 'Discover Your<br>Work Personality<br>'
+            + 'Choose the Work<br>You are Meant to Do';
   var inviteSpectrum = '';
   var invCard = '';
   var invitePatterns = '';

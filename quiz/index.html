@@ -417,6 +417,53 @@
   /* Beta (Lisa-Marie): the card CTA is an <a>, so it was missing from the list above;
      the theme's nowrap made its label overflow the card into the source line below. */
 
+  /* Button colours: the host theme paints every button pink (#c36) on :hover and
+     :focus. On a phone a tap leaves focus behind, so a chosen answer, the fit
+     buttons and the ghost buttons all sat there red long after the tap. Scoping
+     under #page (id specificity) outranks the theme's rule without !important, so
+     each control keeps its own colour in every state. Dan's ruling 2026-08-13:
+     where a control is filled to show it is chosen, that fill is BLACK. */
+  #page .option, #page .option:hover, #page .option:focus,
+  #page .word-tile, #page .word-tile:hover, #page .word-tile:focus,
+  #page .res-dl-btn, #page .res-dl-btn:hover, #page .res-dl-btn:focus,
+  #page .sbtn, #page .sbtn:hover, #page .sbtn:focus,
+  #page .fit-btn, #page .fit-btn:hover, #page .fit-btn:focus {
+    background-color: var(--card);
+  }
+  #page .rate-btn, #page .rate-btn:hover, #page .rate-btn:focus,
+  #page .ghost-btn, #page .ghost-btn:hover, #page .ghost-btn:focus {
+    background-color: transparent;
+  }
+  #page .continue-btn, #page .continue-btn:hover, #page .continue-btn:focus, #page .continue-btn:active,
+  #page a.continue-btn, #page a.continue-btn:hover, #page a.continue-btn:focus,
+  #page .rank-btn, #page .rank-btn:hover, #page .rank-btn:focus, #page .rank-btn:active {
+    background-color: var(--text-primary);
+  }
+  #page .rank-btn { border-color: var(--text-primary); }
+  /* Hover/focus outline for the unfilled controls, so a pointer still gets feedback.
+     This comes BEFORE the filled rule below: a press also counts as a hover, and at
+     equal specificity the later rule wins, so the filled rule has to be last or a
+     pressed control would end up black text on black. */
+  #page .option:hover, #page .word-tile:hover, #page .fit-btn:hover, #page .fit-btn:focus,
+  #page .ghost-btn:hover, #page .rate-btn:hover {
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+  }
+  /* The chosen answer, and the moment of pressing one. Pressing lands on the same
+     black the answer settles into, so there is no colour flash in between. */
+  #page .option.selected, #page .option.selected:hover, #page .option.selected:focus,
+  #page .option:active,
+  #page .word-tile.selected, #page .word-tile.selected:hover, #page .word-tile.selected:focus,
+  #page .word-tile:active,
+  #page .rate-btn.selected, #page .rate-btn.selected:hover, #page .rate-btn.selected:focus,
+  #page .rate-btn:active,
+  #page .fit-btn:active, #page .ghost-btn:active,
+  #page .res-dl-btn:active, #page .sbtn:active {
+    background-color: var(--text-primary);
+    border-color: var(--text-primary);
+    color: var(--card);
+  }
+
   @media (max-width: 600px) {
     .intro-title { font-size: 40px !important; }
     .res-name    { font-size: 34px !important; }
@@ -724,7 +771,11 @@ function renderIntro() {
   // Invited visitors (arriving via a friend's share link) get the friend's pattern up
   // front and a compare promise; everyone else gets the standard intro.
   var invited = _invite && ARCH[_invite.key];
-  var title = 'Discover your Work Personality. Choose the Work You Are Meant to Do.';
+  // Dan's line breaks, 2026-08-13. The same four lines hold at every width: at 40px
+  // the longest of them ("You are Meant to Do") still fits a 390px phone, so
+  // "Work Personality" never splits and no breakpoint override is needed.
+  var title = 'Discover Your<br>Work Personality<br>'
+            + 'Choose the Work<br>You are Meant to Do';
   var inviteSpectrum = '';
   var invCard = '';
   var invitePatterns = '';
