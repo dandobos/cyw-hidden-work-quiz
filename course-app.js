@@ -28,7 +28,7 @@ host.innerHTML="<div class=\"wrap\">\n<header class=\"top\">\n  <h1>7 Days to Ch
   var finish=document.querySelector('.finish');
   var trail=document.getElementById('ctrail');
   var teasers={};
-  var RESP=null, ARCH='';
+  var RESP=null, PLANS=null, PDFS=null, ARCH='';
   var openDay=0;
 
   function titleOf(d){var h=secs[d-1].querySelector('h2');return h?h.textContent:'Day '+d;}
@@ -64,9 +64,19 @@ host.innerHTML="<div class=\"wrap\">\n<header class=\"top\">\n  <h1>7 Days to Ch
       out+='<div class="stop '+st+'" data-d="'+d+'"><span class="tdot"></span><div class="tbody">';
       out+='<p class="tlab">'+(st==='done'?TICK+' Day '+d:st==='today'?'<span class="ttag">Today</span> Day '+d:'Day '+d)+'</p>';
       out+='<button class="topen" type="button" data-d="'+d+'">'+titleOf(d)+'</button>';
-      if(st==='done'&&RESP&&RESP[d]){
-        out+='<button class="rexp" type="button" data-d="'+d+'" aria-expanded="false">Expand to see your responses</button>'
-           +'<div class="resp" id="resp'+d+'" hidden></div>';
+      /* A finished day carries the reader's own action plan, open, and one button
+         to their PDF (Dan's ruling 17 Aug, design D). The plan is the line they
+         come back for, so it is never behind a click. Days stored before 7 Aug
+         have no sections to lift, so they keep the old expander instead. */
+      if(st==='done'){
+        var plan=PLANS&&PLANS[d], pdf=PDFS&&PDFS[d];
+        if(plan||pdf){
+          if(plan){out+='<div class="rplan">'+plan+'</div>';}
+          if(pdf){out+='<p class="rpdf"><a href="'+pdf+'" target="_blank" rel="noopener">PDF with all my answers</a></p>';}
+        }else if(RESP&&RESP[d]){
+          out+='<button class="rexp" type="button" data-d="'+d+'" aria-expanded="false">Expand to see your responses</button>'
+             +'<div class="resp" id="resp'+d+'" hidden></div>';
+        }
       }
       if(st==='locked'){out+='<p class="tnote">'+LOCK+' '+lockNote(d)+'</p>';}
       out+='</div></div>';
@@ -124,9 +134,10 @@ host.innerHTML="<div class=\"wrap\">\n<header class=\"top\">\n  <h1>7 Days to Ch
     }catch(e){}
   }
 
-  /* Cross-device state + the reader's own responses for the trail expanders.
-     The email links carry ?cemail=; the backend answers with the real day,
-     archetype, and the saved response boxes (and stores hw_tz on first contact). */
+  /* Cross-device state + the reader's own work for the finished trail stops.
+     The email links carry ?cemail=; the backend answers with the real day, the
+     archetype, the saved response boxes, the action plan of each finished day
+     and its PDF link (and stores hw_tz on first contact). */
   if(mMail&&!PREVIEW){
     var tz=''; try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';}catch(e){}
     fetch('https://my.dandobos.com/course-state?r=1&cemail='+mMail[1]+(tz?'&tz='+encodeURIComponent(tz):''))
@@ -135,6 +146,8 @@ host.innerHTML="<div class=\"wrap\">\n<header class=\"top\">\n  <h1>7 Days to Ch
         if(!st||!st.ok)return;
         if(st.archetype){ARCH=st.archetype;var a=document.getElementById('cparch');a.textContent=ARCH;document.getElementById('cpstrip').removeAttribute('hidden');}
         if(st.responses)RESP=st.responses;
+        if(st.plans)PLANS=st.plans;
+        if(st.pdfs)PDFS=st.pdfs;
         if(st.buried_idea)nameBuriedIdea(st.buried_idea);
         if(st.day){
           var d=Math.max(1,Math.min(7,st.day));

@@ -63,6 +63,12 @@ padding:14px 24px;border-radius:8px;font-size:14px;letter-spacing:0}
 #cyw-course .cta a,#cyw-course .cta a:hover,#cyw-course .cta a:focus,#cyw-course .cta a:visited{color:#fff !important;text-decoration:none !important;box-shadow:none !important}
 #cyw-course .cta a:hover,#cyw-course .cta a:focus{background:#000 !important}
 #cyw-course nav.days a,#cyw-course nav.days a:visited{text-decoration:none !important;box-shadow:none !important}
+#cyw-course .rpdf a,#cyw-course .rpdf a:visited,#cyw-course .rpdf a:hover,#cyw-course .rpdf a:focus{color:#1a2028 !important;background:#fff !important;text-decoration:none !important;box-shadow:none !important}
+#cyw-course .rpdf a:hover,#cyw-course .rpdf a:focus{border-color:#1a2028 !important}
+/* The theme sets white-space:nowrap on buttons, which pushed every trail day
+   title off the right edge of a phone (342px of text in a 284px column at
+   375px wide). The trail markup uses buttons, so it inherited the leak. */
+#cyw-course .topen,#cyw-course .rexp{white-space:normal !important;max-width:100% !important}
 #cyw-course nav.days a:hover{background:inherit}
 #cyw-course a{border-bottom:none !important}
 
@@ -94,5 +100,16 @@ padding:14px 24px;border-radius:8px;font-size:14px;letter-spacing:0}
 #cyw-course .stop.locked .topen{color:#8d877c;cursor:default}
 #cyw-course .stop.locked .topen:hover{text-decoration:none}
 #cyw-course .tnote{font-size:13px;color:#8d877c;margin:4px 0 0}
-#cyw-course .rexp{font-family:var(--sans);font-size:13px;font-weight:600;color:#3d7a6e;background:none;border:none;padding:0;margin:5px 0 0;cursor:pointer;text-decoration:underline}
+/* display:block keeps the expander off the title's line. Without it both are
+   inline buttons, and a short title left them run together on the live page. */
+#cyw-course .rexp{display:block;font-family:var(--sans);font-size:13px;font-weight:600;color:#3d7a6e;background:none;border:none;padding:0;margin:5px 0 0;cursor:pointer;text-decoration:underline;text-align:left}
 #cyw-course .resp{background:var(--card);border:1px solid var(--border-soft);border-radius:10px;padding:16px 18px;margin:10px 0 0;overflow-x:auto}
+/* A finished day: the reader's action plan, open, then one button to their PDF
+   (Dan's ruling 17 Aug). The plan box arrives fully styled from the backend, so
+   this only gives it room. The button stays outlined, so it never competes with
+   the solid Start Today's Session button in the hero. */
+#cyw-course .rplan{margin:9px 0 0}
+#cyw-course .rpdf{margin:10px 0 0}
+#cyw-course .rpdf a{display:inline-block;font-family:var(--sans);font-size:13px;font-weight:700;background:#fff;
+border:1px solid var(--border);border-radius:8px;padding:10px 15px;color:var(--accent);text-decoration:none}
+#cyw-course .rpdf a:hover,#cyw-course .rpdf a:focus{border-color:var(--accent);outline:none}
