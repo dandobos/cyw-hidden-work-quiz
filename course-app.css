@@ -28,9 +28,12 @@ color:var(--accent);text-decoration:none;font-weight:600;font-size:13.5px;backgr
 padding:8px 11px;border-radius:8px;pointer-events:none;opacity:0;transition:opacity .12s;text-align:center}
 #cyw-course .day{background:var(--card);border:1px solid var(--border-soft);border-radius:12px;padding:26px 24px;margin:22px 0}
 #cyw-course .eyebrow{font-size:12.5px;letter-spacing:.4px;color:var(--eyebrow);font-weight:700;margin:0 0 4px}
-#cyw-course .day h2{font-family:var(--heading);color:var(--text);font-size:clamp(22px,4.6vw,29px);line-height:1.25;margin:0 0 18px}
-#cyw-course .day h3{font-family:var(--heading);color:var(--text);font-size:19px;margin:26px 0 8px}
+#cyw-course .day h2{font-family:var(--heading);color:var(--text);font-size:clamp(22px,4.6vw,29px);line-height:1.25;margin:0 0 18px;font-weight:700}
+#cyw-course .day h3{font-family:var(--heading);color:var(--text);font-size:19px;margin:26px 0 8px;font-weight:700}
 #cyw-course .day p{margin:0 0 14px}
+/* "When you finish, you'll get..." matches the emails, which already set this line
+   italic, centred and grey (Dan's ruling 2026-08-19, item 10). */
+#cyw-course .day p.finishline{font-style:italic;text-align:center;color:#6B6B6B}
 #cyw-course .day ul{margin:0 0 14px;padding-left:22px}
 #cyw-course .day li{margin:0 0 7px}
 #cyw-course .mt{display:grid;gap:0;margin:0 0 22px}
@@ -38,7 +41,7 @@ padding:8px 11px;border-radius:8px;pointer-events:none;opacity:0;transition:opac
 #cyw-course .mt .m{background:#f7f5f1;border:1px solid #d8d5ce;border-bottom:none;border-radius:11px 11px 0 0;color:#000;padding-bottom:7px}
 #cyw-course .mt .t{background:#f7f5f1;border:1px solid #d8d5ce;border-top:none;border-radius:0 0 11px 11px;color:#000}
 #cyw-course .mt span{display:block;font-size:16px;font-weight:700;color:var(--text);margin-bottom:3px}
-#cyw-course .cta{margin:18px 0}
+#cyw-course .cta{margin:18px 0;text-align:center}
 #cyw-course .cta a{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:700;
 padding:14px 24px;border-radius:8px;font-size:14px;letter-spacing:0}
 #cyw-course .cta a:hover,#cyw-course .cta a:focus{background:#000;outline:none}
@@ -56,12 +59,13 @@ padding:14px 24px;border-radius:8px;font-size:14px;letter-spacing:0}
 /* ===== HOST-THEME ISOLATION: re-assert course styles against the dandobos.com
    theme's global h1-h6 / a rules, same pattern as the quiz (do not remove) ===== */
 #cyw-course h1{font-family:'Lora',Georgia,serif !important;color:#1a2028 !important;font-size:clamp(26px,6vw,36px) !important;line-height:1.2 !important;margin:.2em 0 !important;text-transform:none !important;letter-spacing:0 !important}
-#cyw-course .day h2,#cyw-course .teaser h2{font-family:'Lora',Georgia,serif !important;color:#1a2028 !important;font-size:clamp(22px,4.6vw,29px) !important;line-height:1.25 !important;margin:0 0 18px !important;text-transform:none !important;letter-spacing:0 !important}
+#cyw-course .day h2,#cyw-course .teaser h2{font-family:'Lora',Georgia,serif !important;color:#1a2028 !important;font-size:clamp(22px,4.6vw,29px) !important;line-height:1.25 !important;margin:0 0 18px !important;text-transform:none !important;letter-spacing:0 !important;font-weight:700 !important}
 #cyw-course .teaser h2{color:#8d877c !important;font-size:clamp(20px,4.2vw,26px) !important;margin:2px 0 10px !important}
-#cyw-course .day h3{font-family:'Lora',Georgia,serif !important;color:#1a2028 !important;font-size:19px !important;margin:26px 0 8px !important;text-transform:none !important}
+#cyw-course .day h3{font-family:'Lora',Georgia,serif !important;color:#1a2028 !important;font-size:19px !important;margin:26px 0 8px !important;text-transform:none !important;font-weight:700 !important}
 #cyw-course .finish h2{font-size:24px !important;margin:0 0 8px !important;color:#1a2028 !important}
 #cyw-course .cta a,#cyw-course .cta a:hover,#cyw-course .cta a:focus,#cyw-course .cta a:visited{color:#fff !important;text-decoration:none !important;box-shadow:none !important}
 #cyw-course .cta a:hover,#cyw-course .cta a:focus{background:#000 !important}
+#cyw-course .day p.finishline{font-style:italic !important;text-align:center !important;color:#6B6B6B !important}
 #cyw-course nav.days a,#cyw-course nav.days a:visited{text-decoration:none !important;box-shadow:none !important}
 /* The border is re-asserted whole, and with !important, because the rule below
    (#cyw-course a{border-bottom:none !important}, there to stop the theme
