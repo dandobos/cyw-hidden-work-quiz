@@ -66,6 +66,8 @@
   .continue-btn { display: block; margin: 32px auto 0; font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--card); background: var(--text-primary); border: none; padding: 16px 44px; cursor: pointer; transition: opacity 0.15s; }
   .continue-btn:hover { opacity: 0.85; }
   .continue-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  /* Dan, 20 Aug: the book CTA was full width. It now sizes to its own label and centres. */
+  .res-book-cta-row { text-align: center; }
   .back-link { text-align: center; margin-top: 36px; }
   .back-link button { background: transparent; border: none; font-family: var(--sans); font-size: 12px; color: var(--text-muted); cursor: pointer; }
   .back-link button:hover { color: var(--accent); }

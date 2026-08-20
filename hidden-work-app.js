@@ -1515,7 +1515,9 @@ function renderResult(){
       + shareLoopHtml(r, s)
       + '<div class="res-divider"></div>'
       + '<p class="res-book-head"><em>Choose Your Work</em> Takes You From This Snapshot to the System Behind It.</p><p class="res-book-text">Your result points to where to begin, but the book is where the change happens.</p>'
-      + '<a id="hw-book-cta" class="continue-btn" href="https://dandobos.com/choose-your-work/" target="_blank" rel="noopener" onclick="hwBookClick()" style="text-decoration:none; display:block; width:100%; text-align:center;">Get Choose Your Work</a>'
+      + '<div class="res-book-cta-row">'
+        + '<a id="hw-book-cta" class="continue-btn" href="https://dandobos.com/choose-your-work/" target="_blank" rel="noopener" onclick="hwBookClick()" style="text-decoration:none; display:inline-block; width:auto; text-align:center;">Get Choose Your Work</a>'
+      + '</div>'
     + '</div>';
 }
 function renderComplete() { return renderResult(); }
