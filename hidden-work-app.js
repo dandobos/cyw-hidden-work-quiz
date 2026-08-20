@@ -1161,8 +1161,7 @@ function hwChapterHtml(key, s, flag){
   var ordered = plan.chapters.slice().sort(function(a,b){ return a - b; });
   var dlkey = ordered.join('_');
   var label = (plan.chapters.length > 1) ? 'Download Chapters ' + ordered.join(' and ') + ' Free' : 'Download Chapter ' + plan.chapters[0] + ' Free';
-  return '<p class="zone updates">Your next steps</p>'
-    + '<p class="res-section-label">The Next Step</p>'
+  return '<p class="res-section-label">The Next Step</p>'
     + '<div class="res-chapter">'
       + '<div class="res-chapter-title">' + chTitleHtml + '</div>'
       + '<p class="res-chapter-why">' + chWhy + '</p>'

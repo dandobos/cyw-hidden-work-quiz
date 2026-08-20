@@ -418,6 +418,14 @@
   #page .fit-btn, #page .fit-btn:hover, #page .fit-btn:focus {
     background-color: var(--card);
   }
+  /* The native Share button is the one filled sbtn. The rule above is scoped under
+     #page, so it outranked `.sbtn.native` and painted the button white while the
+     colour rule above still forced white text: a blank button next to WhatsApp
+     (Dan, 20 Aug). Restore its fill and border at matching specificity. */
+  #page .sbtn.native, #page .sbtn.native:hover, #page .sbtn.native:focus {
+    background-color: var(--text-primary);
+    border-color: var(--text-primary);
+  }
   #page .rate-btn, #page .rate-btn:hover, #page .rate-btn:focus,
   #page .ghost-btn, #page .ghost-btn:hover, #page .ghost-btn:focus {
     background-color: transparent;
