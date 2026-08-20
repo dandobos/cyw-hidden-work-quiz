@@ -1390,8 +1390,12 @@ function checklistHtml(key, drained){
     return '<div class="rc-q"><label class="rc-qt" for="fm-a-' + i + '">' + bold(it) + '</label>'
       + '<textarea id="fm-a-' + i + '" class="rc-a" rows="2" placeholder="Write your answer here..."></textarea></div>';
   }).join('');
-  var emailRow = (typeof _kitEmail !== 'undefined' && _kitEmail) ? ''
-    : '<input class="email-input" id="fm-email" type="email" name="email" autocomplete="email" aria-label="Your email address" placeholder="your@email.com" style="margin:10px 0 0;"/>';
+  // Dan's ruling 2026-08-20: the archetype page shows the button on its own, never an
+  // email field. We already hold the address in every normal path. The field is rendered
+  // hidden and only unfolds if they press send and we genuinely have nothing to send to
+  // (a result opened from a personal /r/?rt= link on a device that never submitted one),
+  // so that reader is asked once instead of being stuck on an error with nowhere to type.
+  var emailRow = '<input class="email-input" id="fm-email" type="email" name="email" autocomplete="email" aria-label="Your email address" placeholder="your@email.com" style="margin:10px 0 0;display:none;"/>';
   var bi = hwBuriedIdea();
   var nWord = HW_COUNT_WORD[c.items.length];
   var buriedLine = bi
@@ -1399,8 +1403,8 @@ function checklistHtml(key, drained){
       + esc(bi) + '&rdquo;. ' + (nWord ? 'These ' + nWord + ' moves' : 'These moves') + ' are how you start it.</p>'
     : '';
   return '<div class="res-checklist" style="border-left-color:' + accent + '">'
-    + '<p class="rc-eyebrow" style="color:' + accent + '">Your First Moves</p>'
-    + '<p class="rc-title">Apply this to your work this week</p>'
+    + '<p class="rc-eyebrow" style="color:' + accent + '">Start Here</p>'
+    + '<p class="rc-title">Turn Insight Into Action</p>'
     + '<p class="rc-sub">' + c.note + '</p>'
     + buriedLine
     + items
@@ -1416,6 +1420,12 @@ function hwFirstMovesSend(){
   var inp = document.getElementById('fm-email');
   if (!email && inp) email = (inp.value || '').trim();
   if (!EMAIL_RE.test(email)){
+    if (inp && inp.style.display === 'none'){                       // first press, no address on file
+      inp.style.display = '';
+      if (note){ note.textContent = 'Where should we send them?'; note.className = 'rc-note'; }
+      inp.focus();
+      return;
+    }
     if (note){ note.textContent = 'Please enter a valid email address.'; note.className = 'rc-note err'; }
     if (inp) inp.focus();
     return;
