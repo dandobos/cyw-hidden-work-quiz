@@ -88,6 +88,9 @@
   .pb-name:focus { border-color: var(--accent); }
   .pb-name-hint { font-family: var(--sans); font-size: 11px; color: var(--text-muted); margin: -8px 0 14px; }
   .intro-title { font-family: var(--heading); font-size: 56px; font-weight: 400; text-align: center; margin: 0 0 24px; letter-spacing: -1px; line-height: 1.05; }
+  /* The standard intro drops the eyebrow (2026-08-20), so the headline inherits the
+     60px of top air the eyebrow used to carry. The invited intro keeps its eyebrow. */
+  .intro-title:first-child { margin-top: 60px; }
   .intro-desc { font-family: var(--heading); font-style: italic; font-size: 19px; color: var(--text-body); text-align: center; line-height: 1.5; max-width: 520px; margin: 0 auto 48px; }
   .intro-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 520px; margin: 0 auto 48px; }
   .intro-stat { background: var(--card); border: 1px solid var(--border); padding: 24px 12px; text-align: center; }
@@ -304,6 +307,14 @@
   .wc-cell .d { width:7px; height:7px; border-radius:50%; background:var(--border); flex-shrink:0; }
   .wc-cell.me { background:var(--a); border-color:var(--a); color:#fff; font-weight:700; }
   .wc-cell.me .d { background:#fff; }
+  /* Dan, 20 Aug: at phone widths the two 1fr tracks cannot shrink below the cells' own
+     minimum width, so they grew past the grid box and pushed the grid 18px off centre inside
+     the card. Trimming the cell type and padding brings the tracks back inside. Verified live
+     at 390px: the gutters go from 37/19 to 37/37. */
+  @media (max-width: 420px) {
+    .wc-grid { gap:7px; }
+    .wc-cell { font-size:12.5px; padding:9px 10px; gap:7px; }
+  }
   .wc-cta { display:block; width:100%; text-align:center; margin-top:26px; font-family:var(--sans); font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#fff; background:var(--text-primary); border:none; padding:16px; border-radius:10px; cursor:pointer; text-decoration:none; }
   .wc-src { font-family:var(--sans); font-size:11px; font-weight:600; letter-spacing:.5px; color:var(--text-primary); text-align:center; margin:14px 0 0; }
   /* ---- V5 share panel ---- */
@@ -332,9 +343,6 @@
   .fit-hint { font-family: var(--heading); font-style: italic; font-size: 15px; color: var(--text-primary); text-align: center; margin: 18px auto 0; }
   .fit-hint[hidden] { display: none; }
   .reveal[hidden] { display: none; }
-  .zone { font-family: var(--sans); font-size: 12.5px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; text-align: center; margin: 0 0 12px; }
-  .zone.fixed { color: var(--text-subtle); }
-  .zone.updates { color: var(--a); }
   .acc-item { max-width: 600px; margin: 0 auto 10px; }
   .acc-more { max-width: 600px; margin: 6px auto 14px; text-align: center; }
   .phrase-card { display: block; width: 100%; text-align: center; background: var(--card); border: 1px solid var(--border); padding: 18px 22px; cursor: pointer; transition: .15s; font-family: var(--heading); font-style: italic; font-size: 17px; color: var(--text-body); line-height: 1.45; }

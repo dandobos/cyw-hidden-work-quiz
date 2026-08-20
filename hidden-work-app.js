@@ -292,13 +292,12 @@ function renderIntro() {
   // as long as "Work Personality" stays whole, which it does. The nbsp in "to Do"
   // only stops the phone leaving "Do" alone on a fifth line; at any width where the
   // line fits, it does nothing.
-  var title = 'Discover Your<br>Work Personality<br>'
-            + 'Choose the Work<br>You are Meant to&nbsp;Do';
+  var title = 'There Are 8 Work Personalities.<br>One Reveals Your Hidden&nbsp;Work.';
   var inviteSpectrum = '';
   var invCard = '';
   var invitePatterns = '';
   var tagline = '';
-  var desc = '30 quick questions that identify your Work Personality and help clarify your next move.';
+  var desc = 'In five minutes, discover why certain work drains you, what kind of work energizes you, and the quick wins you can make this week.';
   var begin = 'Begin';
   var stats = '';  // stat blocks (30 / ~7 / 8) removed from the intro, 2026-07-20
   if (invited){
@@ -329,7 +328,7 @@ function renderIntro() {
     begin = 'Find Your Pattern';
     stats = '';
   }
-  return '<p class="intro-eyebrow">The Choose Your Work Quiz</p>'
+  return (invited ? '<p class="intro-eyebrow">The Choose Your Work Quiz</p>' : '')
     + inviteSpectrum
     + '<h1 class="intro-title">' + title + '</h1>'
     + tagline
@@ -1497,7 +1496,6 @@ function renderResult(){
     + '<div id="hw-below" hidden>'
       + hwEmailedNote()
       + '<div class="res-divider"></div>'
-      + '<p class="zone fixed">Your diagnosis &middot; from your answers</p>'
       + '<p class="res-section-label">Where You Sit on the Three Dimensions</p>'
       + '<div class="dd-card">' + rows + '</div>'
       + compareHtml(r, s)
