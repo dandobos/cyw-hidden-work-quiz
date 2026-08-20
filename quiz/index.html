@@ -1103,8 +1103,8 @@ function dimensionScores(){
 function regretMeta(v){
   // v = the weakest axis. Lower = more urgent. order: Low < Moderate < Elevated < High
   if (v <= 25) return { label:'High',     idx:3, color:'#B23A2E', desc:"The cost of staying on this path is real, and it is showing up now. This is worth acting on." };
-  if (v <= 45) return { label:'Elevated', idx:2, color:'#C2722F', desc:"There is a real gap between where you are and the work you could be doing. Worth acting on now, before it becomes a major issue." };
-  if (v <= 65) return { label:'Moderate', idx:1, color:'#B8902F', desc:"There is a real gap between where you are and the work you could be doing. Worth acting on now, before it becomes a major issue." };
+  if (v <= 45) return { label:'Elevated', idx:2, color:'#C2722F', desc:"There is a major gap between where you are and the work you could be doing." };
+  if (v <= 65) return { label:'Moderate', idx:1, color:'#B8902F', desc:"There is a major gap between where you are and the work you could be doing." };
   return            { label:'Low',      idx:0, color:'#3D7A6E', desc:"You are in great shape across the board. Well done. Keep going." };
 }
 function regretFor(s){
