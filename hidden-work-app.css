@@ -18,7 +18,7 @@
   .step { flex: 1; text-align: center; }
   .step-bar { height: 4px; background: var(--border); margin-bottom: 6px; transition: background 0.3s; }
   .step-bar.done, .step-bar.active { background: var(--accent); }
-  .step-label { font-family: var(--sans); font-size: 8.5px; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 600; color: var(--text-subtle); }
+  .step-label { font-family: var(--sans); font-size: 8.5px; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 600; color: var(--text-muted); }
   .step-label.active { color: var(--accent); }
   .q-meta { font-family: var(--sans); font-size: 11px; letter-spacing: 3px; color: var(--accent); text-transform: uppercase; font-weight: 600; text-align: center; margin: 0 0 28px; }
   /* font-size/family/weight forced with !important so the host WordPress theme's
@@ -40,7 +40,7 @@
   @media (hover: hover) and (pointer: fine) { .word-tile:hover { border-color: var(--text-primary); background: var(--text-primary); color: var(--card); } }
   .word-tile.selected, .word-tile.selected:hover { background: var(--accent); color: var(--card); border-color: var(--accent); }
   .activity-item { background: var(--card); border: 1px solid var(--border); padding: 20px 24px; margin-bottom: 12px; }
-  .activity-num { font-family: var(--sans); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-subtle); font-weight: 600; margin-bottom: 8px; }
+  .activity-num { font-family: var(--sans); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; }
   .activity-input { width: 100%; font-family: var(--heading); font-size: 18px; border: none; border-bottom: 1px solid var(--border); padding: 4px 0 8px; background: transparent; color: var(--text-primary); outline: none; }
   .activity-input:focus { border-bottom-color: var(--accent); }
   .activity-input::placeholder { color: var(--text-subtle); font-style: italic; }
@@ -52,7 +52,7 @@
   .rate-btn.selected { background: var(--accent); border-color: var(--accent); color: var(--card); }
   .rank-wrap { display: flex; flex-direction: column; gap: 8px; }
   .rank-row { background: var(--card); border: 1px solid var(--border); padding: 16px 18px; display: flex; align-items: center; gap: 14px; }
-  .rank-num { font-family: var(--sans); font-size: 11px; font-weight: 700; color: var(--text-subtle); width: 24px; letter-spacing: 1px; }
+  .rank-num { font-family: var(--sans); font-size: 11px; font-weight: 700; color: var(--text-muted); width: 24px; letter-spacing: 1px; }
   .rank-label { flex: 1; font-family: var(--heading); font-size: 17px; color: var(--text-primary); }
   .rank-controls { display: flex; gap: 4px; }
   .rank-btn { background: var(--accent); border: 1px solid var(--accent); width: 38px; height: 38px; border-radius: 8px; font-family: var(--sans); font-size: 17px; font-weight: 700; color: #FFFFFF; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(15,15,15,.18); }
@@ -107,13 +107,13 @@
   .inv-spectrum span:nth-child(7) { background: #557C9E; }
   .inv-spectrum span:nth-child(8) { background: #6B6B6B; }
   .inv-pattern-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; max-width: 520px; margin: 0 auto 28px; }
-  .inv-grid-lbl { font-family: var(--sans); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-subtle); font-weight: 600; text-align: center; margin: 40px 0 12px; }
+  .inv-grid-lbl { font-family: var(--sans); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; text-align: center; margin: 40px 0 12px; }
   .inv-pattern-pill { display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: var(--sans); font-size: 12px; font-weight: 600; line-height: 1.2; color: var(--text-body); letter-spacing: 0; }
   .inv-pattern-pill i { width: 8px; height: 8px; border-radius: 50%; flex: none; }
   .gate-title { font-family: var(--heading); font-size: 40px; font-weight: 400; text-align: center; margin: 0 0 20px; letter-spacing: -0.5px; line-height: 1.15; }
   .gate-desc { font-family: var(--heading); font-style: italic; font-size: 18px; color: var(--text-body); text-align: center; line-height: 1.5; max-width: 460px; margin: 0 auto 40px; }
   .email-input { display: block; width: 100%; background: var(--card); border: 1px solid var(--border); padding: 18px 22px; font-family: var(--heading); font-size: 17px; color: var(--text-primary); margin-bottom: 16px; outline: none; }
-  .gate-fine { font-family: var(--sans); font-size: 12px; color: var(--text-subtle); text-align: center; margin-top: 18px; line-height: 1.5; }
+  .gate-fine { font-family: var(--sans); font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 18px; line-height: 1.5; }
   /* ---- result page ---- */
   .res-eyebrow { font-family: var(--sans); font-size: 14px; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; color: var(--accent); text-align: center; margin: 0 0 16px; }
   .res-name { font-family: var(--heading); font-size: 44px; font-weight: 400; text-align: center; letter-spacing: -0.5px; line-height: 1.1; margin: 0 0 22px; }
@@ -136,7 +136,6 @@
   .res-sentence { font-family: var(--heading); font-style: italic; font-size: 16px; color: var(--text-body); line-height: 1.5; margin-bottom: 24px; }
   .res-bar { position: relative; height: 4px; background: var(--border); margin: 0 4px; }
   .res-circle { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 46px; height: 46px; border-radius: 50%; background: var(--card); display: flex; align-items: center; justify-content: center; font-family: var(--sans); font-weight: 700; font-size: 16px; border-width: 2px; border-style: solid; }
-  .res-poles { display: flex; justify-content: space-between; margin: 16px 4px 0; font-family: var(--sans); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-subtle); }
   .res-regret { background: var(--card); border: 1px solid var(--border); padding: 26px; }
   .res-regret-top { display: flex; align-items: baseline; justify-content: space-between; }
   .res-regret-label { font-family: var(--sans); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; }
@@ -206,14 +205,13 @@
   .dd-track { height: 3px; background: var(--inner); position: relative; border-radius: 2px; }
   .dd-fill { position: absolute; left: 0; top: 0; height: 100%; border-radius: 2px; }
   .dd-numcircle { position: absolute; top: -23px; transform: translateX(-50%); width: 46px; height: 46px; border-radius: 50%; background: var(--card); border: 2px solid; display: flex; align-items: center; justify-content: center; font-family: var(--heading); font-size: 20px; font-weight: 600; line-height: 1; }
-  .dd-poles { display: flex; justify-content: space-between; font-family: var(--sans); font-size: 9.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-subtle); margin-top: 32px; }
+  .dd-poles { display: flex; justify-content: space-between; font-family: var(--sans); font-size: 9.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); margin-top: 32px; }
   .dd-poles .on { color: var(--text-primary); font-weight: 700; }
   /* ---- share loop ---- */
   .sharecard { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: 0 8px 26px rgba(40,32,12,.10); margin: 0 auto 26px; }
   .sc-top { height: 6px; }
   .sc-in { padding: 38px 40px 30px; text-align: center; }
   .sc-wordmark { font-family: var(--sans); font-size: 10px; letter-spacing: 3.5px; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin: 0 0 16px; }
-  .sc-ey { font-family: var(--sans); font-size: 9.5px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--text-subtle); margin: 0 0 5px; }
   .sc-arch { font-family: var(--heading); font-size: 29px; font-weight: 700; line-height: 1.1; margin: 0 0 9px; letter-spacing: -0.4px; }
   .sc-claim { font-family: var(--heading); font-style: italic; font-size: 15px; color: var(--text-body); line-height: 1.45; margin: 0 auto 20px; max-width: 300px; }
   .sc-dd { text-align: left; margin: 4px 0 18px; }
@@ -225,7 +223,6 @@
   .sc-dd-track { height: 3px; background: var(--inner); position: relative; border-radius: 2px; margin-top: 26px; }
   .sc-dd-fill { position: absolute; left: 0; top: 0; height: 100%; border-radius: 2px; }
   .sc-dd-circle { position: absolute; top: -19px; transform: translateX(-50%); width: 38px; height: 38px; border-radius: 50%; background: var(--card); border: 2px solid; display: flex; align-items: center; justify-content: center; font-family: var(--heading); font-size: 15px; font-weight: 700; line-height: 1; }
-  .sc-foot { font-family: var(--sans); font-size: 10.5px; letter-spacing: .5px; color: var(--text-subtle); border-top: 1px solid var(--border); padding: 12px 0 0; margin: 18px 0 0; }
   .share-prompt { font-family: var(--heading); font-size: 21px; font-weight: 600; color: var(--text-primary); margin: 0 0 18px; line-height: 1.35; text-align: center; }
   .share-btns { display: flex; flex-wrap: wrap; gap: 9px; justify-content: center; }
   .sbtn { font-family: var(--sans); font-size: 13px; font-weight: 600; border: 1px solid var(--border); background: var(--card); color: var(--text-primary); border-radius: 9px; padding: 11px 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; transition: all .14s; text-decoration: none; }
@@ -255,7 +252,7 @@
   .cmp-dim { font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--text-body); }
   .cmp-verdict { font-family: var(--sans); font-size: 12px; font-weight: 600; }
   .cmp-line { display: flex; align-items: center; gap: 12px; margin: 26px 0 0; }
-  .cmp-who { font-family: var(--sans); font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-subtle); width: 44px; flex: none; }
+  .cmp-who { font-family: var(--sans); font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); width: 44px; flex: none; }
   .cmp-track { flex: 1; height: 3px; background: var(--inner); position: relative; border-radius: 2px; }
   .cmp-fill { position: absolute; left: 0; top: 0; height: 100%; border-radius: 2px; }
   .cmp-fill.them { opacity: .4; }
@@ -321,7 +318,6 @@
   .panelbox { background: var(--inner); border: 1px solid var(--border); border-radius: 12px; padding: 26px 24px; margin-top: 26px; }
   .pb-h { font-family: var(--heading); font-size: 25px; font-weight: 700; line-height: 1.2; text-align: center; margin: 0 0 8px; }
   .pb-b { font-family: var(--sans); font-size: 13px; color: var(--text-body); line-height: 1.6; text-align: center; margin: 0 auto 18px; max-width: 380px; }
-  .pb-sub { font-family: var(--sans); font-size: 10.5px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-subtle); text-align: center; margin: 0 0 12px; }
   .pb-rule { height: 1px; background: var(--border); margin: 22px 0; }
   .preview { font-family: var(--heading); font-style: italic; font-size: 14.5px; line-height: 1.5; color: var(--text-body); background: var(--card); border: 1px solid var(--border); border-left: 3px solid #3D7A6E; border-radius: 8px; padding: 14px 16px; margin: 0 auto 18px; max-width: 400px; text-align: left; }
   .preview .quo { color: #3D7A6E; }
@@ -347,7 +343,7 @@
   .acc-more { max-width: 600px; margin: 6px auto 14px; text-align: center; }
   .phrase-card { display: block; width: 100%; text-align: center; background: var(--card); border: 1px solid var(--border); padding: 18px 22px; cursor: pointer; transition: .15s; font-family: var(--heading); font-style: italic; font-size: 17px; color: var(--text-body); line-height: 1.45; }
   .phrase-card:hover { border-color: var(--text-primary); color: var(--text-primary); }
-  .phrase-card .who { display: block; font-family: var(--sans); font-size: 9.5px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; color: var(--text-subtle); margin-bottom: 7px; }
+  .phrase-card .who { display: block; font-family: var(--sans); font-size: 9.5px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 7px; }
   .tag-orig { display: inline-block; font-style: normal; font-family: var(--sans); font-size: 8.5px; letter-spacing: 1.2px; text-transform: uppercase; font-weight: 700; color: var(--a); border: 1px solid var(--a); border-radius: 20px; padding: 1px 8px; margin-left: 8px; vertical-align: middle; }
   .acc-body[hidden] { display: none; }
   .acc-body .res-neighbour { margin-top: 0; }
