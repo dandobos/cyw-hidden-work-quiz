@@ -43,7 +43,22 @@
     return;
   }
 
-  screenMsg('Opening your result', 'One moment.', false);
+  // Working state (decision page item A, 21 Aug 2026): animated dots so the
+  // wait reads as progress, and a reassurance line if the backend is cold.
+  screenMsg('Opening your result',
+    'One moment<span id="hw-r-dots">.</span>', false);
+  var dotsTimer = setInterval(function () {
+    var el = document.getElementById('hw-r-dots');
+    if (!el) { clearInterval(dotsTimer); return; }
+    el.textContent = el.textContent.length >= 3 ? '.' : el.textContent + '.';
+  }, 450);
+  var slowTimer = setTimeout(function () {
+    var el = document.getElementById('hw-r-dots');
+    if (el && el.parentNode) {
+      el.parentNode.innerHTML =
+        'Still fetching your saved answers, a few more seconds<span id="hw-r-dots">.</span>';
+    }
+  }, 4000);
 
   function loadApp() {
     var s = document.createElement('script');
@@ -64,8 +79,12 @@
   }
 
   var done = false;
+  function stopWait() {
+    try { clearInterval(dotsTimer); clearTimeout(slowTimer); } catch (e) {}
+  }
   function failed() {
     if (done) return; done = true;
+    stopWait();
     if (ownResultStored()) { loadApp(); return; }
     screenMsg('We could not open that result',
       'The link may be mistyped, or the result behind it may predate saved links. ' +
@@ -80,6 +99,7 @@
       if (done) return;
       if (!d || !d.answers || !Object.keys(d.answers).length) throw new Error('empty');
       done = true;
+      stopWait();
       window.__HW_RESTORE = { answers: d.answers, token: d.token, taken: d.taken };
       loadApp();
     })
