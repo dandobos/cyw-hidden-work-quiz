@@ -307,7 +307,7 @@ function renderIntro() {
     title = (invName || 'Your friend') + ' got<br><span class="inv-title-key">' + invArch + '.</span><br>What would you get?';
     // Beta feedback (Taylor, 2026-07-09): a cold recipient can't tell it's a career quiz
     // or who it's for. Name the category + audience before the friend card.
-    // Dan's rulings 21 Aug (evening): no tagline at all; the 7-minute promise
+    // Dan's rulings 21 Aug (evening): no tagline at all; the 5-minute promise
     // lives in the description line under the friend card instead.
     invCard = '<div class="inv-card">'
       + '<p class="inv-ey">' + (invName ? invName + ' came out as' : 'Your friend came out as') + '</p>'
@@ -322,7 +322,7 @@ function renderIntro() {
         return '<div class="inv-pattern-pill"><i style="background:' + p[1] + '"></i>' + p[0] + '</div>';
       }).join('')
       + '</div>';
-    desc = 'Complete the same free 7-minute quiz to see how you and ' + (invName || 'your friend') + ' match and differ.';
+    desc = 'Complete the same free 5-minute quiz to see how you and ' + (invName || 'your friend') + ' match and differ.';
     begin = 'Find Your Pattern';
     stats = '';
   }
@@ -766,7 +766,7 @@ var _share = null;
 // Default share message (Dan's copy, share-flow decision 2, 2026-08-04): leads with the
 // sender's result and the compare promise, then the time claim. The link follows after a
 // blank line (never a bare URL mid-sentence).
-function viralShareText(r){ return 'I got ' + r.archetype.replace(/^The\s+/, '') + " on the Choose Your Work Quiz. I wonder what you'd get? It maps the pattern behind how you choose work, and only takes around 7 minutes... then it shows us both side by side at the end."; }
+function viralShareText(r){ return 'I got ' + r.archetype.replace(/^The\s+/, '') + " on the Choose Your Work Quiz. I wonder what you'd get? It maps the pattern behind how you choose work, and only takes around 5 minutes... then it shows us both side by side at the end."; }
 // Per-sharer referral id, computed once. Beta testers get their stable portal token;
 // everyone else a per-share-session random id. Registered as a super property so the
 // sharer's own share_clicked events carry it, and embedded in every share link.
@@ -851,7 +851,7 @@ function wcCardHtml(r, drained){
     + '<div class="wc-list">'+items+'</div>'
     + '<div class="wc-divh"><span>Which of the 8 Work Personalities are you?</span></div>'
     + '<div class="wc-grid">'+cells+'</div>'
-    + '<div class="foot-live"><a class="wc-cta" href="#hw-book-cta" onclick="hwCardCtaDown(event)">Discover Your Work Personality</a><p class="wc-src">A free 7-minute career quiz for people who want more from their work<br>dandobos.com/choose-your-work-quiz</p></div>'
+    + '<div class="foot-live"><a class="wc-cta" href="#hw-book-cta" onclick="hwCardCtaDown(event)">Discover Your Work Personality</a><p class="wc-src">A free 5-minute career quiz for people who want more from their work<br>dandobos.com/choose-your-work-quiz</p></div>'
     + '</div>';
 }
 const SHARE_HEADLINE = {
@@ -975,7 +975,7 @@ function hwRebuildShareLinks(box){
   if (em) {
     var subj = _shareShowResult && _share.archetype
       ? 'I got ' + String(_share.archetype).replace(/^The\s+/, '') + ' on the Choose Your Work Quiz'
-      : 'Try this free 7-minute work quiz';
+      : 'Try this free 5-minute work quiz';
     em.href = 'mailto:?subject=' + e(subj) + '&body=' + e(t + '\n\n' + dl);
   }
   var tw = box.querySelector('a.share-tw, a[href*="twitter.com"]');
@@ -1014,7 +1014,7 @@ function viralSaveImage(){
   // Render a clone with the download footer (Discover prompt + URL as the CTA), no corner icon.
   var clone=el.cloneNode(true); clone.removeAttribute('id');
   var cc=clone.querySelector('.wc-dlrow'); if(cc) cc.parentNode.removeChild(cc);
-  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><p class="dl-tag">A free 7-minute career quiz for people who want more from their work</p><span class="dl-url">dandobos.com/choose-your-work-quiz</span></div>';
+  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><p class="dl-tag">A free 5-minute career quiz for people who want more from their work</p><span class="dl-url">dandobos.com/choose-your-work-quiz</span></div>';
   clone.style.position='fixed'; clone.style.left='-9999px'; clone.style.top='0'; clone.style.width=el.offsetWidth+'px';
   document.body.appendChild(clone);
   function cleanup(){ if(clone.parentNode) clone.parentNode.removeChild(clone); }
@@ -1047,7 +1047,7 @@ function viralSaveStory(){
   var mid=document.createElement('div');
   var clone=el.cloneNode(true); clone.removeAttribute('id');
   var cc=clone.querySelector('.wc-dlrow'); if(cc) cc.parentNode.removeChild(cc);
-  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><p class="dl-tag">A free 7-minute career quiz for people who want more from their work</p><span class="dl-url">dandobos.com/choose-your-work-quiz</span></div>';
+  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><p class="dl-tag">A free 5-minute career quiz for people who want more from their work</p><span class="dl-url">dandobos.com/choose-your-work-quiz</span></div>';
   clone.style.width='860px'; clone.style.boxShadow='0 30px 80px rgba(0,0,0,.35)'; clone.style.borderRadius='6px';
   mid.appendChild(clone);
   var bot=document.createElement('div');
