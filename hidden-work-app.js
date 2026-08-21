@@ -530,9 +530,9 @@ function amFoothillsNarr(s){
   const base = "You're clear about what matters, you're taking action, and your work is reasonably aligned. That puts you in a good position. But there is still work to do.";
   const m = Math.min(s.C, s.AG, s.AL);
   let tail;
-  if (s.AL === m) tail = " The area where you can improve is alignment. Part of what you do seems to be there because others expect it, and the work you'd choose is still waiting for you.";
+  if (s.AL === m) tail = " The area where you can improve is alignment. Name one thing you do mainly because others expect it, and then decide what you would rather do with that time.";
   else if (s.C === m) tail = " The area where you can improve is clarity. The specific shape of your work could be clearer.";
-  else tail = " The area where you can improve is agency. You know what you need to do, but you could be taking more action.";
+  else tail = " The area where you can improve is agency. You know what you need to do, but you could be taking more action. Block one hour this week for the work that matters, and treat it like a scheduled appointment with a VIP client.";
   return base + tail;
 }
 // Drained True Creator: displayed dims all strong (C/AG/AL clear the full bar) but Vitality is low.
@@ -1568,6 +1568,7 @@ function renderResult(){
       + '<div id="hw-chapter">' + hwChapterHtml(r.key, s, r.flag) + '</div>'
       + shareLoopHtml(r, s)
       + '<div class="res-divider"></div>'
+      + '<img class="res-book-cover" src="https://dandobos.com/wp-content/uploads/2025/09/image-3-1.png" alt="Choose Your Work book cover" width="180" loading="lazy" style="display:block;margin:0 auto 20px;width:180px;max-width:60%;height:auto;">'
       + '<p class="res-book-head">Your Result Shows the Pattern. The Book Shows You Step-By-Step How To Change It</p><p class="res-book-text">Discover even deeper insights and turn them into practical decisions.</p>'
       + '<div class="res-book-cta-row">'
         + '<a id="hw-book-cta" class="continue-btn" href="https://dandobos.com/choose-your-work/" target="_blank" rel="noopener" onclick="hwBookClick()" style="text-decoration:none; display:inline-block; width:auto; text-align:center;">Get Choose Your Work</a>'
