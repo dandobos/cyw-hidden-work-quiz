@@ -304,12 +304,13 @@ function renderIntro() {
     // Compare-led headline + sender attribution (share-flow decisions 6 and 7, 2026-08-04).
     var invName = _invite.from ? esc(_invite.from) : '';
     var invArch = ARCH[_invite.key].name.replace(/^The\s+/, '');
-    title = (invName || 'Your friend') + ' got <span class="inv-title-key">' + invArch + '.</span> What would you get?';
+    title = (invName || 'Your friend') + ' got <span class="inv-title-key">' + invArch + '.</span><br>What would you get?';
     // Beta feedback (Taylor, 2026-07-09): a cold recipient can't tell it's a career quiz
     // or who it's for. Name the category + audience before the friend card.
-    tagline = '<p class="intro-tagline">A free 7-minute career quiz for people who want more from their work.</p>';
-    if (invName) tagline = '<p class="inv-from">' + invName + ' sent you this</p>' + tagline;
-    inviteSpectrum = '<div class="inv-spectrum" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>';
+    // Dan's rulings 21 Aug: no "sent you this" line, "career quiz" -> "quiz",
+    // and the tagline moves below the Begin button. The unlabeled dot row goes;
+    // the named pattern grid moves above the friend card in its place.
+    tagline = '<p class="intro-tagline">A free 7-minute quiz for people who want more from their work.</p>';
     invCard = '<div class="inv-card">'
       + '<p class="inv-ey">' + (invName ? invName + ' came out as' : 'Your friend came out as') + '</p>'
       + '<p class="inv-name">' + ARCH[_invite.key].name + '</p>'
@@ -318,8 +319,7 @@ function renderIntro() {
     // Beta feedback (Lisa-Marie, 2026-07-09; actioned 2026-08-04): the pattern grid sat
     // between the friend card and the CTA, reading like buttons to press first. The CTA
     // now follows the card directly; the grid is secondary context under its own label.
-    invitePatterns = '<p class="inv-grid-lbl">The 8 Work Personalities</p>'
-      + '<div class="inv-pattern-grid">'
+    invitePatterns = '<div class="inv-pattern-grid">'
       + [['True Creator','#3D7A6E'],['High Achiever','#B8902F'],['Awakened Observer','#1E5F8C'],['Restless Visionary','#A85A3D'],['Restless Explorer','#C2722F'],['Tireless Driver','#B23A2E'],['Grounded Seeker','#557C9E'],['Late Bloomer','#6B6B6B']].map(function(p){
         return '<div class="inv-pattern-pill"><i style="background:' + p[1] + '"></i>' + p[0] + '</div>';
       }).join('')
@@ -329,14 +329,13 @@ function renderIntro() {
     stats = '';
   }
   return (invited ? '<p class="intro-eyebrow">The Choose Your Work Quiz</p>' : '')
-    + inviteSpectrum
     + '<h1 class="intro-title">' + title + '</h1>'
-    + tagline
+    + invitePatterns
     + invCard
     + '<p class="intro-desc">' + desc + '</p>'
     + stats
     + '<button class="continue-btn" onclick="startQuiz()">' + begin + '</button>'
-    + invitePatterns;
+    + tagline;
 }
 function renderQuestion() {
   const q = questions[qIdx];
@@ -890,6 +889,8 @@ function shareLoopHtml(r, s){
         + '<textarea class="pb-note" placeholder="Hey. I thought of you when I got my result..." oninput="hwNoteInput(this)"></textarea>'
         + '<div class="pb-name-row"><label for="pb-name">Your first name</label><input class="pb-name" id="pb-name" maxlength="24" value="' + esc(hwSenderName()) + '" oninput="hwNameInput(this)"></div>'
         + '<p class="pb-name-hint">Optional. The page your friend opens will greet them with your name and result.</p>'
+        + '<label class="pb-privacy"><input type="checkbox" ' + (_shareShowResult ? 'checked' : '') + ' onchange="hwShareVisToggle(this)"> Show my result to the people I share with</label>'
+        + '<p class="pb-privacy-note" id="pb-priv-note" style="' + (_shareShowResult ? 'display:none' : '') + '">Your friend does NOT see your result</p>'
         + '<p class="pb-edit-hint">✎ Edit this message before you send it</p>'
         + '<div class="preview"><span class="quo">“</span><span class="msg" contenteditable="true" role="textbox" spellcheck="true" oninput="viralEditMsg(this)">' + fMsg + '</span><span class="quo">”</span></div>'
         + '<div class="share-btns">'
@@ -917,37 +918,83 @@ function viralToast(msg){ var t=document.getElementById('share-toast'); if(!t){ 
 // its own line. _share.note is set by the note box; _share.text by the editable message.
 var _shareNote = '';
 function hwOutgoingText(){ return (_shareNote ? _shareNote + '\n\n' : '') + ((_share && _share.text) || ''); }
-function viralShareString(){ return hwOutgoingText() + (_share ? '\n\n' + _share.link : ''); }
+// Privacy ruling 21 Aug: with the toggle off, links carry no archetype and no
+// scores, only the ref (attribution) and the sender's name. Short links (option
+// C) override either form once the backend confirms the registration.
+var _shareShowResult = true;
+function hwPlainShareBase(){
+  var m = ((_share && (_share.baseLink || _share.link)) || '').match(/^https?:[^?]*\//);
+  var base = m ? m[0].replace(/t\/[a-z-]+\/?$/, '') : 'https://dandobos.com/choose-your-work-quiz/';
+  return base + '?ref=' + encodeURIComponent(myShareRef());
+}
+function hwDisplayLink(){
+  if (_share && _share.shortLink) return _share.shortLink;
+  if (!_shareShowResult) return hwLinkWithFrom(hwPlainShareBase());
+  return (_share && _share.link) || '';
+}
+function hwShareVisToggle(el){
+  _shareShowResult = !!el.checked;
+  var n = document.getElementById('pb-priv-note');
+  if (n) n.style.display = _shareShowResult ? 'none' : '';
+  hwRegisterShortLink();
+  hwRebuildShareLinks(el.closest && el.closest('.panelbox'));
+}
+function hwRegisterShortLink(){
+  if (!_share) return;
+  try {
+    var hwsM = ((_share.baseLink || _share.link) || '').match(/hws=([0-9-]+)/);
+    fetch(BETA_BACKEND + '/share-link', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ref: myShareRef(),
+        slug: _shareShowResult ? (SHARE_SLUG[_share.key] || '') : '',
+        hws: _shareShowResult && hwsM ? hwsM[1] : '',
+        from: hwSenderName()
+      })
+    }).then(function(r){ return r.ok ? r.json() : null; }).then(function(d){
+      if (d && d.url) { _share.shortLink = d.url; hwRebuildShareLinks(); }
+    }).catch(function(){});
+  } catch(e){}
+}
+function viralShareString(){ return hwOutgoingText() + (_share ? '\n\n' + hwDisplayLink() : ''); }
 function hwRebuildShareLinks(box){
   if (!_share) return;
+  hwShortLinkInit();
   var e = encodeURIComponent;
   _share.link = hwLinkWithFrom(_share.baseLink || _share.link);
   box = box || document.querySelector('.panelbox');
   if (!box) return;
   var t = hwOutgoingText();
+  var dl = hwDisplayLink();
   var wa = box.querySelector('a.share-wa, a[href*="wa.me"]');
-  if (wa) wa.href = 'https://wa.me/?text=' + e(t + '\n\n' + _share.link);
+  if (wa) wa.href = 'https://wa.me/?text=' + e(t + '\n\n' + dl);
   var tw = box.querySelector('a.share-tw, a[href*="twitter.com"]');
-  if (tw) tw.href = 'https://twitter.com/intent/tweet?text=' + e(t) + '&url=' + e(_share.link);
+  if (tw) tw.href = 'https://twitter.com/intent/tweet?text=' + e(t) + '&url=' + e(dl);
   // LinkedIn and Facebook bake the link into their onclick at render time, so a
   // name typed after render must be written back here too (item 1b, 2026-08-13).
   var li = box.querySelector('button.share-li');
-  if (li) li.setAttribute('onclick', "viralSocial('https://www.linkedin.com/sharing/share-offsite/?url=" + e(_share.link) + "','linkedin')");
+  if (li) li.setAttribute('onclick', "viralSocial('https://www.linkedin.com/sharing/share-offsite/?url=" + e(dl) + "','linkedin')");
   var fb = box.querySelector('button.share-fb');
-  if (fb) fb.setAttribute('onclick', "viralSocial('https://www.facebook.com/sharer/sharer.php?u=" + e(_share.link) + "','facebook')");
+  if (fb) fb.setAttribute('onclick', "viralSocial('https://www.facebook.com/sharer/sharer.php?u=" + e(dl) + "','facebook')");
 }
 function hwNoteInput(el){ _shareNote = (el.value || '').slice(0, 400).trim(); hwRebuildShareLinks(el.closest && el.closest('.panelbox')); }
 function hwNameInput(el){
   var n = (el.value || '').slice(0, 24).trim();
   if (n && !/^[A-Za-z][A-Za-z' -]{0,23}$/.test(n)) n = n.replace(/[^A-Za-z' -]/g, '').slice(0, 24);
   try { localStorage.setItem('hw_sender_name', n); } catch(e){}
+  hwRegisterShortLink();
   hwRebuildShareLinks(el.closest && el.closest('.panelbox'));
 }
 function hwShareClick(ch){ hwCap('share_clicked', { channel: ch, archetype_key: (_share && _share.key) || null }); }
+// Register the short link as soon as the share panel first renders; the
+// response swaps every channel over to /q/<ref>. Failure costs nothing: the
+// long link keeps working exactly as before.
+var _shortLinkAsked = false;
+function hwShortLinkInit(){ if (_shortLinkAsked || !_share) return; _shortLinkAsked = true; hwRegisterShortLink(); }
 function viralCopyLink(){ if(!_share) return; hwShareClick('copy'); var u=viralShareString(); (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(function(){ viralToast('Copied'); }).catch(function(){ viralToast(u); }); }
 function viralSocial(url, channel){ if(!_share) return; hwShareClick(channel||'social'); var u=viralShareString(); if(navigator.clipboard){ navigator.clipboard.writeText(u).then(function(){ viralToast('Message copied, paste it into your post'); }).catch(function(){}); } window.open(url,'_blank','noopener'); }
 function viralInstagram(){ if(!_share) return; hwShareClick('instagram'); var u=viralShareString(); (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(function(){ viralToast('Message copied, paste it into Instagram'); }).catch(function(){ viralToast(u); }); }
-function viralNativeShare(){ if(!_share) return; hwShareClick('native'); if(navigator.share){ navigator.share({ title:'The Choose Your Work Quiz', text:hwOutgoingText(), url:_share.link }).catch(function(){}); } else { viralCopyLink(); } }
+function viralNativeShare(){ if(!_share) return; hwShareClick('native'); if(navigator.share){ navigator.share({ title:'The Choose Your Work Quiz', text:hwOutgoingText(), url:hwDisplayLink() }).catch(function(){}); } else { viralCopyLink(); } }
 function viralEditMsg(el){ var t=(el.textContent||'').replace(/\s+/g,' ').trim(); if(_share) _share.text=t; hwRebuildShareLinks(el.closest&&el.closest('.panelbox')); }
 function viralSaveImage(){
   var el=document.getElementById('wc-card');
