@@ -1,3 +1,37 @@
+/* PostHog for the course pages (Dan's ruling, 21 Aug 2026: session replays on).
+   Same privacy choices as the quiz page: cookieless, autocapture off, every input
+   masked in recordings; events travel via the k.dandobos.com proxy. The reader is
+   identified from the ?cemail= the day emails already carry, so replays line up
+   with the person (and their beta_round property for round-2 testers). A browser
+   marked internal by the quiz's ?internal=1 flag (shared localStorage on
+   dandobos.com) is flagged here too, so our own visits stay out of the charts. */
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording capturePageView capturePageLeave debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+(function () {
+  try {
+    posthog.init('phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey', {
+      api_host: 'https://k.dandobos.com',
+      ui_host: 'https://us.posthog.com',
+      persistence: 'memory',
+      autocapture: false,
+      capture_pageview: true,
+      disable_surveys: true,
+      session_recording: { maskAllInputs: true }
+    });
+    var m = location.search.match(/[?&]cemail=([^&]+)/);
+    if (m) { try { posthog.identify(decodeURIComponent(m[1]).toLowerCase()); } catch (e) {} }
+    var internal = false;
+    try { internal = localStorage.getItem('hw_internal') === '1'; } catch (e) {}
+    if (/[?&]internal=1/.test(location.search)) {
+      internal = true;
+      try { localStorage.setItem('hw_internal', '1'); } catch (e) {}
+    }
+    if (internal) {
+      posthog.register({ $internal_or_test_user: true });
+      try { posthog.setPersonProperties({ $internal_or_test_user: true }); } catch (e) {}
+    }
+  } catch (e) {}
+})();
+
 (function(){
 var host=document.getElementById("cyw-course");
 if(!host){return}
