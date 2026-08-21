@@ -1568,8 +1568,11 @@ function renderResult(){
       + '<div id="hw-chapter">' + hwChapterHtml(r.key, s, r.flag) + '</div>'
       + shareLoopHtml(r, s)
       + '<div class="res-divider"></div>'
-      + '<img class="res-book-cover" src="https://dandobos.com/wp-content/uploads/2025/09/image-3-1.png" alt="Choose Your Work book cover" width="180" loading="lazy" style="display:block;margin:0 auto 20px;width:180px;max-width:60%;height:auto;">'
-      + '<p class="res-book-head">Your Result Shows the Pattern. The Book Shows You Step-By-Step How To Change It</p><p class="res-book-text">Discover even deeper insights and turn them into practical decisions.</p>'
+      + '<p class="res-book-head">Your Result Shows the Pattern. The Book Shows You Step-By-Step How To Change It</p>'
+      + '<div class="res-book-row">'
+        + '<img class="res-book-cover" src="https://dandobos.com/wp-content/uploads/2025/09/image-3-1.png" alt="Choose Your Work book cover" width="170" loading="lazy">'
+        + '<p class="res-book-text">Discover even deeper insights and turn them into practical decisions.</p>'
+      + '</div>'
       + '<div class="res-book-cta-row">'
         + '<a id="hw-book-cta" class="continue-btn" href="https://dandobos.com/choose-your-work/" target="_blank" rel="noopener" onclick="hwBookClick()" style="text-decoration:none; display:inline-block; width:auto; text-align:center;">Get Choose Your Work</a>'
       + '</div>'
