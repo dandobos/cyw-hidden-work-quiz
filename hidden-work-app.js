@@ -304,13 +304,11 @@ function renderIntro() {
     // Compare-led headline + sender attribution (share-flow decisions 6 and 7, 2026-08-04).
     var invName = _invite.from ? esc(_invite.from) : '';
     var invArch = ARCH[_invite.key].name.replace(/^The\s+/, '');
-    title = (invName || 'Your friend') + ' got <span class="inv-title-key">' + invArch + '.</span><br>What would you get?';
+    title = (invName || 'Your friend') + ' got<br><span class="inv-title-key">' + invArch + '.</span><br>What would you get?';
     // Beta feedback (Taylor, 2026-07-09): a cold recipient can't tell it's a career quiz
     // or who it's for. Name the category + audience before the friend card.
-    // Dan's rulings 21 Aug: no "sent you this" line, "career quiz" -> "quiz",
-    // and the tagline moves below the Begin button. The unlabeled dot row goes;
-    // the named pattern grid moves above the friend card in its place.
-    tagline = '<p class="intro-tagline">A free 7-minute quiz for people who want more from their work.</p>';
+    // Dan's rulings 21 Aug (evening): no tagline at all; the 7-minute promise
+    // lives in the description line under the friend card instead.
     invCard = '<div class="inv-card">'
       + '<p class="inv-ey">' + (invName ? invName + ' came out as' : 'Your friend came out as') + '</p>'
       + '<p class="inv-name">' + ARCH[_invite.key].name + '</p>'
@@ -324,7 +322,7 @@ function renderIntro() {
         return '<div class="inv-pattern-pill"><i style="background:' + p[1] + '"></i>' + p[0] + '</div>';
       }).join('')
       + '</div>';
-    desc = 'Answer the same 30 quick questions and see where you and your friend match and differ.';
+    desc = 'Complete the same free 7-minute quiz to see how you and ' + (invName || 'your friend') + ' match and differ.';
     begin = 'Find Your Pattern';
     stats = '';
   }
@@ -898,8 +896,9 @@ function shareLoopHtml(r, s){
         + '<p class="pb-edit-hint">✎ Edit this message before you send it</p>'
         + '<div class="preview"><span class="quo">“</span><span class="msg" contenteditable="true" role="textbox" spellcheck="true" oninput="viralEditMsg(this)">' + fMsg + '</span><span class="quo">”</span></div>'
         + '<div class="share-btns">'
-          + '<button class="sbtn native" onclick="viralNativeShare()"><span class="g">↗</span>Share</button>'
+          + '<button class="sbtn" onclick="viralNativeShare()"><span class="g g-nat">↗</span>Share</button>'
           + '<a class="sbtn share-wa" data-link="'+p.baseLink+'" target="_blank" rel="noopener" onclick="hwShareClick(\'whatsapp\')" href="https://wa.me/?text='+e(fMsg+'\n\n'+p.link)+'"><span class="g g-wa">w</span>WhatsApp</a>'
+          + '<a class="sbtn share-em" onclick="hwShareClick(\'email\')" href="mailto:?body='+e(fMsg+'\n\n'+p.link)+'"><span class="g g-em">@</span>Email</a>'
           + '<button class="sbtn" onclick="viralCopyLink()"><span class="g g-cp">⧉</span>Copy Info</button>'
         + '</div>'
       + '</div>'
@@ -972,6 +971,13 @@ function hwRebuildShareLinks(box){
   var dl = hwDisplayLink();
   var wa = box.querySelector('a.share-wa, a[href*="wa.me"]');
   if (wa) wa.href = 'https://wa.me/?text=' + e(t + '\n\n' + dl);
+  var em = box.querySelector('a.share-em');
+  if (em) {
+    var subj = _shareShowResult && _share.archetype
+      ? 'I got ' + String(_share.archetype).replace(/^The\s+/, '') + ' on the Choose Your Work Quiz'
+      : 'Try this free 7-minute work quiz';
+    em.href = 'mailto:?subject=' + e(subj) + '&body=' + e(t + '\n\n' + dl);
+  }
   var tw = box.querySelector('a.share-tw, a[href*="twitter.com"]');
   if (tw) tw.href = 'https://twitter.com/intent/tweet?text=' + e(t) + '&url=' + e(dl);
   // LinkedIn and Facebook bake the link into their onclick at render time, so a

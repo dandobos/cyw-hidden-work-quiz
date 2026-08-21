@@ -194,6 +194,8 @@
   .sbtn { font-family: var(--sans); font-size: 13px; font-weight: 600; border: 1px solid var(--border); background: var(--card); color: var(--text-primary); border-radius: 9px; padding: 11px 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; transition: all .14s; text-decoration: none; }
   .sbtn:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,0,0,.08); }
   .sbtn .g { width: 18px; height: 18px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #fff; }
+  .g-em { background: #1E5F8C; }
+  .g-nat { background: #1A2028; }
   .sbtn.native { background: var(--text-primary); color: #fff; border-color: var(--text-primary); }
   .sbtn.native .g { background: rgba(255,255,255,.18); }
   .g-x { background: #000; } .g-li { background: #0A66C2; } .g-wa { background: #25D366; } .g-fb { background: #1877F2; } .g-cp { background: #6B6B6B; } .g-ig { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); }
