@@ -75,7 +75,7 @@
   .invited-intro-page .intro-eyebrow { margin-top: 0; margin-bottom: 20px; }
   .invited-intro-page .intro-desc { margin-bottom: 32px; }
   /* Category + audience line for cold share-link arrivals (beta feedback: Taylor, 2026-07-09) */
-  .intro-tagline { font-family: var(--heading); font-style: italic; font-size: 16.5px; line-height: 1.5; color: var(--text-body); text-align: center; margin: -8px auto 22px; max-width: 340px; }
+  .intro-tagline { font-family: var(--heading); font-style: italic; font-size: 16.5px; line-height: 1.5; color: var(--text-body); text-align: center; margin: 18px auto 0; max-width: 340px; }
   .inv-from { font-family: var(--sans); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--a); font-weight: 600; text-align: center; margin: -4px 0 14px; }
   .pb-note-label { font-family: var(--sans); font-size: 12px; font-weight: 600; color: var(--text-primary); text-align: left; margin: 0 0 6px; }
   .pb-privacy { display: flex; align-items: center; gap: 8px; font-family: var(--sans); font-size: 13px; color: var(--text-body); margin: 10px 0 0; cursor: pointer; text-align: left; }
