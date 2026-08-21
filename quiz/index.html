@@ -889,6 +889,10 @@ const NARR = {
   LLH: "You know who you are:\n• You are rarely influenced by other people's expectations.\n• You have thoughtfully created a life based on your own values.\n• What's missing is specific action toward the work that you are meant to do.\nTHE RISK: Being at peace can become an excuse to stay put.\nTHE NEXT STEP: You have character but you are capable of taking more action. Try more things that pull you in, even if you don't exactly know where they will lead.",
   LLL: "From the outside, your life looks fine. Maybe even good. There is a paycheck, a routine, people who would call you successful. And yet there is a small, persistent pebble in your emotional shoe that you have been trying to ignore:\n• You do not know what your real work is.\n• You are unsure what to do next.\n• You do not feel like you have intentionally chosen the life that you are living.\nTHE RISK: You are suffering in comfort, and yet it feels easy to not change anything. You know something is off.\nTHE NEXT STEP: Write down what needs to change. Then take one small action this week that your old self would not take."
 };
+// The LHH closer ends by pointing at the Next Moves card below it. The email has no
+// card below, so the pointer sentence is stripped from every Kit payload (Dan's ruling,
+// 21 Aug 2026: "for email, remove this: The Next Moves below walk you through it.").
+function hwEmailNarr(n){ return n.replace(' The Next Moves below walk you through it.', ''); }
 const WHY = {
   HHH: "Your scores are high across all dimensions, so this chapter is about scale, not repair.",
   HHL: "Your clarity and drive are high. The next step is to choose the work that aligns with your true self.",
@@ -1779,7 +1783,7 @@ function hwArchetypeFields(key){
   var parts = chapterPartsFor(plan);
   return {
     hw_archetype: ARCH[key].name, hw_archetype_indef: archIndef(key),
-    hw_welcome_subject: WELCOME_SUBJ[key], hw_share: share, hw_narrative: narrative,
+    hw_welcome_subject: WELCOME_SUBJ[key], hw_share: share, hw_narrative: hwEmailNarr(narrative),
     hw_chapter_label: chapterLabel, hw_chapter_why: chapterWhy, hw_dl_label: dlLabel,
     hw_chapter_1: parts.one, hw_chapter_2: parts.two,
     hw_chapter_subs: chapterDescsFor(plan).subs,
@@ -2161,7 +2165,7 @@ function hwFields(){
     hw_tz: hwTz(),
     hw_welcome_subject: WELCOME_SUBJ[r.key],
     hw_share: share,
-    hw_narrative: narrative,
+    hw_narrative: hwEmailNarr(narrative),
     hw_clarity_score: String(s.C),
     hw_clarity_verdict: s.C > 50 ? 'Focused' : 'Searching',
     hw_clarity_sentence: SENTENCES.C[bandIdx(s.C)],
