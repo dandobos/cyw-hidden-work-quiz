@@ -11,13 +11,14 @@
      still works. */
   html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   body { margin: 0; background: var(--bg); font-family: var(--heading); color: var(--text-primary); -webkit-font-smoothing: antialiased; }
-  .progress { height: 3px; background: var(--border); position: relative; }
+  .progress { height: 6px; background: var(--border); position: relative; }
   .progress-fill { position: absolute; top: 0; left: 0; height: 100%; background: var(--accent); transition: width 0.3s ease; }
   .page { max-width: 660px; margin: 0 auto; padding: 40px 24px 100px; }
   .stepper { display: flex; gap: 7px; justify-content: center; margin: 0 auto 22px; max-width: 340px; }
   .step { flex: 1; text-align: center; }
-  .step-bar { height: 4px; background: var(--border); margin-bottom: 6px; transition: background 0.3s; }
-  .step-bar.done, .step-bar.active { background: var(--accent); }
+  .step-bar { width: 15px; height: 15px; border-radius: 50%; border: 2px solid var(--border); background: transparent; margin: 0 auto 6px; transition: background 0.3s, border-color 0.3s; }
+  .step-bar.done { background: var(--accent); border-color: var(--accent); }
+  .step-bar.active { border: 2.5px solid var(--accent); }
   .step-label { font-family: var(--sans); font-size: 8.5px; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 600; color: var(--text-muted); }
   .step-label.active { color: var(--accent); }
   /* font-size/family/weight forced with !important so the host WordPress theme's
