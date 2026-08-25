@@ -773,7 +773,7 @@ function viralShareText(r){ return 'I got ' + r.archetype.replace(/^The\s+/, '')
 var _shareRef = null;
 function myShareRef(){
   if (_shareRef) return _shareRef;
-  var bt = _quizBetaToken();
+  var bt = _shareBetaToken();
   _shareRef = bt ? ('b_' + bt) : ('r_' + Math.random().toString(36).slice(2, 10));
   try { if (window.posthog && posthog.register) posthog.register({ share_ref: _shareRef }); } catch(e){}
   return _shareRef;
@@ -941,21 +941,36 @@ function hwShareVisToggle(el){
   hwRegisterShortLink();
   hwRebuildShareLinks(el.closest && el.closest('.panelbox'));
 }
-function hwRegisterShortLink(){
+// Registering used to fire on every keystroke of the sender's name, and the
+// backend appended a row each time, so three shares left twenty-five rows in the
+// register (Dan's ruling 5a, 2026-08-25). Typing now waits until it stops, and an
+// unchanged payload is not sent at all. A discrete action (first render, the
+// privacy toggle, tapping a share button) still registers immediately.
+var _shortLinkTimer = null, _shortLinkSent = '';
+function hwRegisterShortLink(delay){
   if (!_share) return;
   try {
     var hwsM = ((_share.baseLink || _share.link) || '').match(/hws=([0-9-]+)/);
-    fetch(BETA_BACKEND + '/share-link', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ref: myShareRef(),
-        slug: _shareShowResult ? (SHARE_SLUG[_share.key] || '') : '',
-        hws: _shareShowResult && hwsM ? hwsM[1] : '',
-        from: hwSenderName()
-      })
-    }).then(function(r){ return r.ok ? r.json() : null; }).then(function(d){
-      if (d && d.url) { _share.shortLink = d.url; hwRebuildShareLinks(); }
-    }).catch(function(){});
+    var payload = {
+      ref: myShareRef(),
+      slug: _shareShowResult ? (SHARE_SLUG[_share.key] || '') : '',
+      hws: _shareShowResult && hwsM ? hwsM[1] : '',
+      from: hwSenderName()
+    };
+    var body = JSON.stringify(payload);
+    if (body === _shortLinkSent) return;
+    if (_shortLinkTimer) { clearTimeout(_shortLinkTimer); _shortLinkTimer = null; }
+    var send = function(){
+      _shortLinkTimer = null;
+      if (body === _shortLinkSent) return;
+      _shortLinkSent = body;
+      fetch(BETA_BACKEND + '/share-link', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body
+      }).then(function(r){ return r.ok ? r.json() : null; }).then(function(d){
+        if (d && d.url) { _share.shortLink = d.url; hwRebuildShareLinks(); }
+      }).catch(function(){ _shortLinkSent = ''; });
+    };
+    if (delay) _shortLinkTimer = setTimeout(send, delay); else send();
   } catch(e){}
 }
 function viralShareString(){ return hwOutgoingText() + (_share ? '\n\n' + hwDisplayLink() : ''); }
@@ -991,10 +1006,15 @@ function hwNameInput(el){
   var n = (el.value || '').slice(0, 24).trim();
   if (n && !/^[A-Za-z][A-Za-z' -]{0,23}$/.test(n)) n = n.replace(/[^A-Za-z' -]/g, '').slice(0, 24);
   try { localStorage.setItem('hw_sender_name', n); } catch(e){}
-  hwRegisterShortLink();
+  hwRegisterShortLink(700);
   hwRebuildShareLinks(el.closest && el.closest('.panelbox'));
 }
-function hwShareClick(ch){ hwCap('share_clicked', { channel: ch, archetype_key: (_share && _share.key) || null }); }
+// Registering here as well as on a pause means the name they finished typing is
+// on the card even if they tap a channel inside the debounce window.
+function hwShareClick(ch){ hwRegisterShortLink(); hwCap('share_clicked', { channel: ch, archetype_key: (_share && _share.key) || null }); }
+// Register the short link as soon as the share panel first renders; the
+// response swaps every channel over to /q/<ref>. Failure costs nothing: the
+// long link keeps working exactly as before.
 // Register the short link as soon as the share panel first renders; the
 // response swaps every channel over to /q/<ref>. Failure costs nothing: the
 // long link keeps working exactly as before.
@@ -1862,7 +1882,24 @@ function submitGate(){
 var SHEET_LOG_URL = 'https://my.dandobos.com/quiz-log';
 var _sheetLogged = false;
 function _quizBetaToken(){
-  try { var t = (new URLSearchParams(location.search).get('hwbt') || '').slice(0, 64); return (t && t.indexOf('{{') === -1) ? t : ''; } catch(e){ return ''; }
+  try {
+    var t = (new URLSearchParams(location.search).get('hwbt') || '').slice(0, 64);
+    t = (t && t.indexOf('{{') === -1) ? t : '';
+    if (t) { try { localStorage.setItem('hw_beta_token', t); } catch(e){} }
+    return t;
+  } catch(e){ return ''; }
+}
+// The token as last seen on this device, for ATTRIBUTION ONLY. A tester who comes
+// back to their result the next day arrives without hwbt in the address, so their
+// share used to register under a random id and could not be tied to their tester
+// row: Jackie took the quiz on 23 August with her token and shared on the 24th
+// without it (Dan's ruling 5b, 25 August). The quiz record itself still uses the
+// address alone, so a second person taking the quiz on a shared device can never
+// be logged as the first.
+function _shareBetaToken(){
+  var t = _quizBetaToken();
+  if (t) return t;
+  try { return (localStorage.getItem('hw_beta_token') || '').slice(0, 64); } catch(e){ return ''; }
 }
 function buildQuizRecord(){
   var rec = {};
