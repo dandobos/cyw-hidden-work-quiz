@@ -45,6 +45,11 @@ host.innerHTML="<div class=\"wrap\">\n<header class=\"top\">\n  <h1>7 Days to Ch
   var qs=location.search;
   var mDay=qs.match(/[?&]c?day=([1-7])\b/);
   var mMail=qs.match(/[?&]cemail=([^&]+)/);
+  /* The activity forms send the reader back with ?cdone=N and no cemail (Dan's
+     ruling 25 Aug, Jackie's duplicate day 1). Remember the address from any
+     visit that carries it, so the return trip keeps the personalised state. */
+  if(mMail){try{localStorage.setItem('cyw_cemail',mMail[1]);}catch(e){}}
+  else{try{var _sc=localStorage.getItem('cyw_cemail');if(_sc)mMail=[null,_sc];}catch(e){}}
   var stored=0; try{stored=+localStorage.getItem('cyw_course_day')||0;}catch(e){}
   /* Carry the reader's email into the activity pages (Dan, 5 Aug): the
      course-actions pages forward their query string into the Tally embed, whose
@@ -55,6 +60,15 @@ host.innerHTML="<div class=\"wrap\">\n<header class=\"top\">\n  <h1>7 Days to Ch
   });}
   var paramDay=mDay?+mDay[1]:0;
   var PREVIEW=/[?&](?:cpv|preview)=1\b/.test(qs);
+  /* ?cdone=N arrives from a just-completed activity form. Store it, then take
+     it off the address bar so a refresh or bookmark stays clean. */
+  var doneDays={}; try{doneDays=JSON.parse(localStorage.getItem('cyw_done_days')||'{}');}catch(e){doneDays={};}
+  var mDone=qs.match(/[?&]cdone=([1-7])\b/);
+  if(mDone&&!PREVIEW){
+    doneDays[mDone[1]]=1;
+    try{localStorage.setItem('cyw_done_days',JSON.stringify(doneDays));}catch(e){}
+    try{history.replaceState(null,'',location.pathname+location.search.replace(/([?&])cdone=[1-7]&?/,'$1').replace(/[?&]$/,'')+location.hash);}catch(e){}
+  }
   var CUR = PREVIEW ? 8 : Math.max(paramDay,stored,1);
   if(!PREVIEW&&(paramDay||stored)){try{localStorage.setItem('cyw_course_day',String(Math.max(paramDay,stored)));}catch(e){}}
 
@@ -145,6 +159,29 @@ host.innerHTML="<div class=\"wrap\">\n<header class=\"top\">\n  <h1>7 Days to Ch
   }
   function paintAll(){paintHero();paintTrail();}
 
+  /* A finished activity stops asking (Dan's ruling 25 Aug, Jackie's duplicate
+     day 1): the day's buttons give way to a done box. Done = the form's return
+     trip (?cdone=, this browser) or a stored response from /course-state (any
+     device, a few minutes behind the poller). Preview never shows it. */
+  var ANAME={1:'Flow Finder',2:'Exit Signal',3:'Regret Filter',4:'Hour of Possibility',5:'Energy Map',6:'True Self',7:'Fuller Question'};
+  var ACOUNT={1:'two',2:'three',3:'two',4:'three',5:'three',6:'three',7:'three'};
+  function paintDone(){
+    if(PREVIEW)return;
+    for(var d=1;d<=7;d++){
+      if(!doneDays[d]&&!(RESP&&RESP[d]))continue;
+      var sec=secs[d-1];
+      if(!sec||sec.querySelector('.adone'))continue;
+      var ctas=[].slice.call(sec.querySelectorAll('p.cta'));
+      if(!ctas.length)continue;
+      var box=document.createElement('div');box.className='adone';
+      box.innerHTML='&#10003; '+ANAME[d]+' submitted. Your '+ACOUNT[d]+' strategies are on their way by email.';
+      var last=ctas.pop();
+      last.parentNode.replaceChild(box,last);
+      ctas.forEach(function(c){c.parentNode.removeChild(c);});
+      var fin=sec.querySelector('p.finishline');if(fin)fin.style.display='none';
+    }
+  }
+
   document.getElementById('chstart').addEventListener('click',function(){
     var T=Math.min(CUR,7);show(T);secs[T-1].scrollIntoView({behavior:'smooth'});
   });
@@ -153,6 +190,7 @@ host.innerHTML="<div class=\"wrap\">\n<header class=\"top\">\n  <h1>7 Days to Ch
   if(paramDay)active=Math.min(CUR>7?paramDay:Math.min(paramDay,CUR),7);
   paintAll();
   show(active);
+  paintDone();
 
   /* Day 3 names the reader's own buried idea. Dan's sentence keeps its wording and
      gains a colon tight against "you", then their words in quotes (his ruling,
@@ -195,6 +233,7 @@ host.innerHTML="<div class=\"wrap\">\n<header class=\"top\">\n  <h1>7 Days to Ch
             show(Math.min(paramDay||d,d));}
         }
         paintAll();
+        paintDone();
       }).catch(function(){});
   }
 

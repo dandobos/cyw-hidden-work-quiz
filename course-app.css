@@ -120,3 +120,8 @@ padding:14px 24px;border-radius:8px;font-size:14px;letter-spacing:0}
 #cyw-course .rpdf a{display:inline-block;font-family:var(--sans);font-size:13px;font-weight:700;background:#fff;
 border:1px solid var(--border);border-radius:8px;padding:10px 15px;color:var(--accent);text-decoration:none}
 #cyw-course .rpdf a:hover,#cyw-course .rpdf a:focus{border-color:var(--accent);outline:none}
+
+/* The done box that replaces a finished day's activity buttons (Dan's ruling
+   25 Aug, Jackie's duplicate day 1). */
+#cyw-course .adone{background:#e3efe9;border:1px solid #2f6a54;border-radius:9px;color:#2f6a54;
+font-family:var(--sans);font-size:14.5px;font-weight:700;padding:12px 15px;margin:14px 0}
