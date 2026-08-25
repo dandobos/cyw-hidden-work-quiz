@@ -1433,6 +1433,16 @@ function hwBuriedIdea(){
     return (i >= 0 && answers[i]) ? String(answers[i].value || '').trim() : '';
   } catch(e){ return ''; }
 }
+function hwStatusLine(){
+  try {
+    var pick = function(re){
+      var i = questions.findIndex(function(q){ return q.section === 'X' && re.test(q.text || ''); });
+      return (i >= 0 && answers[i]) ? String(answers[i].value || '').trim() : '';
+    };
+    var role = pick(/role type/), career = pick(/career\?/);
+    return role && career ? role + ', ' + career : (role || career);
+  } catch(e){ return ''; }
+}
 var HW_COUNT_WORD = { 3: 'three', 4: 'four', 5: 'five', 6: 'six' };
 function checklistHtml(key, drained){
   var c = (key === 'HHH' && drained) ? CHECKLIST_HHH_DRAINED : CHECKLISTS[key]; if (!c) return '';
@@ -1451,16 +1461,22 @@ function checklistHtml(key, drained){
   // so that reader is asked once instead of being stuck on an error with nowhere to type.
   var emailRow = '<input class="email-input" id="fm-email" type="email" name="email" autocomplete="email" aria-label="Your email address" placeholder="your@email.com" style="margin:10px 0 0;display:none;"/>';
   var bi = hwBuriedIdea();
-  var nWord = HW_COUNT_WORD[c.items.length];
-  var buriedLine = bi
-    ? '<p class="rc-buried">A minute ago you named the thing you have never given yourself permission to start: &ldquo;'
-      + esc(bi) + '&rdquo;. ' + (nWord ? 'These ' + nWord + ' moves' : 'These moves') + ' are how you start it.</p>'
-    : '';
+  var status = hwStatusLine();
+  // Dan's lead-in (25 Aug 2026): the card opens from the reader's own answers.
+  // Only when the buried idea exists, because the closing line points at it;
+  // a reader who skipped it keeps the generic note.
+  var lead = bi
+    ? '<p class="rc-sub">In the quiz you mentioned,</p>'
+      + '<ul class="rc-lead">'
+      + (status ? '<li>' + esc(status) + '</li>' : '')
+      + '<li>An idea you keep coming back to is: &ldquo;' + esc(bi) + '&rdquo;</li>'
+      + '</ul>'
+      + "<p class=\"rc-buried\">Let's make progress on that idea...</p>"
+    : '<p class="rc-sub">' + c.note + '</p>';
   return '<div class="res-checklist" style="border-left-color:' + accent + '">'
     + '<p class="rc-eyebrow" style="color:' + accent + '">Next Moves</p>'
     + '<p class="rc-title">Turn Insight Into Action</p>'
-    + '<p class="rc-sub">' + c.note + '</p>'
-    + buriedLine
+    + lead
     + items
     + emailRow
     + '<button type="button" class="continue-btn rc-send" id="fm-btn" onclick="hwFirstMovesSend()">Email Me My Responses</button>'

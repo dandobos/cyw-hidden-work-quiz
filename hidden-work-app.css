@@ -146,6 +146,8 @@
   .rc-sub { font-family: var(--heading); font-style: italic; font-size: 15px; color: var(--text-body); line-height: 1.5; margin: 0 0 16px; }
   /* The reader's own buried idea, printed above the prompts so the moves have a target. Dan's ruling 13 Aug. */
   .rc-buried { font-family: var(--heading); font-size: 15px; color: var(--text-primary); line-height: 1.5; margin: -8px 0 16px; }
+  .rc-lead { font-family: var(--heading); font-size: 15px; color: var(--text-primary); line-height: 1.5; margin: -8px 0 14px; padding-left: 22px; }
+  .rc-lead li { margin: 0 0 5px; }
   .rc-q { padding: 10px 0 4px; }
   .rc-qt { display: block; font-family: var(--sans); font-size: 15px; line-height: 1.55; color: var(--text-primary); margin: 0 0 7px; }
   .rc-a { width: 100%; font-family: var(--heading); font-size: 15.5px; line-height: 1.5; color: var(--text-primary); background: var(--inner); border: 1px solid var(--border); padding: 10px 12px; min-height: 52px; resize: vertical; outline: none; }
