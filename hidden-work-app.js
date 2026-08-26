@@ -152,7 +152,7 @@ const questions = [
     text: "What is a buried idea you've had for years that you've never given yourself permission to pursue?",
     placeholder: "Anything that comes to mind, however small." },
   { type: 'choice', section: 'X', unscored: true, text: "Where are you in your career?",
-    options: [["Student, still studying", "Student"], ["Early career, roughly my first 10 years of working", "Early career"], ["Mid-career, around 10 to 25 years in", "Mid-career"], ["Late career, more than 25 years in", "Late career"], ["In transition, changing paths", "In transition"]] },
+    options: [["Student", "Student"], ["Early career, roughly my first 10 years of working", "Early career"], ["Mid-career, around 10 to 25 years in", "Mid-career"], ["Late career, more than 25 years in", "Late career"], ["In transition, changing paths", "In transition"]] },
   { type: 'choice', section: 'X', unscored: true, text: "What's your current role type?",
     options: [["Employee", "Employee"], ["Manager", "Manager"], ["Founder or owner", "Founder or owner"], ["Freelance or contractor", "Freelance or contractor"], ["Between roles", "Between roles"], ["Other", "Other"]] }
 ];
@@ -1388,55 +1388,55 @@ function hwReopen(){
 
 // Drained True Creator variant: displayed dims clear the label gate but Vitality is low.
 // "Scale, not repair" is the wrong ask for a depleted reader; energy comes first.
-const CHECKLIST_HHH_DRAINED = { note: `You have chosen your work, but it drains you. You will only become world-class when you are able to focus on the work that energizes you.`, items: [
+const CHECKLIST_HHH_DRAINED = { items: [
   `Write two lists: the parts of your work that still energize you, and the parts that drain you.`,
   `Write down three ways you can eliminate, shrink, or delegate one draining task this week. Even 30 minutes counts.`,
   `Block 60 minutes in your calendar for the part that energizes you, before anything reactive. Protect it like a meeting. What day and time did you choose?`
 ] };
 const CHECKLISTS = {
-  HHH: { note: `The focus is on scale, not repair. The risk is comfort shrinking your ambition.`, items: [
+  HHH: { items: [
     `Write one sentence: what would make your work **world-class**, not just good?`,
     `Name a comfortable routine that is shrinking your ambition. Then describe one way to interrupt it this week.`,
     `Block 60 minutes in your calendar either today or tomorrow to work on the world-class version of your work. Do this session before anything reactive. What day and time did you choose?`
   ] },
-  HHL: { note: `You have high clarity and drive, but you're possibly winning the wrong game. Choose work that fits the real you.`, items: [
+  HHL: { items: [
     `Write down the game you're currently winning. Then, write one line on whether it feels right or something is off.`,
     `Name one metric you chase that you'd stop caring about if no one were watching.`,
     `Block one hour this week away from the scoreboard, focusing on work that feels right. What day and time did you choose?`,
     `Ask someone who you trust: "Where do you see me forcing things instead of letting them flow?" Who will you speak to?`
   ] },
-  HLH: { note: `You can see your real work clearly. You just don't have a system yet. The next step is to turn seeing into a plan.`, items: [
+  HLH: { items: [
     `Write down the work that you can already see yourself doing.`,
     `Review what you have written. Come up with the first three concrete steps. Be specific. Make each step achievable. For example, instead of "Run a marathon", write "Set my alarm for 7am on Tuesday to go for a 30 min jog."`,
     `Put step one on your calendar this week, with a notification. What day and time did you choose?`,
     `Send that first step to someone you trust and tell them the good news. Who will you speak to?`
   ] },
-  HLL: { note: `You can see the life you want but you're held in place by various situations.`, items: [
+  HLL: { items: [
     `Describe a few images about the life and work you see yourself doing.`,
     `Name one situation you're in that doesn't feel right.`,
     `Review what you have written. Come up with the first three concrete steps. Be specific. Make each step achievable. For example, instead of "Run a marathon", write "Set my alarm for 7am on Tuesday to go for a 30 min jog."`,
     `Put step one on your calendar this week, with a notification. What day and time did you choose?`,
     `Send that first step to someone you trust and tell them the good news. Who will you speak to?`
   ] },
-  LHH: { note: `You are moving fast and true to yourself but you need a clear target to move toward.`, items: [
+  LHH: { items: [
     `List three things you've been exploring lately and consider which one pulls you in the most.`,
     `For that one, specify an easy target you'd know you'd like to hit.`,
     `Block one hour in your calendar this week to go deeper on it instead of starting something new. What day and time did you choose?`,
     `Tell someone you trust about your new target, so your exploring moves towards a specific destination. Who will you speak to?`
   ] },
-  LHL: { note: `You have serious horsepower but it's sometimes aimed at work that drains you. This is the curse of competence.`, items: [
+  LHL: { items: [
     `Write down a task you're great at but drains you.`,
     `Name one activity that energizes you more than the above task.`,
     `Redirect 30 minutes of your energy this week from the draining work to the energizing one. Block 30 minutes in your calendar for this energizing activity. What day and time did you choose?`,
     `Tell someone you trust that you're going somewhere new, so you don't drift back. Who will you speak to?`
   ] },
-  LLH: { note: `You are at peace with who you are, but your momentum is lacking. Use play to move you forward.`, items: [
+  LLH: { items: [
     `Write three things you'd happily do this week just because they pull you in. No outcome required.`,
     `Pick the one that energizes you most and think about why you like it.`,
     `Block in your calendar a short 30 minute session in the next three days to focus on that activity. What day and time did you choose?`,
     `Tell someone you trust what you're exploring, so you follow through. Who will you speak to?`
   ] },
-  LLL: { note: `Everything looks fine on paper, but something's off and you're done ignoring it.`, items: [
+  LLL: { items: [
     `Write down your thoughts about the quiet "something's off" feeling.`,
     `What is causing everything to look fine when deep down it feels wrong? Just write down the first thoughts that come to mind.`,
     `Block in your calendar 30 minutes to take one small action this week that your old self never would do. What day and time did you choose?`,
@@ -1460,8 +1460,39 @@ function hwStatusLine(){
       return (i >= 0 && answers[i]) ? String(answers[i].value || '').trim() : '';
     };
     var role = pick(/role type/), career = pick(/career\?/);
-    return role && career ? role + ', ' + career : (role || career);
+    return hwStatusSentence(role, career);
   } catch(e){ return ''; }
+}
+// Dan's rulings 26 Aug 2026 (_testing_now/next-moves-lead-round4-decisions.html).
+// The status bullet is a sentence, not two labels joined by a comma. Four carve-outs,
+// all his: "Between roles" swallows the career stage, because the two say the same
+// thing; "Other" drops the role instead, because "You are other" is not a sentence;
+// "Student" hangs off the role as a clause rather than sitting after a comma; and
+// "Between roles" with "Student" needs "and studying", because "between roles who is
+// studying" is not English.
+var HW_ROLE_PHRASE = {
+  'Employee': 'an employee',
+  'Manager': 'a manager',
+  'Founder or owner': 'a founder or owner',
+  'Freelance or contractor': 'a freelancer or contractor',
+  'Between roles': 'between roles'
+};
+var HW_STAGE_PHRASE = {
+  'Early career': 'early in your career',
+  'Mid-career': 'midway through your career',
+  'Late career': 'well into your career',
+  'In transition': 'in transition'
+};
+function hwStatusSentence(role, career){
+  var studying = career === 'Student';
+  var stage = HW_STAGE_PHRASE[career] || '';
+  var phrase = HW_ROLE_PHRASE[role] || '';   // 'Other', blank and anything new land here
+  var body;
+  if (role === 'Between roles') body = studying ? 'between roles and studying' : 'between roles';
+  else if (phrase) body = studying ? phrase + ' who is studying'
+                                   : (stage ? phrase + ', ' + stage : phrase);
+  else body = studying ? 'studying' : stage;
+  return body ? 'You are ' + body + '.' : '';
 }
 var HW_COUNT_WORD = { 3: 'three', 4: 'four', 5: 'five', 6: 'six' };
 function checklistHtml(key, drained){
@@ -1482,20 +1513,21 @@ function checklistHtml(key, drained){
   var emailRow = '<input class="email-input" id="fm-email" type="email" name="email" autocomplete="email" aria-label="Your email address" placeholder="your@email.com" style="margin:10px 0 0;display:none;"/>';
   var bi = hwBuriedIdea();
   var status = hwStatusLine();
-  // Dan's lead-in (25 Aug 2026): the card opens from the reader's own answers.
-  // Only when the buried idea exists, because the closing line points at it;
-  // a reader who skipped it keeps the generic note.
+  // Dan's lead-in (25 Aug 2026, reworded 26 Aug): the card opens from the reader's
+  // own answers. Only when the buried idea exists, because the closing line points at
+  // it. A reader who named none gets no lead-in at all: the generic archetype note that
+  // used to stand in was removed on his ruling, so the card runs title into prompts.
   var lead = bi
-    ? '<p class="rc-sub">In the quiz you mentioned,</p>'
+    ? '<p class="rc-sub">In the quiz you mentioned...</p>'
       + '<ul class="rc-lead">'
       + (status ? '<li>' + esc(status) + '</li>' : '')
       + '<li>An idea you keep coming back to is: &ldquo;' + esc(bi) + '&rdquo;</li>'
       + '</ul>'
       + "<p class=\"rc-buried\">Let's make progress on that idea...</p>"
-    : '<p class="rc-sub">' + c.note + '</p>';
+    : '';
   return '<div class="res-checklist" style="border-left-color:' + accent + '">'
     + '<p class="rc-eyebrow" style="color:' + accent + '">Next Moves</p>'
-    + '<p class="rc-title">Turn Insight Into Action</p>'
+    + '<p class="rc-title' + (bi ? '' : ' rc-solo') + '">Turn Insight Into Action</p>'
     + lead
     + items
     + emailRow

@@ -145,7 +145,9 @@
   .rc-title { font-family: var(--heading); font-size: 22px; font-weight: 600; color: var(--text-primary); line-height: 1.2; margin: 0 0 5px; }
   .rc-sub { font-family: var(--heading); font-style: italic; font-size: 15px; color: var(--text-body); line-height: 1.5; margin: 0 0 16px; }
   /* The reader's own buried idea, printed above the prompts so the moves have a target. Dan's ruling 13 Aug. */
-  .rc-buried { font-family: var(--heading); font-size: 15px; color: var(--text-primary); line-height: 1.5; margin: -8px 0 16px; }
+  .rc-buried { font-family: var(--heading); font-size: 15px; font-weight: 700; font-style: italic; color: var(--text-primary); line-height: 1.5; margin: -8px 0 16px; }
+  /* No buried idea means no lead-in, so the title carries the gap the sub used to. */
+  .rc-title.rc-solo { margin-bottom: 16px; }
   .rc-lead { font-family: var(--heading); font-size: 15px; color: var(--text-primary); line-height: 1.5; margin: -8px 0 14px; padding-left: 22px; }
   .rc-lead li { margin: 0 0 5px; }
   .rc-q { padding: 10px 0 4px; }
