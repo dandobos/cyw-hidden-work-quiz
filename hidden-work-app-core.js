@@ -1,4 +1,4 @@
-window.HW_BUILD = '2ab35a503f';
+window.HW_BUILD = '22a4d1141e';
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
@@ -1464,7 +1464,7 @@ function hwStatusLine(){
     return hwStatusSentence(role, career);
   } catch(e){ return ''; }
 }
-// Dan's rulings 26 Aug 2026 (_testing_now/next-moves-lead-round4-decisions.html; freshness check verified live the same day).
+// Dan's rulings 26 Aug 2026 (_testing_now/next-moves-lead-round4-decisions.html; loader freshness verified live the same day).
 // The status bullet is a sentence, not two labels joined by a comma. Four carve-outs,
 // all his: "Between roles" swallows the career stage, because the two say the same
 // thing; "Other" drops the role instead, because "You are other" is not a sentence;
