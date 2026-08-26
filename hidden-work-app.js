@@ -1,3 +1,29 @@
+// HW FRESHNESS CHECK. Injected by sync-deploy.py; not part of hidden-work-quiz-v2.html.
+// If this copy came from a stale browser cache, fetch the deployed build stamp and
+// reload once so the reload revalidates against the CDN. Fail-open everywhere: any
+// error, missing file, or odd response and the quiz runs exactly as it would have.
+(function () {
+  var HW_BUILD = 'e565c8bd51';
+  try { window.HW_BUILD = HW_BUILD; } catch (e) {}
+  try {
+    var el = document.currentScript;
+    var src = el && el.src ? String(el.src) : '';
+    if (!/^https?:/.test(src) || !window.fetch || !window.sessionStorage) return;
+    if (sessionStorage.getItem('hw_swap_' + HW_BUILD)) return; // one attempt per build per tab
+    var base = src.split('?')[0].replace(/[^\/]+$/, '');
+    fetch(base + 'version.txt?fresh=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.text() : ''; })
+      .then(function (t) {
+        t = (t || '').trim();
+        // Accept only a plausible stamp: a captive portal or an error page must not
+        // be allowed to reload the quiz.
+        if (!t || !/^[0-9a-f]{6,40}$/.test(t) || t === HW_BUILD) return;
+        sessionStorage.setItem('hw_swap_' + HW_BUILD, '1');
+        location.reload();
+      })
+      .catch(function () {});
+  } catch (e) {}
+})();
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
