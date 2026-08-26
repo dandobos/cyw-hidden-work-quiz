@@ -161,6 +161,14 @@
     if(TOKEN) u.searchParams.set("hwbr", "2");    // beta round tag for PostHog; bump to "3" for round 3
     return u.toString();
   }
+  // The tester's permanent result link (/resolve returns result_token once the quiz
+  // log knows it). It works on ANY device, unlike ?result=1, which only knows the
+  // result in the browser that took the quiz and otherwise says "Please complete the
+  // quiz first" (Jackie Garfield, 25 Aug 2026). Fallback stays ?result=1 until then.
+  var RESULT_TOKEN = "";
+  function resultUrl(){
+    return RESULT_TOKEN ? "https://dandobos.com/r/?rt=" + encodeURIComponent(RESULT_TOKEN) : quizUrl(true);
+  }
   function lsGet(k){ try{ return localStorage.getItem(k)||""; }catch(e){ return ""; } }
   function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
   var rawT = qs("t") || "";
@@ -183,6 +191,7 @@
     // server-confirmed milestones (from Notion), merged with local action ticks
     var server = tester.progress || {};
     var local = localState();
+    RESULT_TOKEN = /^[a-z0-9]{6,32}$/.test(tester.result_token||"") ? tester.result_token : "";
 
     document.getElementById("hi").textContent = first;
 
@@ -195,7 +204,7 @@
         btn:{label:"Open the Quiz Feedback Form", href:withId(FORM.quiz,name,email)} },
       { key:"sharing_feedback", n:3, kind:"form", title:"Share it", time:"Duration: about 7 minutes",
         desc:"1. Open your result and use the share options there."
-             +"<br><a class=\"btn accent inline\" href=\""+quizUrl(true)+"\" target=\"_blank\" rel=\"noopener\">Open My Result to Share</a>"
+             +"<br><a class=\"btn accent inline\" href=\""+resultUrl()+"\" target=\"_blank\" rel=\"noopener\">Open My Result to Share</a>"
              +"<br>2. Send it to a friend."
              +"<br>3. Send it to yourself and go through it as a first-time receiver would."
              +"<br>4. Fill in the sharing feedback form."
@@ -386,7 +395,7 @@
   // Resolve + render. Re-runnable: only re-renders when the server progress actually
   // changes, so a background refresh never flickers or loses scroll position.
   var _booted = false, _lastSig = "", _lastLoad = 0;
-  function _sig(d){ var p = (d && d.progress) || {}; return [p.quiz_taken, p.quiz_feedback, p.sharing_feedback, p.course_feedback].join("|"); }
+  function _sig(d){ var p = (d && d.progress) || {}; return [p.quiz_taken, p.quiz_feedback, p.sharing_feedback, p.course_feedback, d && d.result_token || ""].join("|"); }
   function loadTester(isReload){
     _lastLoad = Date.now();
     return fetch(BACKEND + "/resolve?t=" + encodeURIComponent(TOKEN))
