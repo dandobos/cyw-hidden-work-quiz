@@ -1,4 +1,4 @@
-window.HW_BUILD = '22a4d1141e';
+window.HW_BUILD = '526f3dcbd0';
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
@@ -1967,7 +1967,23 @@ function logQuizToSheet(){
   if (_sheetLogged || !SHEET_LOG_URL) return;
   _sheetLogged = true;
   try {
-    fetch(SHEET_LOG_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(buildQuizRecord()), keepalive: true }).catch(function(){});
+    fetch(SHEET_LOG_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(buildQuizRecord()), keepalive: true })
+      .then(function(r){ if (r && r.ok) { try { localStorage.setItem(SHEET_OK_KEY, resultToken()); } catch(e){} } })
+      .catch(function(){});
+  } catch(e){}
+}
+// Self-heal (Dan, 27 Aug 2026, Owen's dropped request): the log used to fire once and
+// never retry, so a lost POST left the reader with a dead saved link and no course.
+// Now the token is stored only when the backend answers 200. A stored result whose
+// log was never confirmed re-sends on the next load. The backend answers a known
+// token with {ok:true, dup:true} and does nothing, so this can never double-roster.
+var SHEET_OK_KEY = 'hw_sheet_ok_v1';
+function relogIfUnconfirmed(){
+  try {
+    var tok = resultToken();
+    if (!tok || localStorage.getItem(SHEET_OK_KEY) === tok) return;
+    _sheetLogged = false;
+    logQuizToSheet();
   } catch(e){}
 }
 
@@ -2026,7 +2042,7 @@ if (!_fromLink && !_invite && loadState()) {
 // Not mid-quiz and not arriving from a friend's share: if this reader already
 // finished, restore straight to their saved result page.
 if (!_resumed && !_invite) {
-  try { if (loadResult()) { computeResult(); screen = 'complete'; _resumed = true; pingBetaQuizDone(); } }
+  try { if (loadResult()) { computeResult(); screen = 'complete'; _resumed = true; pingBetaQuizDone(); relogIfUnconfirmed(); } }
   catch(e){ clearResult(); }
 }
 // The portal "Open my result to share" button adds ?result=1. If the reader has
