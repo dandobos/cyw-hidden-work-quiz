@@ -3,7 +3,7 @@
 // reload once so the reload revalidates against the CDN. Fail-open everywhere: any
 // error, missing file, or odd response and the quiz runs exactly as it would have.
 (function () {
-  var HW_BUILD = 'e565c8bd51';
+  var HW_BUILD = 'd57fb2efea';
   try { window.HW_BUILD = HW_BUILD; } catch (e) {}
   try {
     var el = document.currentScript;
@@ -1489,7 +1489,7 @@ function hwStatusLine(){
     return hwStatusSentence(role, career);
   } catch(e){ return ''; }
 }
-// Dan's rulings 26 Aug 2026 (_testing_now/next-moves-lead-round4-decisions.html).
+// Dan's rulings 26 Aug 2026 (_testing_now/next-moves-lead-round4-decisions.html; freshness check verified live the same day).
 // The status bullet is a sentence, not two labels joined by a comma. Four carve-outs,
 // all his: "Between roles" swallows the career stage, because the two say the same
 // thing; "Other" drops the role instead, because "You are other" is not a sentence;
