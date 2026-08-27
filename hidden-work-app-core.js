@@ -1,4 +1,4 @@
-window.HW_BUILD = '6dd93cc35d';
+window.HW_BUILD = 'bebf1186fe';
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
@@ -451,6 +451,18 @@ const WHY = {
   LHL: "You're driving hard, and the work takes more from you than it gives back. This is the curse of competence.",
   LLH: "You're grounded in who you are but not yet moving. This chapter will help you find your direction.",
   LLL: "The work begins with confronting the whole pattern and recognizing that there is a way forward."
+};
+// The book headline continues the result in its own voice, one line per archetype
+// (Dan's rulings, 27 Aug 2026, after Owen Keating called the old block abrupt).
+const BOOK_HEAD = {
+  HHH: "You have found your work. The book is about making it world-class.",
+  HHL: "You can win the right game too. The book is where you choose it.",
+  HLH: "You can see the work. The book gives you the system to do it.",
+  HLL: "You know what the work is. The book gives you the system to do it.",
+  LHH: "You are moving fast. The book is where the target gets defined.",
+  LHL: "You know how to get things done. The book is about choosing what to do.",
+  LLH: "You know who you are. The book is about what you do next.",
+  LLL: "You know something is off. The book is where you find out what to change."
 };
 const CH_TITLE = {
   1: "What If My Whole Life Has Been Wrong?",
@@ -1637,7 +1649,7 @@ function renderResult(){
       + '<div id="hw-chapter">' + hwChapterHtml(r.key, s, r.flag) + '</div>'
       + shareLoopHtml(r, s)
       + '<div class="res-divider"></div>'
-      + '<p class="res-book-head">Your Result Shows the Pattern. The Book Shows You Step-By-Step How To Change It</p>'
+      + '<p class="res-book-head">' + (BOOK_HEAD[r.key] || 'Your Result Shows the Pattern. The Book Shows You Step-By-Step How To Change It') + '</p>'
       + '<div class="res-book-row">'
         + '<img class="res-book-cover" src="https://dandobos.com/wp-content/uploads/2025/09/image-3-1.png" alt="Choose Your Work book cover" width="170" loading="lazy">'
         + '<p class="res-book-text">Discover even deeper insights and turn them into practical decisions.</p>'
