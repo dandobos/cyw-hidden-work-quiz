@@ -1,8 +1,66 @@
-window.HW_BUILD = 'bebf1186fe';
+window.HW_BUILD = '6ebbd85557';
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
   if (!POSTHOG_KEY || POSTHOG_KEY.indexOf('phc_REPLACE') === 0) return;   // not configured yet -> skip
+  // ===== Device fields for support triage =====
+  // A complaint like "the outline looks wrong on my iPhone" cannot be chased unless the
+  // event carries the device with it. These ride along on every PostHog event as
+  // super-properties, on a beta tester's person profile, and on the /quiz-log row.
+  // This is the device, never the reader: no cookies, no email, no answers.
+  // The exact iPhone model is NOT in the Safari user agent and is not guessed here.
+  // Screen size plus devicePixelRatio narrows it to a small family, and that is the limit.
+  window.hwDeviceProps = function(){
+    var p = {};
+    try {
+      var nav = navigator || {}, ua = String(nav.userAgent || '');
+      var mq = function(q){ try { return !!(window.matchMedia && window.matchMedia(q).matches); } catch(e){ return false; } };
+      var touch = nav.maxTouchPoints || 0;
+      var isIPhone = /iPhone|iPod/.test(ua);
+      var isIPad   = /iPad/.test(ua);
+      // iPadOS 13+ can send a Macintosh user agent ("Request Desktop Website"). A Mac with
+      // a touch screen does not exist, so the touch points give the iPad away.
+      var isIPadDesktopUa = !isIPad && /Macintosh/.test(ua) && touch > 1;
+      var isAndroid = /Android/.test(ua);
+      p.hw_device_class = isIPhone ? 'iphone' : isIPad ? 'ipad' : isIPadDesktopUa ? 'ipad_desktop_ua'
+                        : isAndroid ? (/Mobile/.test(ua) ? 'android_phone' : 'android_tablet') : 'desktop';
+      // "CPU iPhone OS 17_5_1 like Mac OS X" -> "17.5.1". Empty on the desktop-UA iPad,
+      // where the string carries the Mac version it is pretending to be, not the real iOS.
+      var ios = (isIPhone || isIPad) ? ua.match(/OS (\d+)[._](\d+)(?:[._](\d+))?/) : null;
+      p.hw_ios_version = ios ? [ios[1], ios[2], ios[3]].filter(Boolean).join('.') : '';
+      var andv = isAndroid ? ua.match(/Android (\d+(?:\.\d+)*)/) : null;
+      p.hw_android_version = andv ? andv[1] : '';
+      // Which browser, or which app's in-page browser. On iOS every one of these is WebKit
+      // underneath, so this records who is wrapping it, which is where layout surprises live.
+      p.hw_browser_hint =
+          /FBAN|FBAV/.test(ua) ? 'facebook' : /Instagram/.test(ua) ? 'instagram'
+        : /LinkedInApp/.test(ua) ? 'linkedin' : /(TikTok|musical_ly|BytedanceWebview)/.test(ua) ? 'tiktok'
+        : /CriOS/.test(ua) ? 'chrome_ios' : /FxiOS/.test(ua) ? 'firefox_ios' : /EdgiOS/.test(ua) ? 'edge_ios'
+        : /Edg\//.test(ua) ? 'edge' : /OPR\//.test(ua) ? 'opera'
+        : /Chrome\//.test(ua) ? 'chrome' : /Firefox\//.test(ua) ? 'firefox'
+        : /Safari\//.test(ua) ? 'safari' : 'other';
+      p.hw_ua = ua.slice(0, 400);
+      p.hw_platform = String(nav.platform || '').slice(0, 40);
+      p.hw_max_touch = touch;
+      p.hw_lang = String(nav.language || '').slice(0, 20);
+      var sc = window.screen || {};
+      p.hw_screen_w = sc.width  || null;
+      p.hw_screen_h = sc.height || null;
+      p.hw_dpr = window.devicePixelRatio ? Math.round(window.devicePixelRatio * 100) / 100 : null;
+      p.hw_viewport_w = window.innerWidth  || null;
+      p.hw_viewport_h = window.innerHeight || null;
+      p.hw_orientation = (p.hw_viewport_w && p.hw_viewport_h && p.hw_viewport_w > p.hw_viewport_h) ? 'landscape' : 'portrait';
+      // Touch versus mouse, and whether hover exists at all. A hover style that sticks on a
+      // touch screen is a classic phone-only report, so record what the device claims.
+      p.hw_pointer   = mq('(pointer: coarse)') ? 'coarse' : mq('(pointer: fine)') ? 'fine' : '';
+      p.hw_hover     = mq('(hover: hover)') ? 'hover' : 'none';
+      p.hw_any_hover = mq('(any-hover: hover)') ? 'hover' : 'none';
+      p.hw_standalone = !!(nav.standalone || mq('(display-mode: standalone)'));   // added to home screen
+      p.hw_reduced_motion = mq('(prefers-reduced-motion: reduce)');
+      try { p.hw_tz = String(Intl.DateTimeFormat().resolvedOptions().timeZone || '').slice(0, 64); } catch(e){ p.hw_tz = ''; }
+    } catch(e){}
+    return p;
+  };
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording capturePageView capturePageLeave debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
   posthog.init(POSTHOG_KEY, {
     api_host: POSTHOG_HOST,
@@ -13,6 +71,24 @@ window.HW_BUILD = 'bebf1186fe';
     disable_surveys: true,
     session_recording: { maskAllInputs: true }    // email + free-text answers are never recorded
   });
+  // Stamp the device onto every event from here on, so a future complaint can be traced to
+  // a phone or a desktop, an OS version and a viewport without having to ask the reader.
+  try { posthog.register(window.hwDeviceProps()); } catch (e) {}
+  // Rotating the phone, or the iOS address bar collapsing as the reader scrolls, changes
+  // the viewport mid-quiz. Refresh just those three so later events are not reporting the
+  // shape the page had at load. Debounced, because resize fires in a stream.
+  try {
+    var _hwVpT;
+    window.addEventListener('resize', function(){
+      clearTimeout(_hwVpT);
+      _hwVpT = setTimeout(function(){
+        try {
+          var d = window.hwDeviceProps();
+          posthog.register({ hw_viewport_w: d.hw_viewport_w, hw_viewport_h: d.hw_viewport_h, hw_orientation: d.hw_orientation });
+        } catch (e) {}
+      }, 400);
+    }, { passive: true });
+  } catch (e) {}
   // Beta testers arrive from the portal with ?hwbt=<token>. Tag their whole session so
   // PostHog can report on the beta cohort, per tester. Public visitors have no hwbt and
   // stay anonymous/cookieless. The token is an opaque portal id, not a name or email.
@@ -20,7 +96,10 @@ window.HW_BUILD = 'bebf1186fe';
     var _hwbt = (new URLSearchParams(location.search).get('hwbt') || '').slice(0, 64);
     if (_hwbt && _hwbt.indexOf('{{') === -1) {              // ignore an unresolved Tally mention
       posthog.register({ hw_beta: true, hw_beta_token: _hwbt });          // tags every event
-      posthog.identify('beta:' + _hwbt, { hw_beta: true, hw_beta_token: _hwbt });  // per-tester person
+      // Device fields go on the tester's person record too, so "which iPhone was Fiona on"
+      // is answered from her person page without digging through individual events. Only
+      // named beta testers get a person profile; public visitors stay anonymous.
+      posthog.identify('beta:' + _hwbt, Object.assign({ hw_beta: true, hw_beta_token: _hwbt }, window.hwDeviceProps()));
     }
   } catch (e) {}
   // Person-side marker with a fallback chain: setPersonProperties is in the snippet's
@@ -1992,6 +2071,12 @@ function buildQuizRecord(){
       from_share: !!_invite, invite_type: _invite ? _invite.key : '',
       duration_seconds: d.duration_seconds, active_seconds: d.active_seconds
     };
+    // Same device fields as the PostHog events, so the sheet answers "what were they on"
+    // on its own. Read at completion, so the viewport is the one they finished on.
+    try {
+      var dev = window.hwDeviceProps ? window.hwDeviceProps() : null;
+      for (var k in dev){ if (Object.prototype.hasOwnProperty.call(dev, k)) rec[k] = dev[k]; }
+    } catch(e){}
     for (var i = 0; i < questions.length; i++){
       var q = questions[i]; if (!q) continue;
       var a = answers[i];
