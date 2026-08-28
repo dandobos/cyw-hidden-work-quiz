@@ -1036,7 +1036,33 @@ function hwShortLinkInit(){ if (_shortLinkAsked || !_share) return; _shortLinkAs
 function viralCopyLink(){ if(!_share) return; hwShareClick('copy'); var u=viralShareString(); (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(function(){ viralToast('Copied'); }).catch(function(){ viralToast(u); }); }
 function viralSocial(url, channel){ if(!_share) return; hwShareClick(channel||'social'); var u=viralShareString(); if(navigator.clipboard){ navigator.clipboard.writeText(u).then(function(){ viralToast('Message copied, paste it into your post'); }).catch(function(){}); } window.open(url,'_blank','noopener'); }
 function viralInstagram(){ if(!_share) return; hwShareClick('instagram'); var u=viralShareString(); (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(function(){ viralToast('Message copied, paste it into Instagram'); }).catch(function(){ viralToast(u); }); }
-function viralNativeShare(){ if(!_share) return; hwShareClick('native'); if(navigator.share){ navigator.share({ title:'The Choose Your Work Quiz', text:hwOutgoingText(), url:hwDisplayLink() }).catch(function(){}); } else { viralCopyLink(); } }
+// Native share is for phones and tablets only. On a PC, navigator.share exists in
+// Chrome/Edge and opens the Windows share sheet, which hands the share to Outlook —
+// unusable for a tester who does not use Outlook (Erin, 2026-08-27). Requiring a
+// coarse primary pointer AND no hover capability keeps real touch devices on the
+// sheet: a Windows touchscreen laptop still reports any-hover:hover through its
+// mouse, so it falls through to the copy path instead. The Email button is a plain
+// mailto and is deliberately left alone — that one may still open Outlook.
+function hwNativeShareOk(){
+  if (!navigator.share) return false;
+  try {
+    if (window.matchMedia) return window.matchMedia('(pointer: coarse) and (any-hover: none)').matches;
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+  } catch(e){ return false; }
+}
+// The link goes in `text`, not in a separate `url` field: Gmail's share target reads
+// the text and drops the url, so Share-then-Gmail arrived with no link while Email on
+// the same panel had one (Andrew, 2026-08-25). viralShareString() is the exact string
+// Email and Copy already send, so all four channels now carry an identical link.
+// `url` is omitted rather than duplicated, or targets that do honour it (iMessage,
+// WhatsApp) would show the link twice.
+function viralNativeShare(){
+  if(!_share) return;
+  hwShareClick('native');
+  if(!hwNativeShareOk()){ viralCopyLink(); return; }
+  try { navigator.share({ title:'The Choose Your Work Quiz', text:viralShareString() }).catch(function(){}); }
+  catch(e){ viralCopyLink(); }
+}
 function viralEditMsg(el){ var t=(el.textContent||'').replace(/\s+/g,' ').trim(); if(_share) _share.text=t; hwRebuildShareLinks(el.closest&&el.closest('.panelbox')); }
 function viralSaveImage(){
   var el=document.getElementById('wc-card');
@@ -1173,8 +1199,10 @@ function cmpEditMsg(el){
 function cmpNativeShare(){
   if (!_cmpBack) return;
   hwCap('compare_sendback', { channel: 'native' });
-  if (navigator.share){ navigator.share({ title: 'The Choose Your Work Quiz', text: _cmpBack.text, url: _cmpBack.link }).catch(function(){}); }
-  else { cmpCopy(); }
+  if (!hwNativeShareOk()){ cmpCopy(); return; }
+  // Same as the main panel: link inside `text`, joined with a space to match cmpCopy.
+  try { navigator.share({ title: 'The Choose Your Work Quiz', text: _cmpBack.text + ' ' + _cmpBack.link }).catch(function(){}); }
+  catch(e){ cmpCopy(); }
 }
 function cmpCopy(){
   if (!_cmpBack) return;
