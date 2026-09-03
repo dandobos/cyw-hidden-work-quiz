@@ -21,7 +21,7 @@
 
   function screenMsg(title, body, showCta) {
     page.innerHTML =
-      '<p class="intro-eyebrow">The Choose Your Work Quiz</p>' +
+      '<p class="intro-eyebrow">The Hidden Work Quiz</p>' +
       '<h1 class="intro-title">' + title + '</h1>' +
       '<p class="intro-desc">' + body + '</p>' +
       (showCta

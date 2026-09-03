@@ -1,66 +1,8 @@
-window.HW_BUILD = '6ebbd85557';
+window.HW_BUILD = 'faa583ce72';
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
   if (!POSTHOG_KEY || POSTHOG_KEY.indexOf('phc_REPLACE') === 0) return;   // not configured yet -> skip
-  // ===== Device fields for support triage =====
-  // A complaint like "the outline looks wrong on my iPhone" cannot be chased unless the
-  // event carries the device with it. These ride along on every PostHog event as
-  // super-properties, on a beta tester's person profile, and on the /quiz-log row.
-  // This is the device, never the reader: no cookies, no email, no answers.
-  // The exact iPhone model is NOT in the Safari user agent and is not guessed here.
-  // Screen size plus devicePixelRatio narrows it to a small family, and that is the limit.
-  window.hwDeviceProps = function(){
-    var p = {};
-    try {
-      var nav = navigator || {}, ua = String(nav.userAgent || '');
-      var mq = function(q){ try { return !!(window.matchMedia && window.matchMedia(q).matches); } catch(e){ return false; } };
-      var touch = nav.maxTouchPoints || 0;
-      var isIPhone = /iPhone|iPod/.test(ua);
-      var isIPad   = /iPad/.test(ua);
-      // iPadOS 13+ can send a Macintosh user agent ("Request Desktop Website"). A Mac with
-      // a touch screen does not exist, so the touch points give the iPad away.
-      var isIPadDesktopUa = !isIPad && /Macintosh/.test(ua) && touch > 1;
-      var isAndroid = /Android/.test(ua);
-      p.hw_device_class = isIPhone ? 'iphone' : isIPad ? 'ipad' : isIPadDesktopUa ? 'ipad_desktop_ua'
-                        : isAndroid ? (/Mobile/.test(ua) ? 'android_phone' : 'android_tablet') : 'desktop';
-      // "CPU iPhone OS 17_5_1 like Mac OS X" -> "17.5.1". Empty on the desktop-UA iPad,
-      // where the string carries the Mac version it is pretending to be, not the real iOS.
-      var ios = (isIPhone || isIPad) ? ua.match(/OS (\d+)[._](\d+)(?:[._](\d+))?/) : null;
-      p.hw_ios_version = ios ? [ios[1], ios[2], ios[3]].filter(Boolean).join('.') : '';
-      var andv = isAndroid ? ua.match(/Android (\d+(?:\.\d+)*)/) : null;
-      p.hw_android_version = andv ? andv[1] : '';
-      // Which browser, or which app's in-page browser. On iOS every one of these is WebKit
-      // underneath, so this records who is wrapping it, which is where layout surprises live.
-      p.hw_browser_hint =
-          /FBAN|FBAV/.test(ua) ? 'facebook' : /Instagram/.test(ua) ? 'instagram'
-        : /LinkedInApp/.test(ua) ? 'linkedin' : /(TikTok|musical_ly|BytedanceWebview)/.test(ua) ? 'tiktok'
-        : /CriOS/.test(ua) ? 'chrome_ios' : /FxiOS/.test(ua) ? 'firefox_ios' : /EdgiOS/.test(ua) ? 'edge_ios'
-        : /Edg\//.test(ua) ? 'edge' : /OPR\//.test(ua) ? 'opera'
-        : /Chrome\//.test(ua) ? 'chrome' : /Firefox\//.test(ua) ? 'firefox'
-        : /Safari\//.test(ua) ? 'safari' : 'other';
-      p.hw_ua = ua.slice(0, 400);
-      p.hw_platform = String(nav.platform || '').slice(0, 40);
-      p.hw_max_touch = touch;
-      p.hw_lang = String(nav.language || '').slice(0, 20);
-      var sc = window.screen || {};
-      p.hw_screen_w = sc.width  || null;
-      p.hw_screen_h = sc.height || null;
-      p.hw_dpr = window.devicePixelRatio ? Math.round(window.devicePixelRatio * 100) / 100 : null;
-      p.hw_viewport_w = window.innerWidth  || null;
-      p.hw_viewport_h = window.innerHeight || null;
-      p.hw_orientation = (p.hw_viewport_w && p.hw_viewport_h && p.hw_viewport_w > p.hw_viewport_h) ? 'landscape' : 'portrait';
-      // Touch versus mouse, and whether hover exists at all. A hover style that sticks on a
-      // touch screen is a classic phone-only report, so record what the device claims.
-      p.hw_pointer   = mq('(pointer: coarse)') ? 'coarse' : mq('(pointer: fine)') ? 'fine' : '';
-      p.hw_hover     = mq('(hover: hover)') ? 'hover' : 'none';
-      p.hw_any_hover = mq('(any-hover: hover)') ? 'hover' : 'none';
-      p.hw_standalone = !!(nav.standalone || mq('(display-mode: standalone)'));   // added to home screen
-      p.hw_reduced_motion = mq('(prefers-reduced-motion: reduce)');
-      try { p.hw_tz = String(Intl.DateTimeFormat().resolvedOptions().timeZone || '').slice(0, 64); } catch(e){ p.hw_tz = ''; }
-    } catch(e){}
-    return p;
-  };
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording capturePageView capturePageLeave debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
   posthog.init(POSTHOG_KEY, {
     api_host: POSTHOG_HOST,
@@ -71,24 +13,6 @@ window.HW_BUILD = '6ebbd85557';
     disable_surveys: true,
     session_recording: { maskAllInputs: true }    // email + free-text answers are never recorded
   });
-  // Stamp the device onto every event from here on, so a future complaint can be traced to
-  // a phone or a desktop, an OS version and a viewport without having to ask the reader.
-  try { posthog.register(window.hwDeviceProps()); } catch (e) {}
-  // Rotating the phone, or the iOS address bar collapsing as the reader scrolls, changes
-  // the viewport mid-quiz. Refresh just those three so later events are not reporting the
-  // shape the page had at load. Debounced, because resize fires in a stream.
-  try {
-    var _hwVpT;
-    window.addEventListener('resize', function(){
-      clearTimeout(_hwVpT);
-      _hwVpT = setTimeout(function(){
-        try {
-          var d = window.hwDeviceProps();
-          posthog.register({ hw_viewport_w: d.hw_viewport_w, hw_viewport_h: d.hw_viewport_h, hw_orientation: d.hw_orientation });
-        } catch (e) {}
-      }, 400);
-    }, { passive: true });
-  } catch (e) {}
   // Beta testers arrive from the portal with ?hwbt=<token>. Tag their whole session so
   // PostHog can report on the beta cohort, per tester. Public visitors have no hwbt and
   // stay anonymous/cookieless. The token is an opaque portal id, not a name or email.
@@ -96,10 +20,7 @@ window.HW_BUILD = '6ebbd85557';
     var _hwbt = (new URLSearchParams(location.search).get('hwbt') || '').slice(0, 64);
     if (_hwbt && _hwbt.indexOf('{{') === -1) {              // ignore an unresolved Tally mention
       posthog.register({ hw_beta: true, hw_beta_token: _hwbt });          // tags every event
-      // Device fields go on the tester's person record too, so "which iPhone was Fiona on"
-      // is answered from her person page without digging through individual events. Only
-      // named beta testers get a person profile; public visitors stay anonymous.
-      posthog.identify('beta:' + _hwbt, Object.assign({ hw_beta: true, hw_beta_token: _hwbt }, window.hwDeviceProps()));
+      posthog.identify('beta:' + _hwbt, { hw_beta: true, hw_beta_token: _hwbt });  // per-tester person
     }
   } catch (e) {}
   // Person-side marker with a fallback chain: setPersonProperties is in the snippet's
@@ -366,13 +287,10 @@ function renderIntro() {
   // Invited visitors (arriving via a friend's share link) get the friend's pattern up
   // front and a compare promise; everyone else gets the standard intro.
   var invited = _invite && ARCH[_invite.key];
-  // Dan's line breaks, 2026-08-13. All four lines hold from tablet width up. On a
-  // phone the content column is only 294px, and the last line needs 305px even at
-  // 34px, so it wraps; Dan's rule for that case is to keep the phone's own wrapping
-  // as long as "Work Personality" stays whole, which it does. The nbsp in "to Do"
-  // only stops the phone leaving "Do" alone on a fifth line; at any width where the
-  // line fits, it does nothing.
-  var title = 'There Are 8 Work Personalities.<br>One Reveals Your Hidden&nbsp;Work.';
+  // Renamed 2026-09-03 (Dan's ruling, quiz-rename-decisions.html): the title line
+  // carries "The Hidden Work Quiz", so the H1 asks the question instead of repeating
+  // the hook. The nbsp keeps "You?" off a line of its own on narrow phones.
+  var title = 'There Are 8 Work Personalities.<br>Which One Are&nbsp;You?';
   var inviteSpectrum = '';
   var invCard = '';
   var invitePatterns = '';
@@ -406,7 +324,7 @@ function renderIntro() {
     begin = 'Find Your Pattern';
     stats = '';
   }
-  return (invited ? '<p class="intro-eyebrow">The Choose Your Work Quiz</p>' : '')
+  return (invited ? '<p class="intro-eyebrow">The Hidden Work Quiz</p>' : '')
     + '<h1 class="intro-title">' + title + '</h1>'
     + invitePatterns
     + invCard
@@ -858,7 +776,7 @@ var _share = null;
 // Default share message (Dan's copy, share-flow decision 2, 2026-08-04): leads with the
 // sender's result and the compare promise, then the time claim. The link follows after a
 // blank line (never a bare URL mid-sentence).
-function viralShareText(r){ return 'I got ' + r.archetype.replace(/^The\s+/, '') + " on the Choose Your Work Quiz. I wonder what you'd get? It maps the pattern behind how you choose work, and only takes around 5 minutes... then it shows us both side by side at the end."; }
+function viralShareText(r){ return 'I got ' + r.archetype.replace(/^The\s+/, '') + " on the Hidden Work Quiz. I wonder what you'd get? It maps the pattern behind how you choose work, and only takes around 5 minutes... then it shows us both side by side at the end."; }
 // Per-sharer referral id, computed once. Beta testers get their stable portal token;
 // everyone else a per-share-session random id. Registered as a super property so the
 // sharer's own share_clicked events carry it, and embedded in every share link.
@@ -936,7 +854,7 @@ function wcCardHtml(r, drained){
   }).join('');
   return '<div class="wc" id="wc-card"><div class="wc-bar"></div>'
     + '<div class="wc-dlrow"><button class="wc-dl-btn" title="Download and Share Your Card" onclick="viralSaveImage()"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 4v10m0 0l-3.5-3.5M12 14l3.5-3.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Download &amp; Share</span></button></div>'
-    + '<p class="wc-ey">The Choose Your Work Quiz</p>'
+    + '<p class="wc-ey">The Hidden Work Quiz</p>'
     + '<h2 class="wc-name">I am '+art+' <b>'+short+'</b></h2>'
     + '<p class="wc-claim">“'+(drained ? AM_DRAINED_SHARE : SHARE_CLAIM[r.key])+'”</p>'
     + '<p class="wc-label">What people can count on me for</p>'
@@ -1080,7 +998,7 @@ function hwRebuildShareLinks(box){
   var em = box.querySelector('a.share-em');
   if (em) {
     var subj = _shareShowResult && _share.archetype
-      ? 'I got ' + String(_share.archetype).replace(/^The\s+/, '') + ' on the Choose Your Work Quiz'
+      ? 'I got ' + String(_share.archetype).replace(/^The\s+/, '') + ' on the Hidden Work Quiz'
       : 'Try this free 5-minute work quiz';
     em.href = 'mailto:?subject=' + e(subj) + '&body=' + e(t + '\n\n' + dl);
   }
@@ -1115,33 +1033,7 @@ function hwShortLinkInit(){ if (_shortLinkAsked || !_share) return; _shortLinkAs
 function viralCopyLink(){ if(!_share) return; hwShareClick('copy'); var u=viralShareString(); (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(function(){ viralToast('Copied'); }).catch(function(){ viralToast(u); }); }
 function viralSocial(url, channel){ if(!_share) return; hwShareClick(channel||'social'); var u=viralShareString(); if(navigator.clipboard){ navigator.clipboard.writeText(u).then(function(){ viralToast('Message copied, paste it into your post'); }).catch(function(){}); } window.open(url,'_blank','noopener'); }
 function viralInstagram(){ if(!_share) return; hwShareClick('instagram'); var u=viralShareString(); (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(function(){ viralToast('Message copied, paste it into Instagram'); }).catch(function(){ viralToast(u); }); }
-// Native share is for phones and tablets only. On a PC, navigator.share exists in
-// Chrome/Edge and opens the Windows share sheet, which hands the share to Outlook —
-// unusable for a tester who does not use Outlook (Erin, 2026-08-27). Requiring a
-// coarse primary pointer AND no hover capability keeps real touch devices on the
-// sheet: a Windows touchscreen laptop still reports any-hover:hover through its
-// mouse, so it falls through to the copy path instead. The Email button is a plain
-// mailto and is deliberately left alone — that one may still open Outlook.
-function hwNativeShareOk(){
-  if (!navigator.share) return false;
-  try {
-    if (window.matchMedia) return window.matchMedia('(pointer: coarse) and (any-hover: none)').matches;
-    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
-  } catch(e){ return false; }
-}
-// The link goes in `text`, not in a separate `url` field: Gmail's share target reads
-// the text and drops the url, so Share-then-Gmail arrived with no link while Email on
-// the same panel had one (Andrew, 2026-08-25). viralShareString() is the exact string
-// Email and Copy already send, so all four channels now carry an identical link.
-// `url` is omitted rather than duplicated, or targets that do honour it (iMessage,
-// WhatsApp) would show the link twice.
-function viralNativeShare(){
-  if(!_share) return;
-  hwShareClick('native');
-  if(!hwNativeShareOk()){ viralCopyLink(); return; }
-  try { navigator.share({ title:'The Choose Your Work Quiz', text:viralShareString() }).catch(function(){}); }
-  catch(e){ viralCopyLink(); }
-}
+function viralNativeShare(){ if(!_share) return; hwShareClick('native'); if(navigator.share){ navigator.share({ title:'The Hidden Work Quiz', text:hwOutgoingText(), url:hwDisplayLink() }).catch(function(){}); } else { viralCopyLink(); } }
 function viralEditMsg(el){ var t=(el.textContent||'').replace(/\s+/g,' ').trim(); if(_share) _share.text=t; hwRebuildShareLinks(el.closest&&el.closest('.panelbox')); }
 function viralSaveImage(){
   var el=document.getElementById('wc-card');
@@ -1180,7 +1072,7 @@ function viralSaveStory(){
   wrap.style.cssText='position:fixed;left:-9999px;top:0;width:1080px;height:1920px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:110px 90px;box-sizing:border-box;background:linear-gradient(165deg,'+accent+' 0%,#141414 135%);font-family:\'Source Serif Pro\',Georgia,serif;';
   var top=document.createElement('div');
   top.style.cssText='text-align:center;color:#fff;';
-  top.innerHTML='<p style="font-family:\'Inter\',sans-serif;font-size:24px;font-weight:700;letter-spacing:5px;text-transform:uppercase;opacity:.85;margin:0 0 18px">The Choose Your Work Quiz</p><p style="font-size:52px;line-height:1.15;font-weight:400;margin:0;">There are 8 Work Personalities.<br>Which one are you?</p>';
+  top.innerHTML='<p style="font-family:\'Inter\',sans-serif;font-size:24px;font-weight:700;letter-spacing:5px;text-transform:uppercase;opacity:.85;margin:0 0 18px">The Hidden Work Quiz</p><p style="font-size:52px;line-height:1.15;font-weight:400;margin:0;">There are 8 Work Personalities.<br>Which one are you?</p>';
   var mid=document.createElement('div');
   var clone=el.cloneNode(true); clone.removeAttribute('id');
   var cc=clone.querySelector('.wc-dlrow'); if(cc) cc.parentNode.removeChild(cc);
@@ -1278,10 +1170,8 @@ function cmpEditMsg(el){
 function cmpNativeShare(){
   if (!_cmpBack) return;
   hwCap('compare_sendback', { channel: 'native' });
-  if (!hwNativeShareOk()){ cmpCopy(); return; }
-  // Same as the main panel: link inside `text`, joined with a space to match cmpCopy.
-  try { navigator.share({ title: 'The Choose Your Work Quiz', text: _cmpBack.text + ' ' + _cmpBack.link }).catch(function(){}); }
-  catch(e){ cmpCopy(); }
+  if (navigator.share){ navigator.share({ title: 'The Hidden Work Quiz', text: _cmpBack.text, url: _cmpBack.link }).catch(function(){}); }
+  else { cmpCopy(); }
 }
 function cmpCopy(){
   if (!_cmpBack) return;
@@ -1768,7 +1658,7 @@ function renderResult(){
 }
 function renderComplete() { return renderResult(); }
 function renderNeedQuiz() {
-  return '<p class="intro-eyebrow">The Choose Your Work Quiz</p>'
+  return '<p class="intro-eyebrow">The Hidden Work Quiz</p>'
     + '<h1 class="intro-title">Please complete the quiz first</h1>'
     + '<p class="intro-desc">Take the quiz to get your result. Once you have finished, you can open it here to share it.</p>'
     + '<button class="continue-btn" onclick="startQuiz()">Start the Quiz</button>';
@@ -1784,7 +1674,7 @@ function renderResume() {
   // yet, so say so instead of leaving the ask unanswered (item 6, 2026-08-13).
   var noRes = '';
   try { if (new URLSearchParams(location.search).get('result') === '1') noRes = '<p class="intro-desc">You have not finished this quiz yet, so there is no result to open.</p>'; } catch(e){}
-  return '<p class="intro-eyebrow">The Choose Your Work Quiz</p>'
+  return '<p class="intro-eyebrow">The Hidden Work Quiz</p>'
     + '<h1 class="intro-title">Welcome back</h1>'
     + noRes
     + '<p class="intro-desc">' + where + ' Pick up right where you left off; your answers are saved.</p>'
@@ -2071,12 +1961,6 @@ function buildQuizRecord(){
       from_share: !!_invite, invite_type: _invite ? _invite.key : '',
       duration_seconds: d.duration_seconds, active_seconds: d.active_seconds
     };
-    // Same device fields as the PostHog events, so the sheet answers "what were they on"
-    // on its own. Read at completion, so the viewport is the one they finished on.
-    try {
-      var dev = window.hwDeviceProps ? window.hwDeviceProps() : null;
-      for (var k in dev){ if (Object.prototype.hasOwnProperty.call(dev, k)) rec[k] = dev[k]; }
-    } catch(e){}
     for (var i = 0; i < questions.length; i++){
       var q = questions[i]; if (!q) continue;
       var a = answers[i];
