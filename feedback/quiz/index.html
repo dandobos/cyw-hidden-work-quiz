@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Choose Your Work Quiz: Beta Reader Feedback</title>
+<title>Hidden Work Quiz: Beta Reader Feedback</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap">
@@ -166,8 +166,8 @@
 <div class="wrap">
 
   <p class="eyebrow">Beta Tester Feedback</p>
-  <h1>Choose Your Work Quiz Feedback</h1>
-  <p class="lede">Thank you for testing the <em>Choose Your Work Quiz</em>. Please be direct. Let me know about anything that felt off, slow, or confusing so we can create the best possible quiz!<br><br>I really appreciate your input.<br>Dan</p>
+  <h1>Hidden Work Quiz Feedback</h1>
+  <p class="lede">Thank you for testing the <em>Hidden Work Quiz</em>. Please be direct. Let me know about anything that felt off, slow, or confusing so we can create the best possible quiz!<br><br>I really appreciate your input.<br>Dan</p>
 
   <hr class="rule">
 
@@ -586,7 +586,7 @@
   };
 
   function asText(data) {
-    var lines = ['Choose Your Work Quiz: Beta Reader Feedback', ''];
+    var lines = ['Hidden Work Quiz: Beta Reader Feedback', ''];
     Object.keys(LABELS).forEach(function (k) {
       var val = (data[k] || '').toString().trim();
       lines.push(LABELS[k] + ': ' + (val || '(blank)'));
@@ -628,7 +628,7 @@
   }
 
   function emailFallback(data) {
-    var subject = 'Choose Your Work Quiz feedback: ' + (data.name || 'beta reader');
+    var subject = 'Hidden Work Quiz feedback: ' + (data.name || 'beta reader');
     var href = 'mailto:' + FALLBACK_EMAIL +
       '?subject=' + encodeURIComponent(subject) +
       '&body=' + encodeURIComponent(asText(data));
