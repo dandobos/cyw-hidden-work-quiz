@@ -241,7 +241,15 @@
       var badge = done ? '<span class="badge done">Done</span>' : (current ? '<span class="badge next">Current Task</span>' : "");
       var numHtml = done ? "✓" : s.n;
       var actions = "";
-      if(!done && s.btn){
+      // The course feedback form asks about all seven days, the summary email and
+      // the chapter, so it stays locked until the backend has a Day 7 answer
+      // (Dan's ruling 4 Sep 2026, after a tester answered it at day 1).
+      var daysDone = Number(tester.days_done || 0);
+      var locked = (s.key === "course_feedback" && !done && daysDone < 7);
+      if(locked){
+        actions = '<div class="time">This unlocks once your Day 7 answers are in. '
+                + (daysDone > 0 ? 'You are on day ' + daysDone + ' of 7.' : 'The course has not started yet.') + '</div>';
+      } else if(!done && s.btn){
         actions = '<div class="row"><a class="btn '+(s.btn.accent?"accent":"")+'" href="'+s.btn.href+'" target="_blank" rel="noopener">'+esc(s.btn.label)+'</a></div>';
       } else if(done){
         actions = '<div class="row"><span class="time">Completed</span>' + (s.btn ? ' &middot; <a class="markdone" href="'+s.btn.href+'" target="_blank" rel="noopener">Open Again</a>' : '') + '</div>';
