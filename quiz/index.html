@@ -1234,8 +1234,8 @@ const VIRAL = {
   LLH:{ accent:'#557C9E', claim:"I'm at peace with who I am. Now I need to define where I'm going.",     prompt:"Know someone also at peace with themselves but unsure where they're headed?" },
   LLL:{ accent:'#6B6B6B', claim:"Everything looks fine on paper, but I know something's off, and I'm done ignoring it.", prompt:"Know someone whose work looks fine on paper but something feels off?" }
 };
-const SHARE_BASE = 'https://dandobos.com/choose-your-work-quiz/';
-// Per-archetype share-preview stubs: /choose-your-work-quiz/t/<slug> sets an archetype-specific
+const SHARE_BASE = 'https://dandobos.com/hidden-work-quiz/';
+// Per-archetype share-preview stubs: /hidden-work-quiz/t/<slug> sets an archetype-specific
 // og:image + title, then redirects into the quiz (?type=KEY, forwarding &hws=). So a shared
 // link unfurls as the archetype card in WhatsApp/iMessage instead of the generic page.
 const SHARE_SLUG = { HHH:'true-creator', HHL:'high-achiever', HLH:'awakened-observer', HLL:'restless-visionary', LHH:'restless-explorer', LHL:'tireless-driver', LLH:'grounded-seeker', LLL:'late-bloomer' };
@@ -1328,7 +1328,7 @@ function wcCardHtml(r, drained){
     + '<div class="wc-list">'+items+'</div>'
     + '<div class="wc-divh"><span>Which of the 8 Work Personalities are you?</span></div>'
     + '<div class="wc-grid">'+cells+'</div>'
-    + '<div class="foot-live"><a class="wc-cta" href="#hw-book-cta" onclick="hwCardCtaDown(event)">Discover Your Work Personality</a><p class="wc-src">A free 5-minute career quiz for people who want more from their work<br>dandobos.com/choose-your-work-quiz</p></div>'
+    + '<div class="foot-live"><a class="wc-cta" href="#hw-book-cta" onclick="hwCardCtaDown(event)">Discover Your Work Personality</a><p class="wc-src">A free 5-minute career quiz for people who want more from their work<br>dandobos.com/hidden-work-quiz</p></div>'
     + '</div>';
 }
 const SHARE_HEADLINE = {
@@ -1403,7 +1403,7 @@ function hwOutgoingText(){ return (_shareNote ? _shareNote + '\n\n' : '') + ((_s
 var _shareShowResult = true;
 function hwPlainShareBase(){
   var m = ((_share && (_share.baseLink || _share.link)) || '').match(/^https?:[^?]*\//);
-  var base = m ? m[0].replace(/t\/[a-z-]+\/?$/, '') : 'https://dandobos.com/choose-your-work-quiz/';
+  var base = m ? m[0].replace(/t\/[a-z-]+\/?$/, '') : 'https://dandobos.com/hidden-work-quiz/';
   return base + '?ref=' + encodeURIComponent(myShareRef());
 }
 function hwDisplayLink(){
@@ -1510,7 +1510,7 @@ function viralSaveImage(){
   // Render a clone with the download footer (Discover prompt + URL as the CTA), no corner icon.
   var clone=el.cloneNode(true); clone.removeAttribute('id');
   var cc=clone.querySelector('.wc-dlrow'); if(cc) cc.parentNode.removeChild(cc);
-  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><p class="dl-tag">A free 5-minute career quiz for people who want more from their work</p><span class="dl-url">dandobos.com/choose-your-work-quiz</span></div>';
+  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><p class="dl-tag">A free 5-minute career quiz for people who want more from their work</p><span class="dl-url">dandobos.com/hidden-work-quiz</span></div>';
   clone.style.position='fixed'; clone.style.left='-9999px'; clone.style.top='0'; clone.style.width=el.offsetWidth+'px';
   document.body.appendChild(clone);
   function cleanup(){ if(clone.parentNode) clone.parentNode.removeChild(clone); }
@@ -1543,12 +1543,12 @@ function viralSaveStory(){
   var mid=document.createElement('div');
   var clone=el.cloneNode(true); clone.removeAttribute('id');
   var cc=clone.querySelector('.wc-dlrow'); if(cc) cc.parentNode.removeChild(cc);
-  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><p class="dl-tag">A free 5-minute career quiz for people who want more from their work</p><span class="dl-url">dandobos.com/choose-your-work-quiz</span></div>';
+  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><p class="dl-tag">A free 5-minute career quiz for people who want more from their work</p><span class="dl-url">dandobos.com/hidden-work-quiz</span></div>';
   clone.style.width='860px'; clone.style.boxShadow='0 30px 80px rgba(0,0,0,.35)'; clone.style.borderRadius='6px';
   mid.appendChild(clone);
   var bot=document.createElement('div');
   bot.style.cssText='text-align:center;color:#fff;font-family:\'Inter\',sans-serif;';
-  bot.innerHTML='<p style="font-size:30px;font-weight:600;margin:0 0 8px">Find Your Pattern</p><p style="font-size:26px;opacity:.85;margin:0;letter-spacing:.5px">dandobos.com/choose-your-work-quiz</p>';
+  bot.innerHTML='<p style="font-size:30px;font-weight:600;margin:0 0 8px">Find Your Pattern</p><p style="font-size:26px;opacity:.85;margin:0;letter-spacing:.5px">dandobos.com/hidden-work-quiz</p>';
   wrap.appendChild(top); wrap.appendChild(mid); wrap.appendChild(bot);
   document.body.appendChild(wrap);
   function cleanup(){ if(wrap.parentNode) wrap.parentNode.removeChild(wrap); }
