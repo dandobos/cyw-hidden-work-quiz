@@ -212,6 +212,7 @@
   .g-em { background: #1E5F8C; }
   .g-nat { background: #1A2028; }
   .sbtn.native { background: var(--text-primary); color: #fff; border-color: var(--text-primary); }
+  .share-mailto-small { flex-basis: 100%; font-family: var(--sans); font-size: 12px; color: #6b6b6b; text-decoration: underline; cursor: pointer; margin-top: 2px; }
   .sbtn.native .g { background: rgba(255,255,255,.18); }
   .g-x { background: #000; } .g-li { background: #0A66C2; } .g-wa { background: #25D366; } .g-fb { background: #1877F2; } .g-cp { background: #6B6B6B; } .g-ig { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); }
   .share-toast { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--text-primary); color: #fff; font-family: var(--sans); font-size: 13px; font-weight: 600; padding: 11px 18px; border-radius: 9px; opacity: 0; pointer-events: none; transition: all .25s; z-index: 50; }
@@ -389,6 +390,7 @@
   #page .option, #page .option:hover, #page .option:focus,
   #page .word-tile, #page .word-tile:hover, #page .word-tile:focus,
   #page .res-dl-btn, #page .res-dl-btn:hover, #page .res-dl-btn:focus,
+  #page .share-mailto-small, #page .share-mailto-small:hover { color: #6b6b6b !important; }
   #page .sbtn, #page .sbtn:hover, #page .sbtn:focus,
   #page .fit-btn, #page .fit-btn:hover, #page .fit-btn:focus {
     background-color: var(--card);
