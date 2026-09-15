@@ -136,7 +136,8 @@
   var QUIZ_URL  = "https://dandobos.com/choose-your-work-quiz";
   var FORM = {
     quiz:    "https://tally.so/r/Xxga2Y",  // Hidden Work Quiz: Beta Tester Feedback
-    sharing: "https://tally.so/r/GxgGQk",  // Hidden Work Quiz: The Sharing Test
+    sharing: "https://tally.so/r/GxgGQk",  // The Sharing Test, Part 1: You Sent It (split 15 Sep 2026)
+    sharing2: "https://tally.so/r/RGAaPd", // The Sharing Test, Part 2: Open It Cold
     course:  "https://tally.so/r/wgBx94"   // Email Course - General Feedback
   };
 
@@ -176,7 +177,7 @@
   if(rawT) lsSet("hwbeta:current", rawT);            // remember token so form redirects can find us
   var TOKEN = rawT || lsGet("hwbeta:current");
   var DONE = qs("done");                             // set when a Tally form redirects back after submit
-  var DONE_MAP = { quiz:"quiz_feedback", sharing:"sharing_feedback", course:"course_feedback" };
+  var DONE_MAP = { quiz:"quiz_feedback", sharing:"sharing_feedback", sharing2:"sharing2_feedback", course:"course_feedback" };
   var LSKEY = "hwbeta:" + (TOKEN || (qs("e")||"preview"));
   var CELEB_KEY = "hwbeta:celebrated:" + (TOKEN || "x");
   function localState(){ try{ return JSON.parse(localStorage.getItem(LSKEY)) || {}; }catch(e){ return {}; } }
@@ -202,13 +203,18 @@
       { key:"quiz_feedback", n:2, kind:"form", title:"Quiz feedback form", time:"Duration: about 7 minutes",
         desc:"Be candid and specific.<br><span style=\"color:var(--accent);font-weight:700\">&#10003;</span> “The third question was confusing because…”<br><span style=\"color:var(--clay);font-weight:700\">&#10007;</span> “it was great.”<br><br>Please flag anything slow, ineffective or not working on your device.",
         btn:{label:"Open the Quiz Feedback Form", href:withId(FORM.quiz,name,email)} },
-      { key:"sharing_feedback", n:3, kind:"form", title:"Share it", time:"Duration: about 7 minutes",
+      { key:"sharing_feedback", n:3, kind:"form", title:"Share it", time:"Duration: about 5 minutes",
         desc:"1. Open your result and use the share options there."
              +"<br><a class=\"btn accent inline\" href=\""+resultUrl()+"\" target=\"_blank\" rel=\"noopener\">Open My Result to Share</a>"
              +"<br>2. Send it to a friend."
-             +"<br>3. Send it to yourself and go through it as a first-time receiver would."
-             +"<br>4. Fill in the sharing feedback form."
-             +"<br><a class=\"btn inline\" href=\""+withId(FORM.sharing,name,email)+"\" target=\"_blank\" rel=\"noopener\">Open the Sharing Form</a>",
+             +"<br>3. Fill in part 1 of the sharing form. It asks only about the send."
+             +"<br><a class=\"btn inline\" href=\""+withId(FORM.sharing,name,email)+"\" target=\"_blank\" rel=\"noopener\">Open Part 1: You Sent It</a>",
+        btn:null },
+      { key:"sharing2_feedback", n:"3b", kind:"form", title:"Open it cold", time:"Duration: about 5 minutes",
+        desc:"1. Send the link to yourself."
+             +"<br>2. Open it as a stranger would: the preview, the landing page, what you would do."
+             +"<br>3. Fill in part 2."
+             +"<br><a class=\"btn inline\" href=\""+withId(FORM.sharing2,name,email)+"\" target=\"_blank\" rel=\"noopener\">Open Part 2: Open It Cold</a>",
         btn:null },
       { key:"course", n:4, kind:"course", title:"The 7-day email course", time:"Duration: 10 min per day for 7 days",
         desc:"Each day brings a new email with something insightful to read and a practical activity."
@@ -221,7 +227,7 @@
     ];
 
     // map a step key to the server-side (Notion) progress flag
-    var SKEY = { quiz:"quiz_taken", quiz_feedback:"quiz_feedback", sharing_feedback:"sharing_feedback", course_feedback:"course_feedback" };
+    var SKEY = { quiz:"quiz_taken", quiz_feedback:"quiz_feedback", sharing_feedback:"sharing_feedback", sharing2_feedback:"sharing2_feedback", course_feedback:"course_feedback" };
     function isDone(k){
       if(k === "course") return !!(local.course || server.course_feedback); // course = done once its feedback is in
       var sk = SKEY[k];

@@ -1,4 +1,4 @@
-window.HW_BUILD = '63a49126f0';
+window.HW_BUILD = 'f45c4b933c';
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
@@ -907,7 +907,7 @@ function shareLoopHtml(r, s){
         + '<div class="share-btns">'
           + '<button class="sbtn" onclick="viralNativeShare()"><span class="g g-nat">↗</span>Share</button>'
           + '<a class="sbtn share-wa" data-link="'+p.baseLink+'" target="_blank" rel="noopener" onclick="hwShareClick(\'whatsapp\')" href="https://wa.me/?text='+e(fMsg+'\n\n'+p.link)+'"><span class="g g-wa">w</span>WhatsApp</a>'
-          + '<a class="sbtn share-em" onclick="hwShareClick(\'email\')" href="mailto:?body='+e(fMsg+'\n\n'+p.link)+'"><span class="g g-em">@</span>Email</a>'
+          + hwEmailShareBtns(e, fMsg, p)
           + '<button class="sbtn" onclick="viralCopyLink()"><span class="g g-cp">⧉</span>Copy Info</button>'
         + '</div>'
       + '</div>'
@@ -1002,6 +1002,8 @@ function hwRebuildShareLinks(box){
       : 'Try this free 5-minute work quiz';
     em.href = 'mailto:?subject=' + e(subj) + '&body=' + e(t + '\n\n' + dl);
   }
+  var gm = box.querySelector('a.share-gm');
+  if (gm) gm.href = hwGmailHref();
   var tw = box.querySelector('a.share-tw, a[href*="twitter.com"]');
   if (tw) tw.href = 'https://twitter.com/intent/tweet?text=' + e(t) + '&url=' + e(dl);
   // LinkedIn and Facebook bake the link into their onclick at render time, so a
@@ -1021,6 +1023,40 @@ function hwNameInput(el){
 }
 // Registering here as well as on a pause means the name they finished typing is
 // on the card even if they tap a channel inside the debounce window.
+function hwEmailSubject(){
+  return _shareShowResult && _share && _share.archetype
+    ? 'I got ' + String(_share.archetype).replace(/^The\s+/, '') + ' on the Hidden Work Quiz'
+    : 'Try this free 5-minute work quiz';
+}
+// Desktop only: a mailto is a bet on the reader's default mail program (Erin's PC
+// opened Microsoft Office). Gmail's web compose covers most people, Copy covers the
+// rest, and the mailto stays as a small third link (Dan's ruling, 15 Sep 2026).
+function hwDesktopMail(){
+  try { return window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches; }
+  catch(err){ return false; }
+}
+function hwGmailHref(){
+  var e = encodeURIComponent;
+  return 'https://mail.google.com/mail/?view=cm&fs=1&su=' + e(hwEmailSubject())
+    + '&body=' + e(hwOutgoingText() + '\n\n' + hwDisplayLink());
+}
+function hwCopyEmail(){
+  if(!_share) return;
+  hwShareClick('email-copy');
+  var msg = 'Subject: ' + hwEmailSubject() + '\n\n' + hwOutgoingText() + '\n\n' + hwDisplayLink();
+  (navigator.clipboard ? navigator.clipboard.writeText(msg) : Promise.reject())
+    .then(function(){ viralToast('Copied. Paste it into a new email.'); })
+    .catch(function(){ viralToast(msg); });
+}
+function hwEmailShareBtns(e, fMsg, p){
+  var mailto = 'mailto:?body=' + e(fMsg + '\n\n' + p.link);
+  if (!hwDesktopMail()){
+    return '<a class="sbtn share-em" onclick="hwShareClick(\'email\')" href="' + mailto + '"><span class="g g-em">@</span>Email</a>';
+  }
+  return '<a class="sbtn share-gm" target="_blank" rel="noopener" onclick="hwShareClick(\'gmail\')" href="' + hwGmailHref() + '"><span class="g g-em">@</span>Open in Gmail</a>'
+    + '<button class="sbtn" onclick="hwCopyEmail()"><span class="g g-cp">\u29c9</span>Copy the email</button>'
+    + '<a class="share-mailto-small share-em" onclick="hwShareClick(\'email\')" href="' + mailto + '">Use my mail program instead</a>';
+}
 function hwShareClick(ch){ hwRegisterShortLink(); hwCap('share_clicked', { channel: ch, archetype_key: (_share && _share.key) || null }); }
 // Register the short link as soon as the share panel first renders; the
 // response swaps every channel over to /q/<ref>. Failure costs nothing: the
