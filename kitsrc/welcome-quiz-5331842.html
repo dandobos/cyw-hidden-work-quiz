@@ -4,10 +4,18 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <!-- ============================================================
-     EMAIL 2 (Welcome / intro to the 7-day course) - SINGLE PASTE, archetype switched via Liquid on hw_archetype.
-     Paste this whole file into the Kit email body.
-     SUBJECT (paste into Kit's subject field, Liquid-switched per archetype):
-     {% if subscriber.hw_archetype == 'The Late Bloomer' %}The pebble in your shoe{% elsif subscriber.hw_archetype == 'The Restless Visionary' %}How to actually move toward the life you want{% elsif subscriber.hw_archetype == 'The Tireless Driver' %}✅ Grit. But what about the right direction… ❓{% elsif subscriber.hw_archetype == 'The High Achiever' %}Has winning ever stopped feeling like winning?{% elsif subscriber.hw_archetype == 'The Grounded Seeker' %}How to clarify where you’re going and actually get there{% elsif subscriber.hw_archetype == 'The Awakened Observer' %}You don’t need more insight. You need more action. Here’s how to get started…{% elsif subscriber.hw_archetype == 'The Restless Explorer' %}How to give your momentum a clear target{% elsif subscriber.hw_archetype == 'The True Creator' %}You’ve already chosen your work. Now let’s scale it.{% else %}Your 7-day Choose Your Work course starts tomorrow{% endif %}
+     EMAIL 2 (Welcome / intro to the 7-day course). Kit LAYOUT TEMPLATE 5331842,
+     used by the quiz-path welcome (sequence 2818474).
+     This is the layout template body, not an email body: edit it here in the
+     template editor. Never paste a whole file over it, that is how work done in
+     the Kit editor gets deleted.
+     SUBJECT: the sequence email carries [subscriber.hw_welcome_subject], with a
+     default of "Your 7-day Choose Your Work course starts tomorrow". The quiz
+     writes the per-archetype subject into that field, so there is no Liquid
+     switch in the subject line any more.
+     Field names are in square brackets on purpose: live Liquid inside a comment
+     still runs on every send (same trap fixed in template 5328527, 10 Aug 2026).
+     Rewritten 17 September 2026.
      ============================================================ -->
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
 <meta name="referrer" content="no-referrer">
