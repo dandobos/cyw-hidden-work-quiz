@@ -1,4 +1,4 @@
-window.HW_BUILD = 'f45c4b933c';
+window.HW_BUILD = 'c9f0855226';
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
@@ -47,10 +47,12 @@ window.HW_BUILD = 'f45c4b933c';
       posthog.register({ $internal_or_test_user: true });
       _hwMarkPerson({ $internal_or_test_user: true });
     }
-    // Beta round: portal quiz links carry &hwbr=2 (round 2). Same URL-param mechanism as
-    // the hwbt beta token above; only the current round's value is accepted.
+    // Beta round: portal quiz links carry &hwbr=<digit>, read from the tester's own
+    // row. Same URL-param mechanism as the hwbt beta token above. Any single digit is
+    // accepted (17 Sep 2026: the gate only accepted '2', so round 3 sessions carried
+    // no beta_round at all).
     var _hwbr = _hwqs.get('hwbr');
-    if (_hwbr === '2') {
+    if (_hwbr && /^[1-9]$/.test(_hwbr)) {
       posthog.register({ beta_round: _hwbr });
       _hwMarkPerson({ beta_round: _hwbr });
     }

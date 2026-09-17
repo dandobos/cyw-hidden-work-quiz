@@ -159,7 +159,10 @@
     var u = new URL(QUIZ_URL);
     if(wantResult) u.searchParams.set("result", "1");
     if(TOKEN) u.searchParams.set("hwbt", TOKEN);  // lets the quiz auto-report completion
-    if(TOKEN) u.searchParams.set("hwbr", "2");    // beta round tag for PostHog; bump to "3" for round 3
+    // Beta round tag for PostHog. It comes from this tester's own row via /resolve
+    // (17 Sep 2026). It used to be hardcoded "2", so every round 3 tester's quiz
+    // session was reported as round 2. No round, no tag.
+    if(TOKEN && BETA_ROUND) u.searchParams.set("hwbr", BETA_ROUND);
     return u.toString();
   }
   // The tester's permanent result link (/resolve returns result_token once the quiz
@@ -167,6 +170,7 @@
   // result in the browser that took the quiz and otherwise says "Please complete the
   // quiz first" (Jackie Garfield, 25 Aug 2026). Fallback stays ?result=1 until then.
   var RESULT_TOKEN = "";
+  var BETA_ROUND = "";      // digit from /resolve, e.g. "3"; empty until it answers
   function resultUrl(){
     return RESULT_TOKEN ? "https://dandobos.com/r/?rt=" + encodeURIComponent(RESULT_TOKEN) : quizUrl(true);
   }
@@ -416,6 +420,7 @@
       .then(function(r){ if(!r.ok) throw new Error("bad"); return r.json(); })
       .then(function(d){
         if(!d || !d.name && !d.email) throw new Error("empty");
+        if(d.round) BETA_ROUND = String(d.round);
         var s = _sig(d);
         if(!_booted || s !== _lastSig){ _booted = true; _lastSig = s; boot(d); }
       })
