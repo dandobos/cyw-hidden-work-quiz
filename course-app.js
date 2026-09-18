@@ -225,13 +225,20 @@ host.innerHTML="<div class=\"wrap\">\n<header class=\"top\">\n  <h1>7 Days to Ch
         if(st.plans)PLANS=st.plans;
         if(st.pdfs)PDFS=st.pdfs;
         if(finish&&st.day7_done&&!st.feedback_done){trail.parentNode.insertBefore(finish,trail.nextSibling);finish.style.display='';}
-        /* The map as the course's final stop (Dan's ruling, 18 Sep 2026): a
-           finisher arriving from a course email sees it right under the trail. */
-        if(st.map&&/^https:\/\/my\.dandobos\.com\/map\//.test(st.map)&&!document.getElementById('cmapblock')){
+        /* The map as the course's final stop (Dan's rulings, 18 Sep 2026): a
+           reader with a quiz behind them sees it LOCKED until Day 7 is in,
+           then the link. It sits right under the trail. */
+        if((st.map||st.map_locked)&&!document.getElementById('cmapblock')&&(!st.map||/^https:\/\/my\.dandobos\.com\/map\//.test(st.map))){
           var mb=document.createElement('div');mb.className='finish';mb.id='cmapblock';
-          mb.innerHTML='<h2>Your Map</h2>'
-            +'<p>Your whole journey drawn on one page: what energizes you, what you decided each day, and your next moves.</p>'
-            +'<p class="cta"><a href="'+st.map+'" target="_blank" rel="noopener">Open Your Map</a></p>';
+          var mbBody='<h2>Your Map</h2>'
+            +'<p>Your whole journey drawn on one page: what energizes you, what you decided each day, and your next moves.</p>';
+          if(st.map){
+            mbBody+='<p class="cta"><a href="'+st.map+'" target="_blank" rel="noopener">Open Your Map</a></p>';
+          }else{
+            var mday=Math.max(1,Math.min(7,Number(st.day||CUR||1)));
+            mbBody+='<p style="color:#6b6b6b;font-size:14px;margin:0">This unlocks once your Day 7 answers are in. You are on day '+mday+' of 7.</p>';
+          }
+          mb.innerHTML=mbBody;
           trail.parentNode.insertBefore(mb,trail.nextSibling);
         }
         if(st.buried_idea)nameBuriedIdea(st.buried_idea);
