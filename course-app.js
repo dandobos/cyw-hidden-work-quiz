@@ -99,6 +99,7 @@ host.innerHTML="<div class=\"wrap\">\n<header class=\"top\">\n  <h1>7 Days to Ch
     t.innerHTML='<p class="eyebrow">Day '+d+' of 7</p><h2>'+titleOf(d)+'</h2><p>'+LOCK+' '+lockNote(d)+'</p>';
     secs[d-1].parentNode.insertBefore(t,secs[d-1]); teasers[d]=t; return t;
   }
+  var MAPSTATE='';  /* '', 'locked' or 'open': set by /course-state, drawn by paintHero */
   function paintHero(){
     var T=Math.min(CUR,7);
     document.getElementById('chtitle').textContent='Day '+T+' of 7: '+titleOf(T);
@@ -107,6 +108,12 @@ host.innerHTML="<div class=\"wrap\">\n<header class=\"top\">\n  <h1>7 Days to Ch
     for(var i=1;i<=7;i++){
       var cls=i<=done?'f':(i===T&&!PREVIEW?'r':'');
       dots+='<span class="'+cls+'">'+i+'</span>';
+    }
+    /* The map marker after day 7 (Dan, 18 Sep 2026): the top diagram shows the
+       map is coming. Locked = dashed padlock dot; open = filled dot. Only for
+       readers the backend says have a map behind them. */
+    if(MAPSTATE){
+      dots+='<span class="'+(MAPSTATE==='open'?'m mf':'m')+'" title="Your Map">'+LOCK+'</span>';
     }
     document.getElementById('chdots').innerHTML=dots;
   }
@@ -229,16 +236,27 @@ host.innerHTML="<div class=\"wrap\">\n<header class=\"top\">\n  <h1>7 Days to Ch
            reader with a quiz behind them sees it LOCKED until Day 7 is in,
            then the link. It sits right under the trail. */
         if((st.map||st.map_locked)&&!document.getElementById('cmapblock')&&(!st.map||/^https:\/\/my\.dandobos\.com\/map\//.test(st.map))){
-          var mb=document.createElement('div');mb.className='finish';mb.id='cmapblock';
-          var mbBody='<h2>Your Map</h2>'
-            +'<p>Your whole journey drawn on one page: what energizes you, what you decided each day, and your next moves.</p>';
+          MAPSTATE=st.map?'open':'locked';
+          var mb=document.createElement('div');mb.id='cmapblock';
           if(st.map){
-            mbBody+='<p class="cta"><a href="'+st.map+'" target="_blank" rel="noopener">Open Your Map</a></p>';
+            mb.className='finish';
+            mb.innerHTML='<h2>Your Map</h2>'
+              +'<p>Your whole journey drawn on one page: what energizes you, what you decided each day, and your next moves.</p>'
+              +'<p class="cta"><a href="'+st.map+'" target="_blank" rel="noopener">Open Your Map</a></p>';
           }else{
+            /* Locked card, version A (Dan's ruling, 18 Sep 2026): dashed frame,
+               LOCKED chip, dimmed grey body, day dots ending in the padlock. */
             var mday=Math.max(1,Math.min(7,Number(st.day||CUR||1)));
-            mbBody+='<p style="color:#6b6b6b;font-size:14px;margin:0">This unlocks once your Day 7 answers are in. You are on day '+mday+' of 7.</p>';
+            var mdots='';
+            for(var mi=1;mi<=6;mi++){mdots+='<i'+(mi<=mday?'':' class="u"')+'>'+mi+'</i>';}
+            mdots+='<i class="l">'+LOCK+'</i>';
+            mb.className='finish cmaplock';
+            mb.innerHTML='<span class="cmapchip">LOCKED &middot; OPENS AFTER DAY 7</span>'
+              +'<div class="cmapbody"><h2>Your Map</h2>'
+              +'<p>Your whole journey drawn on one page: what energizes you, what you decided each day, and your next moves.</p></div>'
+              +'<div class="cmapdots" aria-hidden="true">'+mdots+'</div>'
+              +'<p class="cmapfoot">You are on day '+mday+' of 7.</p>';
           }
-          mb.innerHTML=mbBody;
           trail.parentNode.insertBefore(mb,trail.nextSibling);
         }
         if(st.buried_idea)nameBuriedIdea(st.buried_idea);

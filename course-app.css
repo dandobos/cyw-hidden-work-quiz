@@ -125,3 +125,17 @@ border:1px solid var(--border);border-radius:8px;padding:10px 15px;color:var(--a
    25 Aug, Jackie's duplicate day 1). */
 #cyw-course .adone{background:#e3efe9;border:1px solid #2f6a54;border-radius:9px;color:#2f6a54;
 font-family:var(--sans);font-size:14.5px;font-weight:700;padding:12px 15px;margin:14px 0}
+/* The locked Your Map card, version A (Dan's ruling, 18 Sep 2026), and the
+   hero-dots map marker after day 7. */
+#cyw-course .finish.cmaplock{border:2px dashed #cfccc4;position:relative}
+#cyw-course .cmaplock .cmapbody{opacity:.62}
+#cyw-course .cmaplock .cmapbody h2{color:#8d877c !important}
+#cyw-course .cmaplock .cmapbody p{color:#8d877c;margin:0 0 10px}
+#cyw-course .cmapchip{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--bg);border:1px solid #cfccc4;border-radius:99px;padding:3px 14px;font-family:var(--sans);font-size:11px;letter-spacing:1.4px;font-weight:700;color:#5a564e;white-space:nowrap}
+#cyw-course .cmapdots{display:flex;gap:7px;justify-content:center;margin:12px 0 8px}
+#cyw-course .cmapdots i{width:22px;height:22px;border-radius:99px;background:var(--accent);color:#fff;font-style:normal;font-family:var(--sans);font-size:11px;font-weight:700;display:inline-grid;place-items:center;line-height:1}
+#cyw-course .cmapdots i.u{background:#eceae5;color:#8d877c}
+#cyw-course .cmapdots i.l{background:#fff;border:2px dashed #b5b0a6;color:#8d877c}
+#cyw-course .cmapfoot{font-size:13px;color:#8d877c;margin:0 0 0}
+#cyw-course .hdots span.m{background:#fff;border:2px dashed #b5b0a6;color:#8d877c}
+#cyw-course .hdots span.m.mf{background:var(--accent);border:none;color:#fff}
