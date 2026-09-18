@@ -100,7 +100,9 @@
       if (!d || !d.answers || !Object.keys(d.answers).length) throw new Error('empty');
       done = true;
       stopWait();
-      window.__HW_RESTORE = { answers: d.answers, token: d.token, taken: d.taken };
+      // map: the backend says this reader finished the course, so the result
+      // page shows the Your Map button (Dan's ruling, 18 Sep 2026).
+      window.__HW_RESTORE = { answers: d.answers, token: d.token, taken: d.taken, map: !!d.map };
       loadApp();
     })
     .catch(failed);

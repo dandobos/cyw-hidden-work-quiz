@@ -1,4 +1,4 @@
-window.HW_BUILD = 'c9f0855226';
+window.HW_BUILD = '39aed8d747';
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
@@ -1316,6 +1316,20 @@ function _hwPhraseItems(keys){ return keys.map(function(k){ return _hwPhraseItem
 //  - Borderline result (has neighbours): show the 1-2 near archetypes, then a "show all types"
 //    fallback that reveals the rest, so a reader who rejects both neighbours is never stuck.
 //  - Clean result (no neighbours): there is no single obvious alternative, so list all 8 at once.
+// The Your Map button on a restored /r/ result, for readers who finished the
+// course (Dan's ruling, 18 Sep 2026). The backend's /result payload says
+// whether the course is done; the map lives at /map/<the same token>.
+function hwMapBlockHtml(){
+  if (!_fromLink || !window.__HW_RESTORE || !window.__HW_RESTORE.map) return '';
+  var t = (window.__HW_RESTORE.token || '');
+  if (!/^[a-z0-9]{6,32}$/.test(t)) return '';
+  return '<div class="res-divider"></div>'
+    + '<div class="res-map">'
+    + '<p class="res-section-label">Your Map</p>'
+    + '<p class="res-map-note">You finished the 7-day course. Your whole journey is drawn on one page.</p>'
+    + '<a class="wc-cta" href="https://my.dandobos.com/map/' + t + '" onclick="try{hwCap(\'result_map_clicked\',{})}catch(e){}">Open Your Map</a>'
+    + '</div>';
+}
 function hwFitBlockHtml(r){
   var neighbours = r.neighbours || [];
   var neighbourKeys = neighbours.map(function(n){ return n.key; });
@@ -1665,6 +1679,7 @@ function renderResult(){
     + '<div id="hw-top">' + hwTopHtml(r.key, s) + '</div>'
     + '<div class="res-divider"></div>'
     + hwFitBlockHtml(r)
+    + hwMapBlockHtml()
     + '<div id="hw-below" hidden>'
       + hwEmailedNote()
       + '<div class="res-divider"></div>'

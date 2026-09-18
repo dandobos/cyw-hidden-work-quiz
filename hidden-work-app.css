@@ -140,6 +140,7 @@
   .res-regret-seg { flex: 1; height: 8px; background: var(--border); }
   .res-regret-level { font-family: var(--sans); font-size: 13px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; text-align: center; margin: 0 0 14px; }
   .res-regret-desc { font-family: var(--heading); font-style: italic; font-size: 15px; color: var(--text-body); line-height: 1.5; text-align: center; }
+  .res-map-note { font-family: var(--sans); font-size: 15px; color: var(--text-muted); line-height: 1.5; text-align: center; margin: 0 0 6px; }
   .res-checklist { background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--a); padding: 24px 26px; }
   .rc-eyebrow { font-family: var(--sans); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin: 0 0 5px; }
   .rc-title { font-family: var(--heading); font-size: 22px; font-weight: 600; color: var(--text-primary); line-height: 1.2; margin: 0 0 5px; }
