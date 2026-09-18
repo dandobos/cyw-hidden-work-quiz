@@ -2148,9 +2148,12 @@ function renderResult(){
   return hwEmailedNote()
     + '<div id="hw-top">' + hwTopHtml(r.key, s) + '</div>'
     + '<div class="res-divider"></div>'
-    + hwFitBlockHtml(r)
+    // A restored /r/ view skips the does-this-sound-like-you ask and opens the
+    // full result at once: the reader confirmed when they took the quiz
+    // (Dan's ruling, 18 Sep 2026).
+    + (_fromLink ? '' : hwFitBlockHtml(r))
     + hwMapBlockHtml()
-    + '<div id="hw-below" hidden>'
+    + (_fromLink ? '<div id="hw-below">' : '<div id="hw-below" hidden>')
       + hwEmailedNote()
       + '<div class="res-divider"></div>'
       + '<p class="res-section-label">Where You Sit on the Three Dimensions</p>'

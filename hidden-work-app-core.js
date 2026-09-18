@@ -1,4 +1,4 @@
-window.HW_BUILD = '39aed8d747';
+window.HW_BUILD = '80de2d78d2';
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
@@ -1678,9 +1678,12 @@ function renderResult(){
   return hwEmailedNote()
     + '<div id="hw-top">' + hwTopHtml(r.key, s) + '</div>'
     + '<div class="res-divider"></div>'
-    + hwFitBlockHtml(r)
+    // A restored /r/ view skips the does-this-sound-like-you ask and opens the
+    // full result at once: the reader confirmed when they took the quiz
+    // (Dan's ruling, 18 Sep 2026).
+    + (_fromLink ? '' : hwFitBlockHtml(r))
     + hwMapBlockHtml()
-    + '<div id="hw-below" hidden>'
+    + (_fromLink ? '<div id="hw-below">' : '<div id="hw-below" hidden>')
       + hwEmailedNote()
       + '<div class="res-divider"></div>'
       + '<p class="res-section-label">Where You Sit on the Three Dimensions</p>'
