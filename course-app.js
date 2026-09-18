@@ -225,6 +225,15 @@ host.innerHTML="<div class=\"wrap\">\n<header class=\"top\">\n  <h1>7 Days to Ch
         if(st.plans)PLANS=st.plans;
         if(st.pdfs)PDFS=st.pdfs;
         if(finish&&st.day7_done&&!st.feedback_done){trail.parentNode.insertBefore(finish,trail.nextSibling);finish.style.display='';}
+        /* The map as the course's final stop (Dan's ruling, 18 Sep 2026): a
+           finisher arriving from a course email sees it right under the trail. */
+        if(st.map&&/^https:\/\/my\.dandobos\.com\/map\//.test(st.map)&&!document.getElementById('cmapblock')){
+          var mb=document.createElement('div');mb.className='finish';mb.id='cmapblock';
+          mb.innerHTML='<h2>Your Map</h2>'
+            +'<p>Your whole journey drawn on one page: what energizes you, what you decided each day, and your next moves.</p>'
+            +'<p class="cta"><a href="'+st.map+'" target="_blank" rel="noopener">Open Your Map</a></p>';
+          trail.parentNode.insertBefore(mb,trail.nextSibling);
+        }
         if(st.buried_idea)nameBuriedIdea(st.buried_idea);
         if(st.day){
           var d=Math.max(1,Math.min(7,st.day));
