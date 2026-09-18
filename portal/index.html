@@ -227,7 +227,13 @@
         btn:null },
       { key:"course_feedback", n:5, kind:"form", title:"Course feedback form", time:"Duration: about 7 minutes",
         desc:"Once you have been through all seven days, share your candid and specific feedback.",
-        btn:{label:"Open the Email Course Feedback Form", href:withId(FORM.course,name,email)} }
+        btn:{label:"Open the Email Course Feedback Form", href:withId(FORM.course,name,email)} },
+      // Your Map unlocks when the course is finished (Dan's ruling, 18 Sep 2026).
+      // It is a keepsake, not a task: it never counts as done and never joins the
+      // progress milestones.
+      { key:"map", n:6, kind:"reward", title:"Your Map", time:"Yours to keep",
+        desc:"Your whole journey drawn on one page: what energizes you, what you decided each day, and your next moves.",
+        btn: RESULT_TOKEN ? {label:"Open Your Map", href:"https://my.dandobos.com/map/"+RESULT_TOKEN, accent:true} : null }
     ];
 
     // map a step key to the server-side (Notion) progress flag
@@ -255,10 +261,12 @@
       // the chapter, so it stays locked until the backend has a Day 7 answer
       // (Dan's ruling 4 Sep 2026, after a tester answered it at day 1).
       var daysDone = Number(tester.days_done || 0);
-      var locked = (s.key === "course_feedback" && !done && daysDone < 7);
+      var locked = ((s.key === "course_feedback" || s.key === "map") && !done && daysDone < 7);
       if(locked){
         actions = '<div class="time">This unlocks once your Day 7 answers are in. '
                 + (daysDone > 0 ? 'You are on day ' + daysDone + ' of 7.' : 'The course has not started yet.') + '</div>';
+      } else if(s.key === "map" && !s.btn){
+        actions = '<div class="time">Your map link is on its way. Message Dan if it does not appear.</div>';
       } else if(!done && s.btn){
         actions = '<div class="row"><a class="btn '+(s.btn.accent?"accent":"")+'" href="'+s.btn.href+'" target="_blank" rel="noopener">'+esc(s.btn.label)+'</a></div>';
       } else if(done){
