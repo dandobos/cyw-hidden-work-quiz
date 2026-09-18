@@ -126,7 +126,7 @@ border:1px solid var(--border);border-radius:8px;padding:10px 15px;color:var(--a
 #cyw-course .adone{background:#e3efe9;border:1px solid #2f6a54;border-radius:9px;color:#2f6a54;
 font-family:var(--sans);font-size:14.5px;font-weight:700;padding:12px 15px;margin:14px 0}
 /* The locked Your Map card, version A (Dan's ruling, 18 Sep 2026), and the
-   hero-dots map marker after day 7. */
+   card only: the hero-dots marker was reverted (Dan, 18 Sep). */
 #cyw-course .finish.cmaplock{border:2px dashed #cfccc4;position:relative}
 #cyw-course .cmaplock .cmapbody{opacity:.62}
 #cyw-course .cmaplock .cmapbody h2{color:#8d877c !important}
@@ -137,5 +137,3 @@ font-family:var(--sans);font-size:14.5px;font-weight:700;padding:12px 15px;margi
 #cyw-course .cmapdots i.u{background:#eceae5;color:#8d877c}
 #cyw-course .cmapdots i.l{background:#fff;border:2px dashed #b5b0a6;color:#8d877c}
 #cyw-course .cmapfoot{font-size:13px;color:#8d877c;margin:0 0 0}
-#cyw-course .hdots span.m{background:#fff;border:2px dashed #b5b0a6;color:#8d877c}
-#cyw-course .hdots span.m.mf{background:var(--accent);border:none;color:#fff}

@@ -99,7 +99,6 @@ host.innerHTML="<div class=\"wrap\">\n<header class=\"top\">\n  <h1>7 Days to Ch
     t.innerHTML='<p class="eyebrow">Day '+d+' of 7</p><h2>'+titleOf(d)+'</h2><p>'+LOCK+' '+lockNote(d)+'</p>';
     secs[d-1].parentNode.insertBefore(t,secs[d-1]); teasers[d]=t; return t;
   }
-  var MAPSTATE='';  /* '', 'locked' or 'open': set by /course-state, drawn by paintHero */
   function paintHero(){
     var T=Math.min(CUR,7);
     document.getElementById('chtitle').textContent='Day '+T+' of 7: '+titleOf(T);
@@ -108,12 +107,6 @@ host.innerHTML="<div class=\"wrap\">\n<header class=\"top\">\n  <h1>7 Days to Ch
     for(var i=1;i<=7;i++){
       var cls=i<=done?'f':(i===T&&!PREVIEW?'r':'');
       dots+='<span class="'+cls+'">'+i+'</span>';
-    }
-    /* The map marker after day 7 (Dan, 18 Sep 2026): the top diagram shows the
-       map is coming. Locked = dashed padlock dot; open = filled dot. Only for
-       readers the backend says have a map behind them. */
-    if(MAPSTATE){
-      dots+='<span class="'+(MAPSTATE==='open'?'m mf':'m')+'" title="Your Map">'+LOCK+'</span>';
     }
     document.getElementById('chdots').innerHTML=dots;
   }
@@ -236,7 +229,6 @@ host.innerHTML="<div class=\"wrap\">\n<header class=\"top\">\n  <h1>7 Days to Ch
            reader with a quiz behind them sees it LOCKED until Day 7 is in,
            then the link. It sits right under the trail. */
         if((st.map||st.map_locked)&&!document.getElementById('cmapblock')&&(!st.map||/^https:\/\/my\.dandobos\.com\/map\//.test(st.map))){
-          MAPSTATE=st.map?'open':'locked';
           var mb=document.createElement('div');mb.id='cmapblock';
           if(st.map){
             mb.className='finish';
