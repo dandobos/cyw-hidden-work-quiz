@@ -1,4 +1,4 @@
-window.HW_BUILD = '80de2d78d2';
+window.HW_BUILD = 'a455f33528';
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
@@ -912,6 +912,15 @@ function shareLoopHtml(r, s){
           + hwEmailShareBtns(e, fMsg, p)
           + '<button class="sbtn" onclick="viralCopyLink()"><span class="g g-cp">⧉</span>Copy Info</button>'
         + '</div>'
+        + '<div class="pb-sendfor" id="pb-sendfor" hidden>'
+          + '<p class="pb-sf-h">Or let me send it, with the card</p>'
+          + '<p class="pb-sf-b">Your friend gets the card, your note and your link, in one email from me. It is sent once, and nothing else follows.</p>'
+          + '<div class="pb-sf-row">'
+            + '<input class="pb-sf-input" id="pb-sf-to" type="email" inputmode="email" autocomplete="off" spellcheck="false" placeholder="Their email address" maxlength="120">'
+            + '<button class="pb-sf-btn" id="pb-sf-btn" type="button" onclick="hwSendForMe()">Send It for Me</button>'
+          + '</div>'
+          + '<p class="pb-sf-msg" id="pb-sf-msg" hidden></p>'
+        + '</div>'
       + '</div>'
       + '<div class="seg-body" data-m="socials" style="display:none">'
         + '<div class="share-btns">'
@@ -926,6 +935,48 @@ function shareLoopHtml(r, s){
         + '<button class="save-green" onclick="viralSaveStory()" style="margin-top:10px"><span class="main"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 4v10m0 0l-3.5-3.5M12 14l3.5-3.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Save for Stories (9:16)</span><span class="sub">Portrait, for Instagram and TikTok stories.</span></button>'
       + '</div>'
     + '</div>';
+}
+// The server-sent share email (Dan ruled the feature 15 Sep 2026, the sender domain on
+// 21 Sep). The option stays hidden until the backend says a sender exists, so nothing
+// shows for readers while send.dandobos.com is still verifying.
+function hwShareForMeReady(){
+  try {
+    fetch(BETA_BACKEND + '/share-email', { method: 'GET' })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(j){
+        if (j && j.ready) { var el = document.getElementById('pb-sendfor'); if (el) el.hidden = false; }
+      }).catch(function(){});
+  } catch (e) {}
+}
+function hwSendForMe(){
+  var to = document.getElementById('pb-sf-to');
+  var btn = document.getElementById('pb-sf-btn');
+  var msg = document.getElementById('pb-sf-msg');
+  if (!to || !btn || !msg || !_share) return;
+  var addr = (to.value || '').trim();
+  function say(text, bad){ msg.textContent = text; msg.className = 'pb-sf-msg' + (bad ? ' bad' : ''); msg.hidden = false; }
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(addr)) { say('That address does not look right.', true); to.focus(); return; }
+  btn.disabled = true; btn.textContent = 'Sending...';
+  fetch(BETA_BACKEND + '/share-email', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ to: addr, from_name: hwSenderName(), note: _shareNote || '', ref: myShareRef() })
+  }).then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); })
+    .then(function(res){
+      if (res.ok && res.j && res.j.ok) {
+        hwCap('share_email_sent_ui', { archetype_key: (_share && _share.key) || null });
+        say('Sent. Nothing else will follow.');
+        to.value = ''; btn.hidden = true;
+        return;
+      }
+      var err = (res.j && res.j.error) || '';
+      say(err.indexOf('already sent') === 0 ? 'That address has already been sent one.'
+          : 'That did not send. Please use the Email button instead.', true);
+      btn.disabled = false; btn.textContent = 'Send It for Me';
+    })
+    .catch(function(){
+      say('That did not send. Please use the Email button instead.', true);
+      btn.disabled = false; btn.textContent = 'Send It for Me';
+    });
 }
 function viralToast(msg){ var t=document.getElementById('share-toast'); if(!t){ t=document.createElement('div'); t.id='share-toast'; t.className='share-toast'; document.body.appendChild(t); } t.textContent=msg; t.classList.add('on'); clearTimeout(t._t); t._t=setTimeout(function(){ t.classList.remove('on'); },1900); }
 // Outgoing message assembly: personal note (if any), then the message, then the link on
@@ -1067,7 +1118,7 @@ function hwShareClick(ch){ hwRegisterShortLink(); hwCap('share_clicked', { chann
 // response swaps every channel over to /q/<ref>. Failure costs nothing: the
 // long link keeps working exactly as before.
 var _shortLinkAsked = false;
-function hwShortLinkInit(){ if (_shortLinkAsked || !_share) return; _shortLinkAsked = true; hwRegisterShortLink(); }
+function hwShortLinkInit(){ if (_shortLinkAsked || !_share) return; _shortLinkAsked = true; hwRegisterShortLink(); hwShareForMeReady(); }
 function viralCopyLink(){ if(!_share) return; hwShareClick('copy'); var u=viralShareString(); (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(function(){ viralToast('Copied'); }).catch(function(){ viralToast(u); }); }
 function viralSocial(url, channel){ if(!_share) return; hwShareClick(channel||'social'); var u=viralShareString(); if(navigator.clipboard){ navigator.clipboard.writeText(u).then(function(){ viralToast('Message copied, paste it into your post'); }).catch(function(){}); } window.open(url,'_blank','noopener'); }
 function viralInstagram(){ if(!_share) return; hwShareClick('instagram'); var u=viralShareString(); (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(function(){ viralToast('Message copied, paste it into Instagram'); }).catch(function(){ viralToast(u); }); }
