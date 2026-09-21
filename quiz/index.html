@@ -1419,12 +1419,24 @@ function shareLoopHtml(r, s){
 // The server-sent share email (Dan ruled the feature 15 Sep 2026, the sender domain on
 // 21 Sep). The option stays hidden until the backend says a sender exists, so nothing
 // shows for readers while send.dandobos.com is still verifying.
+var _shareForMeReady = false, _shareForMeAsked = false;
+function hwApplySendFor(){
+  if (!_shareForMeReady) return;
+  var el = document.getElementById('pb-sendfor');
+  if (el) el.hidden = false;
+}
 function hwShareForMeReady(){
+  if (_shareForMeAsked) { hwApplySendFor(); return; }
+  _shareForMeAsked = true;
   try {
     fetch(BETA_BACKEND + '/share-email', { method: 'GET' })
       .then(function(r){ return r.ok ? r.json() : null; })
       .then(function(j){
-        if (j && j.ready) { var el = document.getElementById('pb-sendfor'); if (el) el.hidden = false; }
+        // The answer can land before the panel is in the DOM, which is how the
+        // option stayed hidden on the saved-result page (21 Sep 2026). Remember
+        // it, and apply it again every time the panel is rebuilt.
+        _shareForMeReady = !!(j && j.ready);
+        hwApplySendFor();
       }).catch(function(){});
   } catch (e) {}
 }
@@ -1520,6 +1532,7 @@ function viralShareString(){ return hwOutgoingText() + (_share ? '\n\n' + hwDisp
 function hwRebuildShareLinks(box){
   if (!_share) return;
   hwShortLinkInit();
+  hwApplySendFor();
   var e = encodeURIComponent;
   _share.link = hwLinkWithFrom(_share.baseLink || _share.link);
   box = box || document.querySelector('.panelbox');
