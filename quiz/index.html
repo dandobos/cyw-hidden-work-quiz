@@ -1361,6 +1361,10 @@ const SHARE_HEADLINE = {
 function hwSenderName(){ try { var n = (localStorage.getItem('hw_sender_name') || '').slice(0, 24).trim(); return /^[A-Za-z][A-Za-z' -]{0,23}$/.test(n) ? n : ''; } catch(e){ return ''; } }
 function hwLinkWithFrom(base){ var n = hwSenderName(); return n ? base + '&from=' + encodeURIComponent(n) : base; }
 function shareLoopHtml(r, s){
+  // Ask whether a sender exists as soon as the panel is built. setTimeout, because
+  // the caller has not inserted this HTML yet (21 Sep 2026: the saved-result page
+  // never calls hwRebuildShareLinks, so hooking the short-link init was not enough).
+  setTimeout(hwShareForMeReady, 0);
   var p=sharePayload(r, s), e=encodeURIComponent;
   var fMsg = viralShareText(r);
   p.baseLink = p.link;

@@ -1,4 +1,4 @@
-window.HW_BUILD = '99713699ff';
+window.HW_BUILD = 'fc7a273165';
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
@@ -881,6 +881,10 @@ const SHARE_HEADLINE = {
 function hwSenderName(){ try { var n = (localStorage.getItem('hw_sender_name') || '').slice(0, 24).trim(); return /^[A-Za-z][A-Za-z' -]{0,23}$/.test(n) ? n : ''; } catch(e){ return ''; } }
 function hwLinkWithFrom(base){ var n = hwSenderName(); return n ? base + '&from=' + encodeURIComponent(n) : base; }
 function shareLoopHtml(r, s){
+  // Ask whether a sender exists as soon as the panel is built. setTimeout, because
+  // the caller has not inserted this HTML yet (21 Sep 2026: the saved-result page
+  // never calls hwRebuildShareLinks, so hooking the short-link init was not enough).
+  setTimeout(hwShareForMeReady, 0);
   var p=sharePayload(r, s), e=encodeURIComponent;
   var fMsg = viralShareText(r);
   p.baseLink = p.link;
