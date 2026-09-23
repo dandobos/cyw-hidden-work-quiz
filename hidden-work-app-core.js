@@ -1,4 +1,4 @@
-window.HW_BUILD = 'b0cacfd2c6';
+window.HW_BUILD = '641f66ce23';
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
@@ -304,7 +304,7 @@ function hwlpInit(){
   startQuiz('landing');
  });
 
-const A=[["HHH","True Creator","#3D7A6E","#3D7A6E","I have chosen my work. Now it's time to make it world-class."],["HHL","High Achiever","#B8902F","#B8902F","Turns out I've been winning the wrong game."],["HLH","Awakened Observer","#1E5F8C","#1E5F8C","I can see my real work clearly. Now it's time to take more action."],["HLL","Restless Visionary","#A85A3D","#A85A3D","I can see the life I want. Time to start moving toward it."],["LHH","Restless Explorer","#C2722F","#C2722F","I'm moving fast but need to better define my direction."],["LHL","Tireless Driver","#B23A2E","#B23A2E","My engine is firing. I now need to point it in the right direction."],["LLH","Grounded Seeker","#557C9E","#557C9E","I'm at peace with who I am. Now I need to define where I'm going."],["LLL","Late Bloomer","#6B6B6B","#6B6B6B","Everything looks fine on paper, but I know something's off, and I'm done ignoring it."]];
+const A=[["HHH","True Creator","#3D7A6E","#3D7A6E","I have chosen my work. Now it's time to make it world-class."],["HHL","High Achiever","#B8902F","#B8902F","I'm successful but it feels like I'm winning the wrong game."],["HLH","Awakened Observer","#1E5F8C","#1E5F8C","I can see my real work clearly. Now it's time to take more action."],["HLL","Restless Visionary","#A85A3D","#A85A3D","I can see the life I want. Time to start moving toward it."],["LHH","Restless Explorer","#C2722F","#C2722F","I'm moving fast but need to better define my direction."],["LHL","Tireless Driver","#B23A2E","#B23A2E","My engine is firing. I now need to point it in the right direction."],["LLH","Grounded Seeker","#557C9E","#557C9E","I'm at peace with who I am. Now I need to define where I'm going."],["LLL","Late Bloomer","#6B6B6B","#6B6B6B","Everything looks fine on paper, but I know something's off, and I'm done ignoring it."]];
 const ic=c=>'<svg class="ic" aria-hidden="true"><use href="#i-'+c+'"/></svg>';
 const q=t=>'\u201c'+t+'\u201d';
 const QUIZ="#start";
@@ -823,7 +823,7 @@ try { if (_refId && window.posthog && posthog.register) posthog.register({ refer
 // ===== VIRAL SHARE LOOP =====
 const VIRAL = {
   HHH:{ accent:'#3D7A6E', claim:"I have chosen my work. Now it's time to make it world-class.",          prompt:"Know someone also building work that's truly their own?" },
-  HHL:{ accent:'#B8902F', claim:"Turns out I've been winning the wrong game.",                          prompt:"Know someone who's also been winning at the wrong game?" },
+  HHL:{ accent:'#B8902F', claim:"I'm successful but it feels like I'm winning the wrong game.",                          prompt:"Know someone who's also been winning at the wrong game?" },
   HLH:{ accent:'#1E5F8C', claim:"I can see my real work clearly. Now it's time to take more action.",   prompt:"Know someone who can also see their path but hasn't started walking it?" },
   HLL:{ accent:'#A85A3D', claim:"I can see the life I want. Time to start moving toward it.",            prompt:"Know someone who also can picture the life they want but feels stuck?" },
   LHH:{ accent:'#C2722F', claim:"I'm moving fast but need to better define my direction.",              prompt:"Know someone else moving fast with not much interest in a map?" },
