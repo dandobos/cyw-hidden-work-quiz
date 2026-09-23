@@ -628,6 +628,9 @@
 #page .hwlp nav.topbar a.btn:hover{background:var(--ctadk);color:#fff}
 #page .hwlp .dbar,#page .hwlp .mcta{display:none!important}
 #page .hwlp #pick{scroll-margin-top:80px}
+#page .hwlp .hero{padding-bottom:44px}
+#page .hwlp .lines{padding:60px 0 48px}
+#page .hwlp .pick{padding-top:60px}
 #page .hwlp .more{padding:40px 0 56px}
 #page .hwlp .more .lab{margin-bottom:20px}
 #page .hwlp .faq{padding-top:56px}
