@@ -1,4 +1,4 @@
-window.HW_BUILD = '641f66ce23';
+window.HW_BUILD = '203983f3c4';
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
@@ -304,7 +304,7 @@ function hwlpInit(){
   startQuiz('landing');
  });
 
-const A=[["HHH","True Creator","#3D7A6E","#3D7A6E","I have chosen my work. Now it's time to make it world-class."],["HHL","High Achiever","#B8902F","#B8902F","I'm successful but it feels like I'm winning the wrong game."],["HLH","Awakened Observer","#1E5F8C","#1E5F8C","I can see my real work clearly. Now it's time to take more action."],["HLL","Restless Visionary","#A85A3D","#A85A3D","I can see the life I want. Time to start moving toward it."],["LHH","Restless Explorer","#C2722F","#C2722F","I'm moving fast but need to better define my direction."],["LHL","Tireless Driver","#B23A2E","#B23A2E","My engine is firing. I now need to point it in the right direction."],["LLH","Grounded Seeker","#557C9E","#557C9E","I'm at peace with who I am. Now I need to define where I'm going."],["LLL","Late Bloomer","#6B6B6B","#6B6B6B","Everything looks fine on paper, but I know something's off, and I'm done ignoring it."]];
+const A=[["HHH","True Creator","#3D7A6E","#3D7A6E","I have chosen my work. Now it's time to make it world-class."],["HHL","High Achiever","#B8902F","#B8902F","I'm successful but it feels like I'm winning the wrong game."],["HLH","Awakened Observer","#1E5F8C","#1E5F8C","I don't need more insight. I need more action."],["HLL","Restless Visionary","#A85A3D","#A85A3D","I know my real work, but I'm living a life built around other people's expectations."],["LHH","Restless Explorer","#C2722F","#C2722F","I keep exploring. Now I need to pick one direction."],["LHL","Tireless Driver","#B23A2E","#B23A2E","I'm great at my work, but it takes more from me than it gives."],["LLH","Grounded Seeker","#557C9E","#557C9E","I'm at peace with who I am. Now I need to define where I'm going."],["LLL","Late Bloomer","#6B6B6B","#6B6B6B","Everything looks fine on paper, but I know something's off, and I'm done ignoring it."]];
 const ic=c=>'<svg class="ic" aria-hidden="true"><use href="#i-'+c+'"/></svg>';
 const q=t=>'\u201c'+t+'\u201d';
 const QUIZ="#start";
