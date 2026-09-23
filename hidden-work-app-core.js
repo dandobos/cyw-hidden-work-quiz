@@ -1,4 +1,4 @@
-window.HW_BUILD = '6f0bae11ce';
+window.HW_BUILD = '25d8fdd0ab';
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
@@ -312,7 +312,7 @@ const art=n=>/^[AEIOU]/.test(n)?'an':'a';
 function pickLine(i){const n=A[i][1];return '<p>Sounds like '+art(n)+' <b>'+n+'</b>? The quiz tells you for sure.</p><a class="btn" href="'+QUIZ+'">Take the Hidden Work Quiz <span>&rarr;</span></a>';}
 (function(){var h=document.getElementById('heroCta'),b=document.getElementById('mcta');if(!h)return;
  if(!('IntersectionObserver' in window)){b.classList.add('show');return;}
- new IntersectionObserver(function(e){b.classList.toggle('show',!e[0].isIntersecting);}).observe(h);})();
+ new IntersectionObserver(function(e){b.classList.toggle('show',!e[0].isIntersecting&&e[0].boundingClientRect.top<0);}).observe(h);})();
 
 function lightUp(sel){if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')}),{rootMargin:'0px 0px -30% 0px'});
  document.querySelectorAll(sel).forEach(l=>io.observe(l));}else{document.querySelectorAll(sel).forEach(l=>l.classList.add('on'));}}
@@ -337,7 +337,7 @@ toKnow=function(i){const r=A[i],k=document.getElementById('know');
 
 (function(){var d=document.getElementById('dbar'),h=document.getElementById('heroCta');if(!d||!h)return;
  if(!('IntersectionObserver' in window)){d.classList.add('show');return;}
- new IntersectionObserver(function(e){var on=!e[0].isIntersecting;d.classList.toggle('show',on);d.setAttribute('aria-hidden',on?'false':'true');
+ new IntersectionObserver(function(e){var on=!e[0].isIntersecting&&e[0].boundingClientRect.top<0;d.classList.toggle('show',on);d.setAttribute('aria-hidden',on?'false':'true');
   var a=d.querySelector('a');a.tabIndex=on?0:-1;}).observe(h);})();
 
 

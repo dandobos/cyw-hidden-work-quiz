@@ -624,7 +624,7 @@
 #page .hwlp .c.c{padding-left:32px;padding-right:32px}
 @media (max-width:820px){#page .hwlp .c.c{padding-left:16px;padding-right:16px}}
 /* the page around the landing: full width, white, no progress bar */
-body.hwlp-on{background:#fff}
+body.hwlp-on{background:#fff;max-width:none;margin:0;padding:0}  /* WP gives <body> the class .page, which the quiz sizes to 660px */
 html.hwlp-on,body.hwlp-on{overflow-x:clip}
 body.hwlp-on #progressbar{display:none}
 body.hwlp-on #page{max-width:none;margin:0;padding:0}
