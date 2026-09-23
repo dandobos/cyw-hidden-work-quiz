@@ -641,8 +641,18 @@
 #page .hwlp .dbar,#page .hwlp .mcta{display:none!important}
 #page .hwlp #pick{scroll-margin-top:80px}
 #page .hwlp .more{padding:40px 0 56px}
+#page .hwlp .more .lab{margin-bottom:20px}
 #page .hwlp .faq{padding-top:56px}
 #page .hwlp .final{padding-bottom:90px}
+@media (max-width:820px){#page .hwlp .hero{padding-bottom:40px}
+#page .hwlp .lines{padding:44px 0}
+#page .hwlp .pick,#page .hwlp .get{padding:52px 0}
+#page .hwlp .more{padding:28px 0 44px}
+#page .hwlp .faq{padding-top:44px}
+#page .hwlp .final{padding:56px 0 60px}
+#page .hwlp .inl{padding:18px 16px}
+#page .hwlp .inl p{font-size:19px}
+#page .hwlp .inl .btn{font-size:16px;padding:14px 22px;white-space:nowrap}}
 @media (max-width:340px){#page .hwlp nav.topbar>span{font-size:10px}
 #page .hwlp nav.topbar a.btn{padding:8px 10px;font-size:12px}}
 #page .hwlp nav.topbar span,#page .hwlp nav.topbar a.btn{white-space:nowrap}
@@ -1019,6 +1029,9 @@ toKnow=function(i){const r=A[i],k=document.getElementById('know');
  new IntersectionObserver(function(e){var on=!e[0].isIntersecting&&e[0].boundingClientRect.top<0;d.classList.toggle('show',on);d.setAttribute('aria-hidden',on?'false':'true');
   var a=d.querySelector('a');a.tabIndex=on?0:-1;}).observe(h);})();
 
+(function(){var g=document.getElementById('g'),n=document.getElementById('inl');if(!g||!n)return;
+ g.addEventListener('click',function(e){var c=e.target.closest?e.target.closest('.card'):null;if(!c)return;
+  setTimeout(function(){if(window.matchMedia('(max-width:820px)').matches){c.after(n);n.style.margin='0';}else if(n.parentNode===g){g.after(n);n.style.margin='';}},0);});})();
 
 }
 // HWLP END

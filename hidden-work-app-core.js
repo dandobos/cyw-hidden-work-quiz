@@ -1,4 +1,4 @@
-window.HW_BUILD = '00faa947dd';
+window.HW_BUILD = '668c0487bf';
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
@@ -340,6 +340,9 @@ toKnow=function(i){const r=A[i],k=document.getElementById('know');
  new IntersectionObserver(function(e){var on=!e[0].isIntersecting&&e[0].boundingClientRect.top<0;d.classList.toggle('show',on);d.setAttribute('aria-hidden',on?'false':'true');
   var a=d.querySelector('a');a.tabIndex=on?0:-1;}).observe(h);})();
 
+(function(){var g=document.getElementById('g'),n=document.getElementById('inl');if(!g||!n)return;
+ g.addEventListener('click',function(e){var c=e.target.closest?e.target.closest('.card'):null;if(!c)return;
+  setTimeout(function(){if(window.matchMedia('(max-width:820px)').matches){c.after(n);n.style.margin='0';}else if(n.parentNode===g){g.after(n);n.style.margin='';}},0);});})();
 
 }
 // HWLP END
