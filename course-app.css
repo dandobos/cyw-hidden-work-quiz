@@ -137,3 +137,107 @@ font-family:var(--sans);font-size:14.5px;font-weight:700;padding:12px 15px;margi
 #cyw-course .cmapdots i.u{background:#eceae5;color:#8d877c}
 #cyw-course .cmapdots i.l{background:#fff;border:2px dashed #b5b0a6;color:#8d877c}
 #cyw-course .cmapfoot{font-size:13px;color:#8d877c;margin:0 0 0}
+
+/* CWTHEME START: LIVE 24 Sep 2026 (Dan: "it's great - pl update"). Source: _testing_now/course-restyle-theme.css */
+/* CWTHEME: the landing page's look on the 7-day course page (dandobos.com/course/).
+   Scoped #cyw-course.cwt (id + class) so it outranks the course's own rules and its
+   HOST-THEME ISOLATION block; where that block uses !important, this one does too.
+   Behaviour, copy, gating and order are unchanged: only type, colour, shape and spacing. */
+#cyw-course.cwt {
+  --cw-sans: 'Inter Tight', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --cw-serif: 'Newsreader', Georgia, serif;
+  --cw-fg: #0F0F0F; --cw-soft: #3A3A3A; --cw-dim: #6B6B6B; --cw-line: #E4E1DA; --cw-bg2: #EEF3F8;
+  --cw-red: #B23A2E; --cw-cta: #1E5F8C; --cw-ctadk: #164A6E;
+  --heading: var(--cw-sans); --sans: var(--cw-sans);
+  --bg: #FFFFFF; --card: #FFFFFF; --border: var(--cw-line); --border-soft: var(--cw-line);
+  --text: var(--cw-fg); --body: var(--cw-fg); --subtle: var(--cw-soft); --accent: var(--cw-cta);
+  background: #FFFFFF; color: var(--cw-fg); font-family: var(--cw-sans); font-size: 18px; line-height: 1.6;
+}
+#cyw-course.cwt .wrap { max-width: 700px; padding: 28px 24px 90px; }
+
+/* ---- page title ---- */
+#cyw-course.cwt header.top { text-align: left; padding: 18px 0 8px; }
+#cyw-course.cwt header.top h1 { font-family: var(--cw-sans) !important; font-weight: 900 !important; font-size: clamp(40px, 8vw, 60px) !important; line-height: .96 !important; letter-spacing: -.045em !important; color: var(--cw-fg) !important; margin: 0 0 10px !important; }
+#cyw-course.cwt header.top p { font-family: var(--cw-serif); font-style: italic; font-size: 22px; color: var(--cw-red); }
+
+/* ---- today hero ---- */
+#cyw-course.cwt .chero { text-align: left; background: var(--cw-bg2); border: 0; border-radius: 20px; padding: 28px 28px 26px; margin: 22px 0 14px; }
+#cyw-course.cwt .hdots { justify-content: flex-start; gap: 8px; margin: 0 0 16px; }
+#cyw-course.cwt .hdots span { width: 30px; height: 30px; font-family: var(--cw-sans); font-size: 13px; font-weight: 700; background: #fff; color: #9A958B; }
+#cyw-course.cwt .hdots span.f { background: var(--cw-cta); color: #fff; }
+#cyw-course.cwt .hdots span.r { background: #fff; color: var(--cw-cta); border: 2.5px solid var(--cw-cta); }
+#cyw-course.cwt .htitle { font-family: var(--cw-sans) !important; font-weight: 900 !important; font-size: clamp(28px, 5.4vw, 40px) !important; line-height: 1.02 !important; letter-spacing: -.035em !important; color: var(--cw-fg) !important; margin: 0 0 20px !important; }
+#cyw-course.cwt .hstart { display: inline-flex; align-items: center; gap: 12px; font-family: var(--cw-sans); font-size: 18px; font-weight: 800; background: var(--cw-cta); border-radius: 999px; padding: 17px 28px; transition: background .15s, transform .15s; }
+#cyw-course.cwt .hstart::after { content: "\2192"; font-size: 21px; line-height: 1; }
+#cyw-course.cwt .hstart:hover { background: var(--cw-ctadk); opacity: 1; transform: translateY(-2px); }
+#cyw-course.cwt .pstrip { justify-content: flex-start; }
+#cyw-course.cwt .parch { font-family: var(--cw-sans); font-size: 13px; font-weight: 700; letter-spacing: .02em; padding: 5px 14px; }
+
+/* ---- journey trail ---- */
+#cyw-course.cwt .trail { margin: 8px 0 30px; }
+#cyw-course.cwt .stop:before { background: var(--cw-line); width: 2px; }
+#cyw-course.cwt .tdot { border-color: #CFCBC2; }
+#cyw-course.cwt .stop.done .tdot { background: var(--cw-cta); border-color: var(--cw-cta); }
+#cyw-course.cwt .stop.today .tdot { border-color: var(--cw-cta); box-shadow: 0 0 0 3px rgba(30,95,140,.2); }
+#cyw-course.cwt .tlab { font-family: var(--cw-sans); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--cw-dim); }
+#cyw-course.cwt .ttag { background: var(--cw-red); border-radius: 999px; padding: 2px 9px; letter-spacing: .12em; }
+#cyw-course.cwt .topen { font-family: var(--cw-sans); font-weight: 700; font-size: 19px; letter-spacing: -.01em; color: var(--cw-fg); }
+#cyw-course.cwt .stop.locked .topen { color: #9A958B; }
+#cyw-course.cwt .tnote { font-family: var(--cw-sans); font-size: 14px; color: #8C877E; }
+#cyw-course.cwt .rexp { font-family: var(--cw-sans); font-size: 14px; color: var(--cw-cta); }
+#cyw-course.cwt .resp { border: 1.5px solid var(--cw-line); border-radius: 14px; }
+#cyw-course.cwt .rpdf a, #cyw-course.cwt .rpdf a:visited { font-family: var(--cw-sans) !important; font-size: 14px !important; font-weight: 700 !important; color: var(--cw-cta) !important; background: #fff !important; border: 1.5px solid var(--cw-cta) !important; border-radius: 999px !important; padding: 10px 18px !important; }
+#cyw-course.cwt .rpdf a:hover, #cyw-course.cwt .rpdf a:focus { background: var(--cw-cta) !important; color: #fff !important; }
+
+/* ---- a day's lesson ---- */
+#cyw-course.cwt .day { border: 1.5px solid var(--cw-line); border-radius: 20px; padding: 30px 30px 26px; }
+#cyw-course.cwt .eyebrow { font-family: var(--cw-sans); font-size: 12.5px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--cw-red); }
+#cyw-course.cwt .day h2 { font-family: var(--cw-sans) !important; font-weight: 900 !important; font-size: clamp(28px, 5.4vw, 40px) !important; line-height: 1.02 !important; letter-spacing: -.035em !important; color: var(--cw-fg) !important; margin: 0 0 22px !important; }
+#cyw-course.cwt .day h3 { font-family: var(--cw-sans) !important; font-weight: 800 !important; font-size: 23px !important; letter-spacing: -.02em !important; line-height: 1.2 !important; color: var(--cw-fg) !important; margin: 30px 0 10px !important; }
+#cyw-course.cwt .day p, #cyw-course.cwt .day li { font-size: 18px; line-height: 1.62; }
+#cyw-course.cwt .day li::marker { color: var(--cw-red); }
+/* Popular Myth / Overlooked Truth */
+#cyw-course.cwt .mt { gap: 8px; margin: 0 0 26px; }
+#cyw-course.cwt .mt div { font-size: 18px; padding: 16px 20px; }
+#cyw-course.cwt .mt .m { background: #F5F4F1; border: 0; border-radius: 14px; padding-bottom: 16px; color: var(--cw-soft); }
+#cyw-course.cwt .mt .t { background: var(--cw-bg2); border: 0; border-radius: 14px; color: var(--cw-fg); }
+#cyw-course.cwt .mt span { font-family: var(--cw-sans); font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--cw-dim); margin-bottom: 6px; }
+#cyw-course.cwt .mt .t span { color: var(--cw-cta); }
+/* activity buttons: the landing's blue pill */
+#cyw-course.cwt .cta { margin: 20px 0; }
+#cyw-course.cwt .cta a, #cyw-course.cwt .cta a:visited { display: inline-flex; align-items: center; gap: 12px; font-family: var(--cw-sans); font-size: 17px; font-weight: 800; background: var(--cw-cta) !important; border-radius: 999px; padding: 17px 28px; transition: background .15s, transform .15s; }
+#cyw-course.cwt .cta a::after { content: "\2192"; font-size: 20px; line-height: 1; }
+#cyw-course.cwt .cta a:hover, #cyw-course.cwt .cta a:focus { background: var(--cw-ctadk) !important; transform: translateY(-2px); }
+/* Dan's ruling 19 Aug: this line stays italic, centred and grey, like the emails. */
+#cyw-course.cwt .day p.finishline { font-family: var(--cw-serif) !important; font-size: 18px; }
+#cyw-course.cwt .sign { font-family: var(--cw-serif); font-style: italic; font-size: 19px; color: var(--cw-soft); }
+#cyw-course.cwt .refs { border-top-color: var(--cw-line); }
+#cyw-course.cwt .refs summary, #cyw-course.cwt .refs p { font-family: var(--cw-sans); font-size: 14px; }
+#cyw-course.cwt .adone { font-family: var(--cw-sans); font-size: 16px; border-radius: 14px; }
+
+/* ---- locked day ---- */
+#cyw-course.cwt .teaser { background: #FAFAF8; border: 1.5px dashed #CFCBC2; border-radius: 20px; text-align: left; padding: 30px 28px; }
+#cyw-course.cwt .teaser .eyebrow { color: #9A958B; }
+#cyw-course.cwt .teaser h2 { font-family: var(--cw-sans) !important; font-weight: 900 !important; font-size: clamp(26px, 5vw, 34px) !important; letter-spacing: -.03em !important; color: #9A958B !important; }
+#cyw-course.cwt .teaser p { font-family: var(--cw-sans); font-size: 16px; color: #8C877E; }
+
+/* ---- course feedback + Your Map cards ---- */
+#cyw-course.cwt .finish { border: 2px solid var(--cw-cta); border-radius: 20px; padding: 28px; }
+#cyw-course.cwt .finish h2 { font-family: var(--cw-sans) !important; font-weight: 900 !important; font-size: 30px !important; letter-spacing: -.03em !important; color: var(--cw-fg) !important; }
+#cyw-course.cwt .finish p { font-family: var(--cw-sans); font-size: 17px; color: var(--cw-soft); }
+#cyw-course.cwt .finish.cmaplock { border: 2px dashed #CFCBC2; }
+#cyw-course.cwt .cmaplock .cmapbody h2 { color: #9A958B !important; }
+#cyw-course.cwt .cmapchip { background: #fff; font-family: var(--cw-sans); letter-spacing: .14em; border-color: #CFCBC2; }
+#cyw-course.cwt .cmapdots i { background: var(--cw-cta); font-family: var(--cw-sans); }
+#cyw-course.cwt .cmapdots i.u { background: #EEEDE9; }
+
+@media (max-width: 600px) {
+  #cyw-course.cwt .wrap { padding: 18px 16px 80px; }
+  #cyw-course.cwt .day { padding: 24px 20px 22px; }
+  #cyw-course.cwt .chero { padding: 24px 20px 22px; }
+  #cyw-course.cwt .hdots { gap: 6px; }
+  #cyw-course.cwt .hdots span { width: 28px; height: 28px; }
+  #cyw-course.cwt .cta a { font-size: 16px; padding: 16px 22px; }
+}
+@media (prefers-reduced-motion: reduce) { #cyw-course.cwt * { transition: none !important; } }
+/* CWTHEME END */
