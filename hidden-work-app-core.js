@@ -1,4 +1,4 @@
-window.HW_BUILD = 'bfce40c019';
+window.HW_BUILD = '6dd59e7ba3';
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
