@@ -1,4 +1,4 @@
-window.HW_BUILD = 'caa82d6377';
+window.HW_BUILD = 'fc899db899';
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
@@ -435,7 +435,7 @@ function renderGate() {
   return '<h1 class="gate-title">Your Work Personality is ready.</h1>'
     + '<p class="gate-desc">Enter your email and I&rsquo;ll send your result, your free chapter, and the 7-day <em>Choose Your Work</em> course.</p>'
     + '<input class="email-input" id="hw-email" type="email" name="email" autocomplete="email" aria-label="Your email address" placeholder="your@email.com" onkeydown="if(event.key===\'Enter\'){event.preventDefault();submitGate();}"/>'
-    + '<p id="hw-gate-err" role="alert" style="display:none;font-family:var(--sans);font-size:13px;color:#B23A2E;text-align:center;margin:10px 0 0;">Please enter a valid email address.</p>'
+    + '<p id="hw-gate-err" role="alert" style="display:none;font-family:var(--sans);font-size:13px;color:#B23A2E;text-align:left;margin:10px 0 0;">Please enter a valid email address.</p>'
     + '<button class="continue-btn" id="hw-gate-btn" onclick="submitGate()" style="margin: 8px auto 0; width: 100%;">Show me my Work Personality</button>'
     + '<p class="gate-fine">No spam. Unsubscribe anytime. Your answers stay private.</p>';
 }
@@ -1867,7 +1867,7 @@ function renderResume() {
     + noRes
     + '<p class="intro-desc">' + where + ' Pick up right where you left off; your answers are saved.</p>'
     + '<button class="continue-btn" onclick="resumeQuiz()">Resume the quiz</button>'
-    + '<div style="text-align:center;margin-top:18px"><button class="ghost-btn" onclick="startOver()">Start Over</button></div>';
+    + '<div style="margin-top:18px"><button class="ghost-btn" onclick="startOver()">Start Over</button></div>';
 }
 function resumeQuiz() {
   if (!_resumeTarget) { screen = 'question'; qIdx = 0; }
@@ -1879,6 +1879,30 @@ function startOver() {
   try { hwCap('quiz_resume_declined', {}); } catch(e){}
   restart();
 }
+// HWTHEME: the landing page's look on every quiz screen and the result page (Dan, 24 Sep 2026).
+// The WordPress pages (3958 quiz, 4176 /r/) carry their own markup, so the class, the fonts and
+// the logo bar are added here in code, once, rather than in the HTML.
+var HWT_FONTS = 'https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,300;1,6..72,400&display=swap';
+function hwThemeFrame(){
+  try {
+    document.documentElement.classList.add('hwt');
+    if (!document.getElementById('hwlp-fonts')) { var l = document.createElement('link'); l.id = 'hwlp-fonts'; l.rel = 'stylesheet'; l.href = HWT_FONTS; document.head.appendChild(l); }
+    if (document.getElementById('hwt-bar')) return;
+    var pg = document.getElementById('page'); if (!pg || !pg.parentNode) return;
+    var at = document.getElementById('progressbar') || pg;
+    var bar = document.createElement('div'); bar.className = 'hwt-bar'; bar.id = 'hwt-bar';
+    bar.innerHTML = '<span class="lg" role="img" aria-label="The Hidden Work Quiz"><svg class="rg" viewBox="0 0 34 34" aria-hidden="true">'
+      + '<circle cx="27.35" cy="12.71" r="4.90" fill="#B23A2E"/><circle cx="27.35" cy="21.29" r="3.00" fill="#C2722F"/><circle cx="21.29" cy="27.35" r="3.00" fill="#B8902F"/>'
+      + '<circle cx="12.71" cy="27.35" r="3.00" fill="#3D7A6E"/><circle cx="6.65" cy="21.29" r="3.00" fill="#1E5F8C"/><circle cx="6.65" cy="12.71" r="3.00" fill="#557C9E"/>'
+      + '<circle cx="12.71" cy="6.65" r="3.00" fill="#6B6B6B"/><circle cx="21.29" cy="6.65" r="3.00" fill="#A85A3D"/></svg>'
+      + '<b class="nm">H<b class="idot">ı</b>dden Work</b><b class="q">QUIZ</b></span><span class="step-count" id="hwt-count"></span>';
+    at.parentNode.insertBefore(bar, at);
+  } catch(e){}
+}
+function hwThemeCount(){
+  var el = document.getElementById('hwt-count'); if (!el) return;
+  el.textContent = (screen === 'question') ? ('Question ' + (qIdx + 1) + ' of ' + TOTAL_Q) : '';
+}
 function render(keepScroll) {
   setProgress();
   let html;
@@ -1888,11 +1912,13 @@ function render(keepScroll) {
   else if (screen === 'resume') html = renderResume();
   else if (screen === 'needquiz') html = renderNeedQuiz();
   else html = renderComplete();
+  hwThemeFrame();  // HWTHEME
   const pageEl = document.getElementById('page');
   pageEl.className = 'page';
   if (screen === 'intro' && _invite && ARCH[_invite.key]) pageEl.classList.add('invited-intro-page');
   pageEl.innerHTML = html;
   var _hwlp = hwlpIsLanding(); document.documentElement.classList.toggle('hwlp-on', _hwlp); document.body.classList.toggle('hwlp-on', _hwlp); if (_hwlp) hwlpInit();  // HWLP
+  hwThemeCount();  // HWTHEME
   if (screen === 'complete') hwSwapAddress();
   advancing = false;
   inputReadyAt = Date.now() + 350;

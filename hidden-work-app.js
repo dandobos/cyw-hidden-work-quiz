@@ -4,7 +4,7 @@
 // (unique query, so no cache can answer) and injects the real bundle by its stamped
 // URL, hidden-work-app-core.js?v=<stamp>, which no cache has seen before. If the
 // version fetch is slow or fails, it injects the core with a per-minute query, which
-// also misses every cache: at most 1 minute stale. Current build at write time: caa82d6377.
+// also misses every cache: at most 1 minute stale. Current build at write time: fc899db899.
 (function () {
   var el = document.currentScript;
   var src = el && el.src ? String(el.src) : '';

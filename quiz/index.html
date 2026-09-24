@@ -464,6 +464,239 @@
     .intro-title { font-size: 40px !important; }
     .res-name    { font-size: 34px !important; }
   }
+/* HWTHEME START */
+/* HWTHEME: the landing-page look applied to every quiz screen and the result page.
+   LIVE since 24 Sep 2026 (Dan: "Let's make those changes"). Review copy: _testing_now/quiz-restyle-review.html.
+   Scoped under html.hwt #page so it outranks the HOST-THEME ISOLATION rules (#page ...) and the
+   WordPress theme. Where the isolation block uses !important, this block does too.
+   Behaviour is unchanged: only colour, type, shape and spacing. */
+
+html.hwt {
+  --hw-sans: 'Inter Tight', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --hw-serif: 'Newsreader', Georgia, serif;
+  --hw-bg: #FFFFFF; --hw-bg2: #EEF3F8; --hw-fg: #0F0F0F; --hw-soft: #3A3A3A; --hw-dim: #6B6B6B;
+  --hw-line: #E4E1DA; --hw-red: #B23A2E; --hw-cta: #1E5F8C; --hw-ctadk: #164A6E;
+  /* the app's own tokens, re-pointed */
+  --heading: var(--hw-sans); --sans: var(--hw-sans);
+  --bg: var(--hw-bg); --card: #FFFFFF; --inner: #F7F8FA; --border: var(--hw-line);
+  --text-primary: var(--hw-fg); --text-body: var(--hw-soft); --text-muted: var(--hw-dim);
+  --accent: var(--hw-cta);
+}
+html.hwt body { background: var(--hw-bg); font-family: var(--hw-sans); color: var(--hw-fg); }
+
+/* ---------- top bar with the logo (quiz screens only; the landing has its own) ---------- */
+html.hwt .hwt-bar { display: flex; align-items: center; justify-content: space-between; max-width: 1180px; margin: 0 auto; padding: 18px 32px; }
+html.hwt body.hwlp-on .hwt-bar { display: none; }
+html.hwt .hwt-bar .lg { display: inline-flex; align-items: center; gap: .32em; font-size: 26px; line-height: 1.55; color: var(--hw-fg); text-decoration: none; }
+html.hwt .hwt-bar .rg { width: 1.3em; height: 1.3em; flex: none; }
+html.hwt .hwt-bar .nm { font-family: var(--hw-sans); font-weight: 900; letter-spacing: -.035em; font-size: 1em; }
+html.hwt .hwt-bar .idot { position: relative; letter-spacing: 0; margin-right: -.03em; font-weight: 900; }
+html.hwt .hwt-bar .idot::after { content: ""; position: absolute; left: 50%; top: .24em; width: .2em; height: .2em; margin-left: -.1em; border-radius: 50%; background: var(--hw-red); }
+html.hwt .hwt-bar .q { font-family: var(--hw-sans); font-weight: 800; font-size: .42em; letter-spacing: .12em; color: #fff; background: var(--hw-cta); border-radius: 999px; padding: .28em .75em; margin-left: .2em; }
+html.hwt .hwt-bar .step-count { font-family: var(--hw-sans); font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--hw-dim); }
+@media (max-width: 600px) { html.hwt .hwt-bar { padding: 14px 16px; } html.hwt .hwt-bar .lg { font-size: 20px; } }
+
+/* ---------- frame ---------- */
+html.hwt .progress { height: 4px; background: var(--hw-line); }
+html.hwt .progress-fill { background: var(--hw-cta); border-radius: 0 4px 4px 0; }
+html.hwt body.hwlp-on .progress { display: none; }
+html.hwt body:not(.hwlp-on) #page.page { max-width: 680px; padding: 28px 24px 110px; }
+@media (max-width: 600px) { html.hwt body:not(.hwlp-on) #page.page { padding: 18px 16px 100px; } }
+
+/* stepper: five parts of the quiz */
+html.hwt #page .stepper { max-width: 420px; gap: 6px; margin-bottom: 34px; }
+html.hwt #page .step-bar { width: auto; height: 6px; border-radius: 999px; border: 0; background: var(--hw-line); margin: 0 0 8px; }
+html.hwt #page .step-bar.done { background: var(--hw-cta); }
+html.hwt #page .step-bar.active { background: var(--hw-cta); opacity: .45; border: 0; }
+html.hwt #page .step-label { font-family: var(--hw-sans); font-size: 10.5px; letter-spacing: .12em; font-weight: 700; color: var(--hw-dim); }
+html.hwt #page .step-label.active { color: var(--hw-fg); }
+
+/* ---------- headings ---------- */
+html.hwt #page .q-text { font-family: var(--hw-sans) !important; font-weight: 800 !important; font-size: 32px !important; line-height: 1.15 !important; letter-spacing: -.025em; text-align: left; margin: 0 0 30px; color: var(--hw-fg); }
+html.hwt #page .q-sub { font-family: var(--hw-serif); font-style: italic; font-size: 19px; color: var(--hw-soft); text-align: left; margin: -18px 0 28px; }
+html.hwt #page .intro-eyebrow, html.hwt #page .res-eyebrow { font-family: var(--hw-sans); font-size: 13px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--hw-dim); margin: 36px 0 18px; }
+html.hwt #page .intro-title, html.hwt #page .gate-title { font-family: var(--hw-sans) !important; font-weight: 900 !important; font-size: 64px !important; line-height: .95 !important; letter-spacing: -.045em; color: var(--hw-fg); margin: 0 0 22px; }
+html.hwt #page .intro-title:first-child { margin-top: 36px; }
+html.hwt #page .intro-title .inv-title-key { font-family: var(--hw-serif); font-style: italic; font-weight: 400 !important; letter-spacing: -.02em; color: var(--hw-red) !important; }
+html.hwt #page .intro-desc, html.hwt #page .gate-desc { font-family: var(--hw-sans); font-style: normal; font-size: 20px; line-height: 1.55; color: var(--hw-soft); max-width: 34em; margin: 0 auto 32px; }
+html.hwt #page .res-name { font-family: var(--hw-sans) !important; font-weight: 900 !important; font-size: 60px !important; line-height: .98 !important; letter-spacing: -.045em; margin: 0 0 18px; }
+html.hwt #page .res-share { font-family: var(--hw-serif); font-style: italic; font-size: 26px; line-height: 1.3; color: var(--hw-red); max-width: 22em; }
+html.hwt #page .res-section-label { font-family: var(--hw-sans); font-weight: 800; font-size: 30px; line-height: 1.12; letter-spacing: -.025em; color: var(--hw-fg); margin: 0 0 24px; text-align: left; }
+html.hwt #page .res-book-head { font-family: var(--hw-sans); font-weight: 800; font-size: 28px; letter-spacing: -.02em; line-height: 1.15; }
+@media (max-width: 600px) {
+  html.hwt #page .q-text { font-size: 25px !important; }
+  html.hwt #page .intro-title, html.hwt #page .gate-title { font-size: 44px !important; }
+  html.hwt #page .res-name { font-size: 44px !important; }
+  html.hwt #page .res-share { font-size: 22px; }
+  html.hwt #page .res-section-label { font-size: 25px; }
+  html.hwt #page .intro-desc, html.hwt #page .gate-desc { font-size: 18px; }
+}
+
+/* ---------- answers ---------- */
+html.hwt #page .options { gap: 10px; }
+html.hwt #page .option, html.hwt #page .word-tile { font-family: var(--hw-sans); font-weight: 500; background: #fff; border: 1.5px solid var(--hw-line); border-radius: 14px; color: var(--hw-fg) !important; transition: border-color .15s, background .15s, transform .15s, box-shadow .15s; }
+html.hwt #page .option { font-size: 18px; padding: 18px 22px; }
+html.hwt #page .word-tile { font-size: 19px; font-weight: 600; padding: 24px 8px; }
+html.hwt #page .option:hover, html.hwt #page .word-tile:hover { border-color: var(--hw-cta); background: #fff; color: var(--hw-fg) !important; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(15,15,15,.06); }
+/* Dan's ruling 13 Aug 2026: a chosen control is filled BLACK. Kept. */
+html.hwt #page .option.selected, html.hwt #page .option.selected:hover, html.hwt #page .option:active,
+html.hwt #page .word-tile.selected, html.hwt #page .word-tile.selected:hover, html.hwt #page .word-tile:active,
+html.hwt #page .rate-btn.selected, html.hwt #page .rate-btn:active {
+  background: var(--hw-fg); border-color: var(--hw-fg); color: #fff !important; box-shadow: none; transform: none;
+}
+html.hwt #page .activity-item, html.hwt #page .rate-item { background: #fff; border: 1.5px solid var(--hw-line); border-radius: 16px; padding: 20px 22px; }
+html.hwt #page .activity-num { font-family: var(--hw-sans); font-size: 12px; letter-spacing: .16em; font-weight: 700; color: var(--hw-dim); }
+html.hwt #page .activity-input { font-family: var(--hw-sans); font-size: 19px; border-bottom: 1.5px solid var(--hw-line); }
+html.hwt #page .activity-input:focus { border-bottom-color: var(--hw-cta); }
+html.hwt #page .activity-input::placeholder, html.hwt #page .textarea-input::placeholder, html.hwt #page .rc-a::placeholder, html.hwt #page .pb-note::placeholder { font-family: var(--hw-serif); font-style: italic; color: #9A9A9A; }
+html.hwt #page .rate-label { font-family: var(--hw-sans); font-weight: 800; font-size: 19px; letter-spacing: -.01em; }
+html.hwt #page .rate-btn { font-family: var(--hw-sans); font-size: 12px; font-weight: 600; border: 1.5px solid var(--hw-line); border-radius: 10px; padding: 10px 4px; color: var(--hw-soft); }
+html.hwt #page .rate-btn:hover { border-color: var(--hw-cta); color: var(--hw-fg); }
+html.hwt #page .rank-row { border: 1.5px solid var(--hw-line); border-radius: 14px; padding: 14px 16px; }
+html.hwt #page .rank-num { font-family: var(--hw-sans); font-weight: 800; color: var(--hw-cta); }
+html.hwt #page .rank-label { font-family: var(--hw-sans); font-weight: 600; font-size: 18px; }
+html.hwt #page .rank-btn, html.hwt #page .rank-btn:hover, html.hwt #page .rank-btn:focus { background-color: var(--hw-cta); border-color: var(--hw-cta); border-radius: 10px; box-shadow: none; }
+html.hwt #page .rank-btn:disabled { background: #F2F2F0; border-color: var(--hw-line); color: #B5B1A8; }
+html.hwt #page .rank-nudge { font-family: var(--hw-serif); color: var(--hw-red); font-size: 18px; }
+html.hwt #page .textarea-input, html.hwt #page .email-input { font-family: var(--hw-sans); font-size: 18px; border: 1.5px solid var(--hw-line); border-radius: 14px; padding: 18px 20px; }
+html.hwt #page .textarea-input:focus, html.hwt #page .email-input:focus { border-color: var(--hw-cta); box-shadow: 0 0 0 4px rgba(30,95,140,.12); }
+
+/* ---------- buttons ---------- */
+/* primary: the landing's blue pill with an arrow */
+html.hwt #page .continue-btn, html.hwt #page a.continue-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 12px; margin: 30px 0 0;
+  font-family: var(--hw-sans); font-size: 18px; font-weight: 800; letter-spacing: 0; text-transform: none;
+  background-color: var(--hw-cta); color: #fff !important; border: 0; border-radius: 999px; padding: 18px 30px;
+  transition: background-color .15s, transform .15s, opacity .15s;
+}
+html.hwt #page .continue-btn::after { content: "\2192"; font-size: 21px; line-height: 1; }
+html.hwt #page .continue-btn:hover, html.hwt #page .continue-btn:focus, html.hwt #page a.continue-btn:hover { background-color: var(--hw-ctadk); opacity: 1; transform: translateY(-2px); }
+html.hwt #page .continue-btn:disabled { background-color: #C9D6E0; transform: none; cursor: not-allowed; opacity: 1; }
+html.hwt #page .thats-it { font-size: 15px; padding: 12px 22px; margin: 0; }
+html.hwt #page .thats-it::after { content: none; }
+html.hwt #page .res-book-cta-row .continue-btn, html.hwt #page .rc-send, html.hwt #page #hw-gate-btn { width: 100%; }
+@media (min-width: 601px) { html.hwt #page .res-book-cta-row .continue-btn { width: auto; } }
+/* secondary: outline pill */
+html.hwt #page .ghost-btn, html.hwt #page .fit-btn {
+  font-family: var(--hw-sans); font-size: 16px; font-weight: 700; letter-spacing: 0; text-transform: none;
+  color: var(--hw-cta); background-color: #fff; border: 1.5px solid var(--hw-cta); border-radius: 999px; padding: 13px 24px;
+}
+html.hwt #page .ghost-btn:hover, html.hwt #page .fit-btn:hover, html.hwt #page .fit-btn:focus { background-color: var(--hw-cta); border-color: var(--hw-cta); color: #fff; }
+html.hwt #page .fit-btn:active, html.hwt #page .ghost-btn:active { background-color: var(--hw-fg); border-color: var(--hw-fg); color: #fff; }
+html.hwt #page .back-link button { font-family: var(--hw-sans); font-size: 14px; font-weight: 600; color: var(--hw-dim); }
+html.hwt #page .back-link { text-align: left; }
+
+/* left-align the working screens, like the landing */
+html.hwt #page .intro-eyebrow, html.hwt #page .intro-title, html.hwt #page .intro-desc,
+html.hwt #page .gate-title, html.hwt #page .gate-desc, html.hwt #page .gate-fine,
+html.hwt #page .res-eyebrow, html.hwt #page .res-name, html.hwt #page .res-share { text-align: left; margin-left: 0; margin-right: 0; }
+html.hwt #page .gate-fine { font-family: var(--hw-sans); font-size: 14px; color: var(--hw-dim); }
+
+/* ---------- invite intro ---------- */
+html.hwt #page .inv-card { border: 1.5px solid var(--hw-line); border-left: 4px solid var(--hw-red); border-radius: 16px; padding: 20px 22px; margin: 0 0 26px; max-width: none; }
+html.hwt #page .inv-ey { font-family: var(--hw-sans); font-size: 12px; font-weight: 700; letter-spacing: .16em; color: var(--hw-dim); }
+html.hwt #page .inv-name { font-family: var(--hw-sans); font-weight: 800; font-size: 26px; letter-spacing: -.02em; }
+html.hwt #page .inv-claim { font-family: var(--hw-serif); font-size: 19px; color: var(--hw-soft); }
+html.hwt #page .inv-pattern-grid { max-width: none; margin: 0 0 28px; }
+html.hwt #page .inv-pattern-pill { font-family: var(--hw-sans); font-size: 14px; font-weight: 600; border: 1.5px solid var(--hw-line); border-radius: 999px; padding: 9px 14px; }
+html.hwt #page .inv-pattern-pill i { width: 10px; height: 10px; }
+
+/* ---------- result page ---------- */
+html.hwt #page .res-narrative, html.hwt #page .dd-card, html.hwt #page .res-regret, html.hwt #page .res-checklist,
+html.hwt #page .cmp-card { background: #fff; border: 1.5px solid var(--hw-line); border-radius: 18px; }
+html.hwt #page .res-narrative { max-width: none; padding: 28px 30px; }
+html.hwt #page .res-narrative p, html.hwt #page .res-narr-list li { font-family: var(--hw-sans); font-size: 18px; line-height: 1.6; }
+html.hwt #page .res-narr-list li::before { background: var(--hw-red); top: 11px; }
+html.hwt #page p.res-narr-label { font-family: var(--hw-sans); font-size: 12px; letter-spacing: .18em; color: var(--hw-red); }
+html.hwt #page .res-savenote, html.hwt #page .res-emailed { font-family: var(--hw-sans); }
+html.hwt #page .res-emailed { background: var(--hw-bg2); border: 0; border-radius: 999px; font-weight: 600; color: var(--hw-cta); }
+html.hwt #page .res-divider { background: var(--hw-line); margin: 48px 0; }
+
+html.hwt #page .phrase-card { font-family: var(--hw-serif); font-size: 20px; text-align: left; background: var(--hw-bg2); border: 1.5px solid transparent; border-radius: 16px; padding: 18px 22px; color: var(--hw-fg); }
+html.hwt #page .phrase-card:hover { border-color: var(--hw-cta); transform: translateY(-2px); }
+html.hwt #page .phrase-card .who { font-family: var(--hw-sans); font-size: 12px; letter-spacing: .12em; color: var(--hw-cta); }
+html.hwt #page .tag-orig { font-family: var(--hw-sans); border-color: var(--hw-red); color: var(--hw-red); }
+html.hwt #page .res-neighbour { background: var(--hw-bg2); border: 1.5px solid var(--hw-line); border-radius: 18px; max-width: none; }
+html.hwt #page .res-neighbour-eyebrow { font-family: var(--hw-sans); font-size: 12px; letter-spacing: .16em; color: var(--hw-dim); text-align: left; }
+html.hwt #page .res-neighbour-name { font-family: var(--hw-sans) !important; font-weight: 800 !important; font-size: 30px !important; letter-spacing: -.025em; text-align: left; }
+html.hwt #page .res-neighbour-share { font-family: var(--hw-serif); color: var(--hw-red); font-size: 20px; text-align: left; }
+html.hwt #page .res-neighbour-narr p, html.hwt #page .res-neighbour-narr .res-narr-list li { font-family: var(--hw-sans); font-size: 16.5px; }
+html.hwt #page .fit-opts { justify-content: flex-start; }
+html.hwt #page .fit-hint { font-family: var(--hw-serif); font-size: 18px; text-align: left; }
+html.hwt #page .acc-item, html.hwt #page .acc-more { max-width: none; }
+
+html.hwt #page .dd-card { padding: 30px 30px; }
+html.hwt #page .dd-dimlabel { font-family: var(--hw-sans); font-size: 12px; letter-spacing: .18em; color: var(--hw-dim); }
+html.hwt #page .dd-verdict { font-family: var(--hw-sans); font-weight: 900; font-size: 34px; letter-spacing: -.035em; }
+html.hwt #page .dd-micro { font-family: var(--hw-serif); font-size: 17px; color: var(--hw-soft); }
+html.hwt #page .dd-track { height: 8px; background: #F0EEEA; border-radius: 999px; }
+html.hwt #page .dd-fill { border-radius: 999px; }
+html.hwt #page .dd-numcircle { top: -19px; width: 46px; height: 46px; font-family: var(--hw-sans); font-weight: 800; font-size: 18px; border-width: 2.5px; }
+html.hwt #page .dd-poles { font-family: var(--hw-sans); font-size: 11px; letter-spacing: .12em; }
+
+html.hwt #page .res-regret { padding: 28px 30px; }
+html.hwt #page .res-regret-level { font-family: var(--hw-sans); font-weight: 900; font-size: 30px; letter-spacing: -.02em; text-transform: none; text-align: left; }
+html.hwt #page .res-regret-meter { gap: 6px; }
+html.hwt #page .res-regret-seg { height: 10px; border-radius: 999px; }
+html.hwt #page .res-regret-desc { font-family: var(--hw-serif); font-size: 18px; text-align: left; color: var(--hw-soft); }
+
+/* the card keeps its archetype colour on the left edge (set inline by the app) */
+html.hwt #page .res-checklist { border-left-width: 5px; padding: 26px 28px; }
+html.hwt #page .rc-eyebrow { font-family: var(--hw-sans); font-size: 12px; letter-spacing: .18em; }
+html.hwt #page .rc-title { font-family: var(--hw-sans); font-weight: 800; font-size: 26px; letter-spacing: -.02em; }
+html.hwt #page .rc-sub, html.hwt #page .rc-buried { font-family: var(--hw-serif); font-size: 18px; }
+html.hwt #page .rc-lead, html.hwt #page .rc-qt { font-family: var(--hw-sans); font-size: 16px; }
+html.hwt #page .rc-a { font-family: var(--hw-sans); font-size: 16px; background: #fff; border: 1.5px solid var(--hw-line); border-radius: 12px; }
+html.hwt #page .rc-a:focus { border-color: var(--hw-cta); }
+
+html.hwt #page .res-chapter { background: var(--hw-bg2); border: 0; border-radius: 18px; padding: 30px; }
+html.hwt #page .res-chapter-title { font-family: var(--hw-sans); font-style: normal; font-weight: 800; font-size: 24px; letter-spacing: -.02em; }
+html.hwt #page .res-chapter-desc { font-family: var(--hw-serif); font-size: 17px; color: var(--hw-soft); margin-top: 6px; }
+html.hwt #page .res-chapter-why { font-family: var(--hw-sans); font-size: 17px; }
+html.hwt #page .res-note { font-family: var(--hw-serif); font-size: 17px; border-top-color: #CFDAE4; }
+html.hwt #page .res-dl { border-top-color: #CFDAE4; }
+html.hwt #page .res-dl-label { font-family: var(--hw-sans); font-weight: 800; font-size: 19px; }
+html.hwt #page .res-dl-btn, html.hwt #page .res-dl-btn:visited { font-family: var(--hw-sans); font-weight: 700; font-size: 15px; background: #fff; border: 1.5px solid var(--hw-cta); border-radius: 999px; color: var(--hw-cta) !important; padding: 12px 14px; }
+html.hwt #page .res-dl-btn:hover { background: var(--hw-cta); color: #fff !important; }
+
+html.hwt #page .res-book-text { font-family: var(--hw-serif); font-style: italic; font-size: 20px; color: var(--hw-soft); }
+
+/* share card + panel */
+html.hwt #page .wc { border: 1.5px solid var(--hw-line); border-radius: 20px; box-shadow: 0 24px 48px rgba(15,15,15,.08); }
+html.hwt #page .wc-bar { border-radius: 20px 20px 0 0; }
+html.hwt #page .wc-ey, html.hwt #page .wc-label { font-family: var(--hw-sans); letter-spacing: .16em; }
+html.hwt #page .wc-name { font-family: var(--hw-sans) !important; font-weight: 900 !important; font-size: 32px !important; letter-spacing: -.035em; }
+html.hwt #page .wc-claim, html.hwt #page .dl-tag { font-family: var(--hw-serif); font-size: 19px; }
+html.hwt #page .wc-it-t, html.hwt #page .dl-discover, html.hwt #page .wc-divh span { font-family: var(--hw-sans); font-weight: 800; letter-spacing: -.01em; }
+html.hwt #page .wc-it-d, html.hwt #page .wc-cell { font-family: var(--hw-sans); }
+html.hwt #page .wc-item { border-radius: 12px; }
+html.hwt #page .wc-cta, html.hwt #page a.wc-cta { font-family: var(--hw-sans); font-size: 17px; font-weight: 800; letter-spacing: 0; text-transform: none; background: var(--hw-cta); border-radius: 999px; }
+html.hwt #page .dl-url { font-family: var(--hw-sans); background: var(--hw-fg); border-radius: 999px; }
+html.hwt #page .wc-dl-btn { background: var(--hw-cta); }
+html.hwt #page .panelbox { background: var(--hw-bg2); border: 0; border-radius: 18px; }
+html.hwt #page .pb-h { font-family: var(--hw-sans); font-weight: 800; font-size: 28px; letter-spacing: -.025em; }
+html.hwt #page .pb-b, html.hwt #page .pb-sf-h, html.hwt #page .pb-sf-b { font-family: var(--hw-sans); font-size: 15px; }
+html.hwt #page .preview { font-family: var(--hw-serif); font-size: 17px; border-left-color: var(--hw-red); border-radius: 12px; }
+html.hwt #page .preview .quo { color: var(--hw-red); }
+html.hwt #page .seg { border-radius: 999px; }
+html.hwt #page .seg-btn { font-family: var(--hw-sans); font-size: 13px; border-radius: 999px; }
+html.hwt #page .sbtn { font-family: var(--hw-sans); font-size: 14px; border: 1.5px solid var(--hw-line); border-radius: 999px; padding: 11px 16px; }
+html.hwt #page .save-green { border-radius: 999px; }
+html.hwt #page .save-green .main { font-family: var(--hw-sans); font-size: 15px; }
+html.hwt #page .pb-sf-input, html.hwt #page .pb-name, html.hwt #page .pb-note { font-family: var(--hw-sans); border: 1.5px solid var(--hw-line); border-radius: 12px; }
+html.hwt #page .pb-sf-btn { font-family: var(--hw-sans); border-radius: 999px; }
+
+/* compare card (a friend's link) */
+html.hwt #page .cmp-dim, html.hwt #page .cmp-verdict, html.hwt #page .cmp-names, html.hwt #page .cmp-who { font-family: var(--hw-sans); }
+html.hwt #page .cmp-summary, html.hwt #page .cmp-band { font-family: var(--hw-serif); }
+html.hwt #page .cmp-back-h { font-family: var(--hw-sans); font-weight: 800; }
+html.hwt #page .cmp-track { height: 6px; border-radius: 999px; }
+
+html.hwt #page .res-map-note { font-family: var(--hw-sans); }
+@media (prefers-reduced-motion: reduce) { html.hwt #page * { transition: none !important; } }
+
+html.hwt #page #hw-book-cta { display: inline-flex !important; width: auto; }
+/* HWTHEME END */
 /* HWLP START: landing page as the quiz intro. Generated by _testing_now/gen_landing_embed.py; do not edit by hand. */
 #page .hwlp{display:block;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:18px;line-height:1.55;text-align:left}
 #page .hwlp h1,#page .hwlp h2,#page .hwlp h3,#page .hwlp p,#page .hwlp figure,#page .hwlp blockquote,#page .hwlp ol,#page .hwlp ul{margin:0;padding:0;text-transform:none;letter-spacing:normal;background:none;border:0}
@@ -1154,7 +1387,7 @@ function renderGate() {
   return '<h1 class="gate-title">Your Work Personality is ready.</h1>'
     + '<p class="gate-desc">Enter your email and I&rsquo;ll send your result, your free chapter, and the 7-day <em>Choose Your Work</em> course.</p>'
     + '<input class="email-input" id="hw-email" type="email" name="email" autocomplete="email" aria-label="Your email address" placeholder="your@email.com" onkeydown="if(event.key===\'Enter\'){event.preventDefault();submitGate();}"/>'
-    + '<p id="hw-gate-err" role="alert" style="display:none;font-family:var(--sans);font-size:13px;color:#B23A2E;text-align:center;margin:10px 0 0;">Please enter a valid email address.</p>'
+    + '<p id="hw-gate-err" role="alert" style="display:none;font-family:var(--sans);font-size:13px;color:#B23A2E;text-align:left;margin:10px 0 0;">Please enter a valid email address.</p>'
     + '<button class="continue-btn" id="hw-gate-btn" onclick="submitGate()" style="margin: 8px auto 0; width: 100%;">Show me my Work Personality</button>'
     + '<p class="gate-fine">No spam. Unsubscribe anytime. Your answers stay private.</p>';
 }
@@ -2586,7 +2819,7 @@ function renderResume() {
     + noRes
     + '<p class="intro-desc">' + where + ' Pick up right where you left off; your answers are saved.</p>'
     + '<button class="continue-btn" onclick="resumeQuiz()">Resume the quiz</button>'
-    + '<div style="text-align:center;margin-top:18px"><button class="ghost-btn" onclick="startOver()">Start Over</button></div>';
+    + '<div style="margin-top:18px"><button class="ghost-btn" onclick="startOver()">Start Over</button></div>';
 }
 function resumeQuiz() {
   if (!_resumeTarget) { screen = 'question'; qIdx = 0; }
@@ -2598,6 +2831,30 @@ function startOver() {
   try { hwCap('quiz_resume_declined', {}); } catch(e){}
   restart();
 }
+// HWTHEME: the landing page's look on every quiz screen and the result page (Dan, 24 Sep 2026).
+// The WordPress pages (3958 quiz, 4176 /r/) carry their own markup, so the class, the fonts and
+// the logo bar are added here in code, once, rather than in the HTML.
+var HWT_FONTS = 'https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,300;1,6..72,400&display=swap';
+function hwThemeFrame(){
+  try {
+    document.documentElement.classList.add('hwt');
+    if (!document.getElementById('hwlp-fonts')) { var l = document.createElement('link'); l.id = 'hwlp-fonts'; l.rel = 'stylesheet'; l.href = HWT_FONTS; document.head.appendChild(l); }
+    if (document.getElementById('hwt-bar')) return;
+    var pg = document.getElementById('page'); if (!pg || !pg.parentNode) return;
+    var at = document.getElementById('progressbar') || pg;
+    var bar = document.createElement('div'); bar.className = 'hwt-bar'; bar.id = 'hwt-bar';
+    bar.innerHTML = '<span class="lg" role="img" aria-label="The Hidden Work Quiz"><svg class="rg" viewBox="0 0 34 34" aria-hidden="true">'
+      + '<circle cx="27.35" cy="12.71" r="4.90" fill="#B23A2E"/><circle cx="27.35" cy="21.29" r="3.00" fill="#C2722F"/><circle cx="21.29" cy="27.35" r="3.00" fill="#B8902F"/>'
+      + '<circle cx="12.71" cy="27.35" r="3.00" fill="#3D7A6E"/><circle cx="6.65" cy="21.29" r="3.00" fill="#1E5F8C"/><circle cx="6.65" cy="12.71" r="3.00" fill="#557C9E"/>'
+      + '<circle cx="12.71" cy="6.65" r="3.00" fill="#6B6B6B"/><circle cx="21.29" cy="6.65" r="3.00" fill="#A85A3D"/></svg>'
+      + '<b class="nm">H<b class="idot">ı</b>dden Work</b><b class="q">QUIZ</b></span><span class="step-count" id="hwt-count"></span>';
+    at.parentNode.insertBefore(bar, at);
+  } catch(e){}
+}
+function hwThemeCount(){
+  var el = document.getElementById('hwt-count'); if (!el) return;
+  el.textContent = (screen === 'question') ? ('Question ' + (qIdx + 1) + ' of ' + TOTAL_Q) : '';
+}
 function render(keepScroll) {
   setProgress();
   let html;
@@ -2607,11 +2864,13 @@ function render(keepScroll) {
   else if (screen === 'resume') html = renderResume();
   else if (screen === 'needquiz') html = renderNeedQuiz();
   else html = renderComplete();
+  hwThemeFrame();  // HWTHEME
   const pageEl = document.getElementById('page');
   pageEl.className = 'page';
   if (screen === 'intro' && _invite && ARCH[_invite.key]) pageEl.classList.add('invited-intro-page');
   pageEl.innerHTML = html;
   var _hwlp = hwlpIsLanding(); document.documentElement.classList.toggle('hwlp-on', _hwlp); document.body.classList.toggle('hwlp-on', _hwlp); if (_hwlp) hwlpInit();  // HWLP
+  hwThemeCount();  // HWTHEME
   if (screen === 'complete') hwSwapAddress();
   advancing = false;
   inputReadyAt = Date.now() + 350;
