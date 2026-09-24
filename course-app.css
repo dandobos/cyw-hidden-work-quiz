@@ -240,4 +240,6 @@ font-family:var(--sans);font-size:14.5px;font-weight:700;padding:12px 15px;margi
   #cyw-course.cwt .cta a { font-size: 16px; padding: 16px 22px; }
 }
 @media (prefers-reduced-motion: reduce) { #cyw-course.cwt * { transition: none !important; } }
+/* the day label keeps its small size against the .day p body rule */
+#cyw-course.cwt .day p.eyebrow, #cyw-course.cwt .teaser p.eyebrow { font-size: 12.5px; line-height: 1.4; margin: 0 0 8px; }
 /* CWTHEME END */
