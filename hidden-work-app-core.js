@@ -1,4 +1,4 @@
-window.HW_BUILD = '7f634f3d75';
+window.HW_BUILD = 'e4681a4979';
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
@@ -1919,6 +1919,11 @@ function render(keepScroll) {
   pageEl.innerHTML = html;
   var _hwlp = hwlpIsLanding(); document.documentElement.classList.toggle('hwlp-on', _hwlp); document.body.classList.toggle('hwlp-on', _hwlp); if (_hwlp) hwlpInit();  // HWLP
   hwThemeCount();  // HWTHEME
+  // Item 6 (Dan, 25 Sep 2026): a new question starts clean. Drop the tapped button's focus and
+  // move focus to the question itself, so iOS shows no carried-over highlight and a keyboard or
+  // screen-reader user lands on the new question, not on nothing.
+  if (screen === 'question') { try { var _ae = document.activeElement; if (_ae && _ae !== document.body && _ae.blur) _ae.blur();
+    var _qt = pageEl.querySelector('.q-text'); if (_qt) { _qt.setAttribute('tabindex', '-1'); _qt.style.outline = 'none'; _qt.focus({ preventScroll: true }); } } catch (e) {} }
   if (screen === 'complete') hwSwapAddress();
   advancing = false;
   inputReadyAt = Date.now() + 350;

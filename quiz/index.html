@@ -537,7 +537,8 @@ html.hwt #page .options { gap: 10px; }
 html.hwt #page .option, html.hwt #page .word-tile { font-family: var(--hw-sans); font-weight: 500; background: #fff; border: 1.5px solid var(--hw-line); border-radius: 14px; color: var(--hw-fg) !important; transition: border-color .15s, background .15s, transform .15s, box-shadow .15s; }
 html.hwt #page .option { font-size: 18px; padding: 18px 22px; }
 html.hwt #page .word-tile { font-size: 19px; font-weight: 600; padding: 24px 8px; }
-html.hwt #page .option:hover, html.hwt #page .word-tile:hover { border-color: var(--hw-cta); background: #fff; color: var(--hw-fg) !important; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(15,15,15,.06); }
+/* item 6 (Dan, 25 Sep 2026): hover only on a real mouse, so iOS never carries it to the next question */
+@media (hover: hover) and (pointer: fine) { html.hwt #page .option:hover, html.hwt #page .word-tile:hover { border-color: var(--hw-cta); background: #fff; color: var(--hw-fg) !important; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(15,15,15,.06); } }
 /* Dan's ruling 13 Aug 2026: a chosen control is filled BLACK. Kept. */
 html.hwt #page .option.selected, html.hwt #page .option.selected:hover, html.hwt #page .option:active,
 html.hwt #page .word-tile.selected, html.hwt #page .word-tile.selected:hover, html.hwt #page .word-tile:active,
@@ -551,7 +552,8 @@ html.hwt #page .activity-input:focus { border-bottom-color: var(--hw-cta); }
 html.hwt #page .activity-input::placeholder, html.hwt #page .textarea-input::placeholder, html.hwt #page .rc-a::placeholder, html.hwt #page .pb-note::placeholder { font-family: var(--hw-serif); font-style: italic; color: #9A9A9A; }
 html.hwt #page .rate-label { font-family: var(--hw-sans); font-weight: 800; font-size: 19px; letter-spacing: -.01em; }
 html.hwt #page .rate-btn { font-family: var(--hw-sans); font-size: 12px; font-weight: 600; border: 1.5px solid var(--hw-line); border-radius: 10px; padding: 10px 4px; color: var(--hw-soft); }
-html.hwt #page .rate-btn:hover { border-color: var(--hw-cta); color: var(--hw-fg); }
+/* item 6 (Dan, 25 Sep 2026): hover only on a real mouse, so iOS never carries it to the next question */
+@media (hover: hover) and (pointer: fine) { html.hwt #page .rate-btn:hover { border-color: var(--hw-cta); color: var(--hw-fg); } }
 html.hwt #page .rank-row { border: 1.5px solid var(--hw-line); border-radius: 14px; padding: 14px 16px; }
 html.hwt #page .rank-num { font-family: var(--hw-sans); font-weight: 800; color: var(--hw-cta); }
 html.hwt #page .rank-label { font-family: var(--hw-sans); font-weight: 600; font-size: 18px; }
@@ -613,7 +615,8 @@ html.hwt #page .res-emailed { background: var(--hw-bg2); border: 0; border-radiu
 html.hwt #page .res-divider { background: var(--hw-line); margin: 48px 0; }
 
 html.hwt #page .phrase-card { font-family: var(--hw-serif); font-size: 20px; text-align: left; background: var(--hw-bg2); border: 1.5px solid transparent; border-radius: 16px; padding: 18px 22px; color: var(--hw-fg); }
-html.hwt #page .phrase-card:hover { border-color: var(--hw-cta); transform: translateY(-2px); }
+/* item 6 (Dan, 25 Sep 2026): hover only on a real mouse, so iOS never carries it to the next question */
+@media (hover: hover) and (pointer: fine) { html.hwt #page .phrase-card:hover { border-color: var(--hw-cta); transform: translateY(-2px); } }
 html.hwt #page .phrase-card .who { font-family: var(--hw-sans); font-size: 12px; letter-spacing: .12em; color: var(--hw-cta); }
 html.hwt #page .tag-orig { font-family: var(--hw-sans); border-color: var(--hw-red); color: var(--hw-red); }
 html.hwt #page .res-neighbour { background: var(--hw-bg2); border: 1.5px solid var(--hw-line); border-radius: 18px; max-width: none; }
@@ -2873,6 +2876,11 @@ function render(keepScroll) {
   pageEl.innerHTML = html;
   var _hwlp = hwlpIsLanding(); document.documentElement.classList.toggle('hwlp-on', _hwlp); document.body.classList.toggle('hwlp-on', _hwlp); if (_hwlp) hwlpInit();  // HWLP
   hwThemeCount();  // HWTHEME
+  // Item 6 (Dan, 25 Sep 2026): a new question starts clean. Drop the tapped button's focus and
+  // move focus to the question itself, so iOS shows no carried-over highlight and a keyboard or
+  // screen-reader user lands on the new question, not on nothing.
+  if (screen === 'question') { try { var _ae = document.activeElement; if (_ae && _ae !== document.body && _ae.blur) _ae.blur();
+    var _qt = pageEl.querySelector('.q-text'); if (_qt) { _qt.setAttribute('tabindex', '-1'); _qt.style.outline = 'none'; _qt.focus({ preventScroll: true }); } } catch (e) {} }
   if (screen === 'complete') hwSwapAddress();
   advancing = false;
   inputReadyAt = Date.now() + 350;
