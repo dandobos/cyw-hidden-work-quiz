@@ -1,4 +1,4 @@
-window.HW_BUILD = 'e4681a4979';
+window.HW_BUILD = 'fd4da18e20';
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
@@ -948,7 +948,9 @@ function shareLoopHtml(r, s){
   // Ask whether a sender exists as soon as the panel is built. setTimeout, because
   // the caller has not inserted this HTML yet (21 Sep 2026: the saved-result page
   // never calls hwRebuildShareLinks, so hooking the short-link init was not enough).
-  setTimeout(hwShareForMeReady, 0);
+  // Item 3 (Dan, 25 Sep 2026): register the short link when the panel is built, so
+  // Send It for Me never mails a link that falls back to the plain quiz page.
+  setTimeout(function(){ hwShortLinkInit(); hwShareForMeReady(); }, 0);
   var p=sharePayload(r, s), e=encodeURIComponent;
   var fMsg = viralShareText(r);
   p.baseLink = p.link;
@@ -988,6 +990,7 @@ function shareLoopHtml(r, s){
             + '<button class="pb-sf-btn" id="pb-sf-btn" type="button" onclick="hwSendForMe()">Send It for Me</button>'
           + '</div>'
           + '<p class="pb-sf-msg" id="pb-sf-msg" hidden></p>'
+          + '<p class="pb-sf-link" id="pb-sf-link" hidden></p>'
         + '</div>'
       + '</div>'
       + '<div class="seg-body" data-m="socials" style="display:none">'
@@ -1032,31 +1035,42 @@ function hwSendForMe(){
   var to = document.getElementById('pb-sf-to');
   var btn = document.getElementById('pb-sf-btn');
   var msg = document.getElementById('pb-sf-msg');
+  var box = document.getElementById('pb-sf-link');
   if (!to || !btn || !msg || !_share) return;
   var addr = (to.value || '').trim();
   function say(text, bad){ msg.textContent = text; msg.className = 'pb-sf-msg' + (bad ? ' bad' : ''); msg.hidden = false; }
+  // Item 3 (Dan, 25 Sep 2026): a failed send shows the link to copy, so the share still happens.
+  function fallback(status, reason){
+    hwCap('share_email_failed', { archetype_key: (_share && _share.key) || null, ref: myShareRef(), status: status || 0, reason: reason || 'network' });
+    say('That did not send. Copy the link below and send it yourself.', true);
+    if (box) { box.innerHTML = '<span class="pb-sf-url"></span> <button type="button" class="sbtn" onclick="viralCopyLink()">Copy link</button>';
+      box.querySelector('.pb-sf-url').textContent = hwDisplayLink(); box.hidden = false; }
+    btn.disabled = false; btn.textContent = 'Send It for Me';
+  }
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(addr)) { say('That address does not look right.', true); to.focus(); return; }
   btn.disabled = true; btn.textContent = 'Sending...';
+  if (box) box.hidden = true;
   fetch(BETA_BACKEND + '/share-email', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ to: addr, from_name: hwSenderName(), note: _shareNote || '', ref: myShareRef() })
-  }).then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); })
+    body: JSON.stringify({ to: addr, from_name: hwSenderName(), note: _shareNote || '', ref: myShareRef(), link: hwShortLinkPayload() })
+  }).then(function(r){ return r.json().then(function(j){ return { ok: r.ok, status: r.status, j: j }; }); })
     .then(function(res){
       if (res.ok && res.j && res.j.ok) {
-        hwCap('share_email_sent_ui', { archetype_key: (_share && _share.key) || null });
-        say('Sent. Nothing else will follow.');
+        hwCap('share_email_sent', { archetype_key: (_share && _share.key) || null, ref: myShareRef(), has_note: !!_shareNote, has_card: !!res.j.card });
+        say('Sent. We emailed your friend the quiz link.');
         to.value = ''; btn.hidden = true;
         return;
       }
       var err = (res.j && res.j.error) || '';
-      say(err.indexOf('already sent') === 0 ? 'That address has already been sent one.'
-          : 'That did not send. Please use the Email button instead.', true);
-      btn.disabled = false; btn.textContent = 'Send It for Me';
+      if (err.indexOf('already sent') === 0) {
+        hwCap('share_email_failed', { archetype_key: (_share && _share.key) || null, ref: myShareRef(), status: res.status, reason: 'already sent' });
+        say('That address has already been sent one.', true);
+        btn.disabled = false; btn.textContent = 'Send It for Me';
+        return;
+      }
+      fallback(res.status, err || 'error');
     })
-    .catch(function(){
-      say('That did not send. Please use the Email button instead.', true);
-      btn.disabled = false; btn.textContent = 'Send It for Me';
-    });
+    .catch(function(){ fallback(0, 'network'); });
 }
 function viralToast(msg){ var t=document.getElementById('share-toast'); if(!t){ t=document.createElement('div'); t.id='share-toast'; t.className='share-toast'; document.body.appendChild(t); } t.textContent=msg; t.classList.add('on'); clearTimeout(t._t); t._t=setTimeout(function(){ t.classList.remove('on'); },1900); }
 // Outgoing message assembly: personal note (if any), then the message, then the link on
@@ -1090,17 +1104,19 @@ function hwShareVisToggle(el){
 // unchanged payload is not sent at all. A discrete action (first render, the
 // privacy toggle, tapping a share button) still registers immediately.
 var _shortLinkTimer = null, _shortLinkSent = '';
+function hwShortLinkPayload(){
+  var hwsM = ((_share && (_share.baseLink || _share.link)) || '').match(/hws=([0-9-]+)/);
+  return {
+    ref: myShareRef(),
+    slug: _shareShowResult ? (SHARE_SLUG[_share.key] || '') : '',
+    hws: _shareShowResult && hwsM ? hwsM[1] : '',
+    from: hwSenderName()
+  };
+}
 function hwRegisterShortLink(delay){
   if (!_share) return;
   try {
-    var hwsM = ((_share.baseLink || _share.link) || '').match(/hws=([0-9-]+)/);
-    var payload = {
-      ref: myShareRef(),
-      slug: _shareShowResult ? (SHARE_SLUG[_share.key] || '') : '',
-      hws: _shareShowResult && hwsM ? hwsM[1] : '',
-      from: hwSenderName()
-    };
-    var body = JSON.stringify(payload);
+    var body = JSON.stringify(hwShortLinkPayload());
     if (body === _shortLinkSent) return;
     if (_shortLinkTimer) { clearTimeout(_shortLinkTimer); _shortLinkTimer = null; }
     var send = function(){

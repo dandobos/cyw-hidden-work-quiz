@@ -225,6 +225,11 @@
              +"<br><br>If the emails are not arriving, please message Dan."
              ,
         btn:null },
+      // Item 8 (Dan, 25 Sep 2026): the chapters sit on the portal, in the step before course
+      // feedback, not only in the result email (Abigail Teruya finished Day 7 without them).
+      { key:"chapters", n:"4b", kind:"chapters", title:"Your book chapters", time:"Read or listen before the course feedback form",
+        desc:"Your chapters of <em>Choose Your Work</em>, chosen for your result. A few questions in the course feedback form ask about them.",
+        btn:null },
       { key:"course_feedback", n:5, kind:"form", title:"Course feedback form", time:"Duration: about 7 minutes",
         desc:"Once you have been through all seven days, share your candid and specific feedback.",
         btn:{label:"Open the Email Course Feedback Form", href:withId(FORM.course,name,email)} }
@@ -239,7 +244,7 @@
     }
 
     // find current step = first not-done
-    var currentIdx = STEPS.findIndex(function(s){ return !isDone(s.key); });
+    var currentIdx = STEPS.findIndex(function(s){ return s.kind !== "chapters" && !isDone(s.key); });
 
     var host = document.getElementById("steps");
     host.innerHTML = "";
@@ -256,7 +261,15 @@
       // (Dan's ruling 4 Sep 2026, after a tester answered it at day 1).
       var daysDone = Number(tester.days_done || 0);
       var locked = (s.key === "course_feedback" && !done && daysDone < 7);
-      if(locked){
+      if(s.kind === "chapters"){
+        var ch = tester.chapters || {};
+        actions = ch.pdf
+          ? '<div class="row"><a class="btn" href="'+esc(ch.pdf)+'" target="_blank" rel="noopener">PDF</a> '
+            + (ch.epub ? '<a class="btn" href="'+esc(ch.epub)+'" target="_blank" rel="noopener">EPUB (Kindle)</a> ' : '')
+            + (ch.mp3 ? '<a class="btn" href="'+esc(ch.mp3)+'" target="_blank" rel="noopener">Audio (MP3)</a>' : '')
+            + '</div>'
+          : '<div class="time">Your chapter links appear here once you have taken the quiz.</div>';
+      } else if(locked){
         actions = '<div class="time">This unlocks once your Day 7 answers are in. '
                 + (daysDone > 0 ? 'You are on day ' + daysDone + ' of 7.' : 'The course has not started yet.') + '</div>';
       } else if(!done && s.btn){
