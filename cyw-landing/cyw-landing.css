@@ -1,4 +1,4 @@
-/* Choose Your Work landing (built 20260929b). Reset what the WordPress theme and Elementor kit set on bare elements. */
+/* Choose Your Work landing (built 20260929c). Reset what the WordPress theme and Elementor kit set on bare elements. */
 html,body{overflow-x:clip}
 #cywlp h1,#cywlp h2,#cywlp h3,#cywlp p,#cywlp a,#cywlp button,#cywlp input,#cywlp blockquote,#cywlp figcaption,#cywlp summary,#cywlp li,#cywlp label,#cywlp small,#cywlp span,#cywlp b,#cywlp i{font-family:inherit}
 #cywlp h1,#cywlp h2,#cywlp h3{color:inherit;text-transform:none;line-height:1.1;font-weight:700;letter-spacing:normal;margin-top:0}
@@ -456,3 +456,9 @@ html,body{overflow-x:clip}
 #cywlp .qx .qbtn{white-space:normal;text-align:center;font-size:16px;padding:16px 18px;width:100%;justify-content:center}
 #cywlp .qx .pk a{font-size:12.5px;padding:8px 9px}
 #cywlp .qx-r{font-size:19px}}
+#cywlp .ty{padding:70px 0 90px}
+#cywlp .ty h1.big{font-weight:900;font-size:clamp(40px,5vw,72px);line-height:1;letter-spacing:-.045em;margin:0 0 28px}
+#cywlp .dlrow{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:30px}
+#cywlp .nl{max-width:40em;color:var(--soft);font-size:18px;margin:0 0 40px}
+@media (max-width:680px){#cywlp .dlrow .btn{flex:1 1 30%;padding:16px 10px;font-size:16px}}
+#cywlp .qz .em{margin:-6px 0 16px;font:600 15px var(--sans);color:var(--cta)}
