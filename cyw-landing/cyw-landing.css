@@ -1,4 +1,4 @@
-/* Choose Your Work landing (built 20260930a). Reset what the WordPress theme and Elementor kit set on bare elements. */
+/* Choose Your Work landing (built 20260930b). Reset what the WordPress theme and Elementor kit set on bare elements. */
 html,body{overflow-x:clip}
 #cywlp h1,#cywlp h2,#cywlp h3,#cywlp p,#cywlp a,#cywlp button,#cywlp input,#cywlp blockquote,#cywlp figcaption,#cywlp summary,#cywlp li,#cywlp label,#cywlp small,#cywlp span,#cywlp b,#cywlp i{font-family:inherit}
 #cywlp h1,#cywlp h2,#cywlp h3{color:inherit;text-transform:none;line-height:1.1;font-weight:700;letter-spacing:normal;margin-top:0}
@@ -197,6 +197,8 @@ html,body{overflow-x:clip}
 #cywlp header.top .c{height:62px}
 #cywlp .mbar{display:none!important}
 #cywlp .wm{font-size:20px}}
+#cywlp #topCta i.dl-long{font-style:normal}
+@media (max-width:420px){#cywlp #topCta i.dl-long{display:none}}
 @media (prefers-reduced-motion:reduce){#cywlp,#cywlp *{transition:none!important}}
 #cywlp h1.big{font-weight:900;font-size:clamp(38px,4.3vw,62px);line-height:1.02;letter-spacing:-.04em;margin:0}
 #cywlp h1.big em{display:inline;font:italic 400 1.02em/1 var(--serif);letter-spacing:-.02em;color:var(--red);margin:0}
