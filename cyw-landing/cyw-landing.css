@@ -1,4 +1,4 @@
-/* Choose Your Work landing (built 20260929c). Reset what the WordPress theme and Elementor kit set on bare elements. */
+/* Choose Your Work landing (built 20260930a). Reset what the WordPress theme and Elementor kit set on bare elements. */
 html,body{overflow-x:clip}
 #cywlp h1,#cywlp h2,#cywlp h3,#cywlp p,#cywlp a,#cywlp button,#cywlp input,#cywlp blockquote,#cywlp figcaption,#cywlp summary,#cywlp li,#cywlp label,#cywlp small,#cywlp span,#cywlp b,#cywlp i{font-family:inherit}
 #cywlp h1,#cywlp h2,#cywlp h3{color:inherit;text-transform:none;line-height:1.1;font-weight:700;letter-spacing:normal;margin-top:0}
@@ -70,7 +70,7 @@ html,body{overflow-x:clip}
 #cywlp .btn span{font-size:20px}
 #cywlp header.top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
 #cywlp header.top .c{display:flex;justify-content:space-between;align-items:center;height:76px}
-#cywlp .wm{font:800 20px/1 var(--sans);letter-spacing:.14em;color:var(--fg);text-decoration:none}
+#cywlp .wm{font:400 24px/1.5 'Righteous',sans-serif;letter-spacing:.1em;color:#000;text-decoration:none;text-transform:none}
 #cywlp header .btn{font-size:15px;padding:14px 20px;box-shadow:none;opacity:0;pointer-events:none;transition:opacity .2s}
 #cywlp header.show .btn{opacity:1;pointer-events:auto}
 #cywlp .hero{position:relative;padding:64px 0 70px}
@@ -196,7 +196,7 @@ html,body{overflow-x:clip}
 #cywlp header .btn{font-size:13.5px;padding:11px 14px;gap:8px}
 #cywlp header.top .c{height:62px}
 #cywlp .mbar{display:none!important}
-#cywlp .wm{font-size:16px}}
+#cywlp .wm{font-size:20px}}
 @media (prefers-reduced-motion:reduce){#cywlp,#cywlp *{transition:none!important}}
 #cywlp h1.big{font-weight:900;font-size:clamp(38px,4.3vw,62px);line-height:1.02;letter-spacing:-.04em;margin:0}
 #cywlp h1.big em{display:inline;font:italic 400 1.02em/1 var(--serif);letter-spacing:-.02em;color:var(--red);margin:0}
