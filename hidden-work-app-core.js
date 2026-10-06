@@ -1,4 +1,4 @@
-window.HW_BUILD = 'bd38739ead';
+window.HW_BUILD = 'f801254ce5';
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
@@ -1789,6 +1789,37 @@ function hwFirstMovesSend(){
   });
 }
 
+// Dan, 6 Oct 2026 (dims-explain-decision.html, from quiz feedback): 2 tap-to-open lines under each
+// dimension bar. "What does 54 mean?" gives the dimension's meaning and the 4 score ranges with their
+// sentences; "See the 6 answers behind 54" lists the reader's own answers on that dimension, lowest first.
+const DD_MEANING = {
+  C:  'How clearly you can see the work you want to do.',
+  AG: 'How much you act on it.',
+  AL: 'How much your work is your own choice, rather than what others expect.'
+};
+function ddExplainHtml(d){
+  var band = bandIdx(d.score), rng = ['0 to 25', '26 to 50', '51 to 75', '76 to 100'];
+  var ladder = SENTENCES[d.key].map(function(t, i){
+    return '<li' + (i === band ? ' class="on"' : '') + '><b>' + rng[i] + '</b><span>' + esc(t)
+      + (i === band ? '<i style="color:' + d.color + '">You are here</i>' : '') + '</span></li>';
+  }).join('');
+  var mine = [];
+  questions.forEach(function(q, i){
+    var a = answers[i];
+    if (q.section !== d.key || q.unscored || !a || a.unscored || typeof a.value !== 'number') return;
+    mine.push({ q: q.text || '', a: a.label || '', v: Math.max(0, Math.min(100, a.value)) });
+  });
+  mine.sort(function(x, y){ return x.v - y.v; });
+  var list = mine.map(function(m){
+    return '<li><div class="dx-q">' + esc(m.q) + '</div><div class="dx-a">&ldquo;' + esc(m.a) + '&rdquo;</div>'
+      + '<div class="dx-bar"><i><b style="width:' + m.v + '%;background:' + d.color + '"></b></i><span>' + Math.round(m.v) + '</span></div></li>';
+  }).join('');
+  return '<details class="dx" ontoggle="if(this.open)hwCap(\'result_dim_explain_opened\',{dim:\'' + d.key + '\',part:\'meaning\'})"><summary>What does ' + d.score + ' mean?</summary>'
+    + '<p class="dx-def"><b>' + d.name + ':</b> ' + DD_MEANING[d.key].charAt(0).toLowerCase() + DD_MEANING[d.key].slice(1) + '</p>'
+    + '<ul class="dx-ladder">' + ladder + '</ul></details>'
+    + (mine.length ? '<details class="dx" ontoggle="if(this.open)hwCap(\'result_dim_explain_opened\',{dim:\'' + d.key + '\',part:\'answers\'})"><summary>See the ' + mine.length + ' answers behind ' + d.score + '</summary>'
+      + '<p class="dx-def">Your score is the average of these answers.</p><ul class="dx-list">' + list + '</ul></details>' : '');
+}
 function renderResult(){
   const r = computeResult();
   const s = r.scores;
@@ -1817,6 +1848,7 @@ function renderResult(){
       + '<div class="dd-track"><div class="dd-fill" style="width:' + d.score + '%;background:' + d.color + '"></div>'
       + '<div class="dd-numcircle" style="left:' + pos + '%;border-color:' + d.color + ';color:' + d.color + '">' + d.score + '</div></div>'
       + '<div class="dd-poles"><span class="' + loOn + '">' + d.lo + '</span><span class="' + hiOn + '">' + d.hi + '</span></div>'
+      + ddExplainHtml(d)
       + '</div></div>';
   }).join('');
 
