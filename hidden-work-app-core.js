@@ -1,4 +1,4 @@
-window.HW_BUILD = 'f801254ce5';
+window.HW_BUILD = '51486f1c2f';
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
@@ -185,7 +185,7 @@ function clearState(){ try{ localStorage.removeItem(STATE_KEY); }catch(e){} }
 // share link (?type=) counts as a fresh visit and does NOT restore this.
 const RESULT_KEY = 'hw_quiz_result_v2';
 function saveResult(){ try{ localStorage.setItem(RESULT_KEY, JSON.stringify({answers, activityNames, activityScores, textVal, rankState, rankTouched, rankConfirmPending, email: (typeof _kitEmail !== 'undefined' && _kitEmail) || ''})); }catch(e){} }
-function loadResult(){ try{ var r = localStorage.getItem(RESULT_KEY); if(!r) return false; var st = JSON.parse(r); if(!st || !st.answers) return false; answers=st.answers; activityNames=st.activityNames||['','','']; activityScores=st.activityScores||[null,null,null]; textVal=st.textVal||''; rankState=st.rankState||{}; rankTouched=st.rankTouched||{}; rankConfirmPending=st.rankConfirmPending||{}; if (st.email && EMAIL_RE.test(st.email)) _kitEmail = st.email; return true; }catch(e){ return false; } }
+function loadResult(){ try{ var r = localStorage.getItem(RESULT_KEY); if(!r) return false; var st = JSON.parse(r); if(!st || !st.answers) return false; answers=st.answers; activityNames=st.activityNames||['','','']; activityScores=st.activityScores||[null,null,null]; textVal=st.textVal||''; rankState=st.rankState||{}; rankTouched=st.rankTouched||{}; rankConfirmPending=st.rankConfirmPending||{}; if (st.email && EMAIL_RE.test(st.email)) { _kitEmail = st.email; hwMarkKnown(); } return true; }catch(e){ return false; } }
 function clearResult(){ try{ localStorage.removeItem(RESULT_KEY); localStorage.removeItem(TOKEN_KEY); }catch(e){} }
 
 // ---- Permanent personal result link ------------------------------------
@@ -2139,6 +2139,9 @@ function submitToKit(email, fields){
 }
 
 let _submitting = false, _submitted = false, _kitEmail = '';
+// "We have this reader's email" marker for dandobos.com (Dan, 6 Oct 2026): OptinMonster's popups skip any
+// browser holding the cookie dd_known. Set when the reader gives their email here or a saved result carries one.
+function hwMarkKnown(){ try{ document.cookie = 'dd_known=1; path=/; max-age=63072000; SameSite=Lax; Secure'; }catch(e){} }
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 function submitGate(){
   if (_submitting || _submitted) return;                       // double-submit guard
@@ -2152,7 +2155,7 @@ function submitGate(){
     return;
   }
   if (err) err.style.display = 'none';
-  _submitting = true; _kitEmail = email;
+  _submitting = true; _kitEmail = email; hwMarkKnown();
   mintResultToken();   // before hwFields() and the sheet log, so both carry the same token
   const btn = document.getElementById('hw-gate-btn');
   if (btn){ btn.disabled = true; btn.textContent = 'Sending…'; }
