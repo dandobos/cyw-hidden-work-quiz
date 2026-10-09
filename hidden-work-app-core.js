@@ -1,4 +1,4 @@
-window.HW_BUILD = '2f55f80181';
+window.HW_BUILD = '7a01af291e';
 (function(){
   var POSTHOG_KEY  = 'phc_xaksPnZi9WkQ4uSEJYdeFzS4Kx7Ez6uJTAvSmGE26hey';   // project API key (US)
   var POSTHOG_HOST = 'https://k.dandobos.com';            // managed reverse proxy (dodges ad-blockers); events + /static served via k.dandobos.com -> PostHog US
@@ -928,7 +928,7 @@ function wcCardHtml(r, drained){
     + '<div class="wc-list">'+items+'</div>'
     + '<div class="wc-divh"><span>Which of the 8 Work Personalities are you?</span></div>'
     + '<div class="wc-grid">'+cells+'</div>'
-    + '<div class="foot-live"><a class="wc-cta" href="#hw-book-cta" onclick="hwCardCtaDown(event)">Discover Your Work Personality</a><p class="wc-src">A free 5-minute career quiz for people who want more from their work<br>dandobos.com/quiz</p></div>'
+    + '<div class="foot-live"><a class="wc-cta" href="#hw-book-cta" onclick="hwCardCtaDown(event)">Discover Your Work Personality</a><p class="wc-src">A free 5-minute career quiz for people who want more from their work<br>workalignmentprofile.com</p></div>'
     + '</div>';
 }
 const SHARE_HEADLINE = {
@@ -1230,7 +1230,7 @@ function viralSaveImage(){
   // Render a clone with the download footer (Discover prompt + URL as the CTA), no corner icon.
   var clone=el.cloneNode(true); clone.removeAttribute('id');
   var cc=clone.querySelector('.wc-dlrow'); if(cc) cc.parentNode.removeChild(cc);
-  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><p class="dl-tag">A free 5-minute career quiz for people who want more from their work</p><span class="dl-url">dandobos.com/quiz</span></div>';
+  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><p class="dl-tag">A free 5-minute career quiz for people who want more from their work</p><span class="dl-url">workalignmentprofile.com</span></div>';
   clone.style.position='fixed'; clone.style.left='-9999px'; clone.style.top='0'; clone.style.width=el.offsetWidth+'px';
   document.body.appendChild(clone);
   function cleanup(){ if(clone.parentNode) clone.parentNode.removeChild(clone); }
@@ -1263,12 +1263,12 @@ function viralSaveStory(){
   var mid=document.createElement('div');
   var clone=el.cloneNode(true); clone.removeAttribute('id');
   var cc=clone.querySelector('.wc-dlrow'); if(cc) cc.parentNode.removeChild(cc);
-  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><p class="dl-tag">A free 5-minute career quiz for people who want more from their work</p><span class="dl-url">dandobos.com/quiz</span></div>';
+  var fl=clone.querySelector('.foot-live'); if(fl) fl.outerHTML='<div class="foot-dl"><p class="dl-discover">Discover Your Work Personality</p><p class="dl-tag">A free 5-minute career quiz for people who want more from their work</p><span class="dl-url">workalignmentprofile.com</span></div>';
   clone.style.width='860px'; clone.style.boxShadow='0 30px 80px rgba(0,0,0,.35)'; clone.style.borderRadius='6px';
   mid.appendChild(clone);
   var bot=document.createElement('div');
   bot.style.cssText='text-align:center;color:#fff;font-family:\'Inter\',sans-serif;';
-  bot.innerHTML='<p style="font-size:30px;font-weight:600;margin:0 0 8px">Find Your Pattern</p><p style="font-size:26px;opacity:.85;margin:0;letter-spacing:.5px">dandobos.com/quiz</p>';
+  bot.innerHTML='<p style="font-size:30px;font-weight:600;margin:0 0 8px">Find Your Pattern</p><p style="font-size:26px;opacity:.85;margin:0;letter-spacing:.5px">workalignmentprofile.com</p>';
   wrap.appendChild(top); wrap.appendChild(mid); wrap.appendChild(bot);
   document.body.appendChild(wrap);
   function cleanup(){ if(wrap.parentNode) wrap.parentNode.removeChild(wrap); }
