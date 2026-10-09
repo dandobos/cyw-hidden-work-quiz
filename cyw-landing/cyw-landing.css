@@ -463,4 +463,9 @@ html,body{overflow-x:clip}
 #cywlp .dlrow{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:30px}
 #cywlp .nl{max-width:40em;color:var(--soft);font-size:18px;margin:0 0 40px}
 @media (max-width:680px){#cywlp .dlrow .btn{flex:1 1 30%;padding:16px 10px;font-size:16px}}
-#cywlp .qz .em{margin:-6px 0 16px;font:600 15px var(--sans);color:var(--cta)}
+#cywlp .qz .em{margin:-6px 0 16px;font:600 15px var(--sans);color:var(--cta)}/* Dan, 9 Oct 2026: renamed The Work Alignment Profile; keep the name whole and stack the tag on narrow phones */
+#cywlp .lg b.nm{white-space:nowrap}
+@media (max-width:380px){#cywlp .lg{display:inline-grid;grid-template-columns:auto auto;column-gap:.36em;font-size:19px}
+#cywlp .lg .rg{grid-row:1/3;width:2.2em;height:2.2em}
+#cywlp .lg b.nm{grid-column:2;margin-bottom:-.3em}
+#cywlp .lg b.q{grid-column:2;justify-self:start;font-size:.56em;padding:.3em .7em}}
