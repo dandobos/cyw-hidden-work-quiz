@@ -21,12 +21,12 @@
 
   function screenMsg(title, body, showCta) {
     page.innerHTML =
-      '<p class="intro-eyebrow">The Hidden Work Quiz</p>' +
+      '<p class="intro-eyebrow">The Work Alignment Profile</p>' +
       '<h1 class="intro-title">' + title + '</h1>' +
       '<p class="intro-desc">' + body + '</p>' +
       (showCta
         ? '<a class="continue-btn" style="text-decoration:none;display:block;text-align:center;" ' +
-          'href="https://dandobos.com/choose-your-work-quiz/">Take the quiz</a>'
+          'href="https://dandobos.com/work-alignment-profile/">Take the quiz</a>'
         : '');
   }
 
