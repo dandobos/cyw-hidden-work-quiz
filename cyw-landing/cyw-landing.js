@@ -1,4 +1,4 @@
-/* Choose Your Work landing (built 20261005a) */
+/* Choose Your Work landing (built 20261016a) */
 (function(){
 
 !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag identify alias people.set people.set_once set_config startSessionRecording stopSessionRecording".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
@@ -55,6 +55,7 @@ start();
   var card=f.closest('[data-card]');cywEv('cyw_form_submitted',{where:f.getAttribute('data-where')||'form',chapter:card?card.getAttribute('data-card'):null});},true);
  document.addEventListener('click',function(e){var t=e.target;
   if(t.closest&&t.closest('#topCta'))cywEv('cyw_topbar_clicked');
+  var pm=t.closest&&t.closest('#cywlp .tmore');if(pm)setTimeout(function(){cywEv('cyw_praise_more',{open:pm.getAttribute('aria-expanded')==='true'});},0);
   var q=t.closest&&t.closest('.qx a');if(q)cywEv('cyw_quiz_clicked',{what:q.classList.contains('qbtn')?'button':q.textContent.trim()});},true);
  document.querySelectorAll('#cywlp details').forEach(function(d){d.addEventListener('toggle',function(){if(d.open)cywEv('cyw_faq_opened',{question:d.querySelector('summary').textContent.trim()});});});
  var seen={};window.addEventListener('scroll',function(){var h=document.documentElement,p=Math.round((h.scrollTop+innerHeight)/h.scrollHeight*100);

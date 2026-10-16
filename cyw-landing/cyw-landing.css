@@ -1,4 +1,4 @@
-/* Choose Your Work landing (built 20261005a). Reset what the WordPress theme and Elementor kit set on bare elements. */
+/* Choose Your Work landing (built 20261016a). Reset what the WordPress theme and Elementor kit set on bare elements. */
 html,body{overflow-x:clip}
 #cywlp h1,#cywlp h2,#cywlp h3,#cywlp p,#cywlp a,#cywlp button,#cywlp input,#cywlp blockquote,#cywlp figcaption,#cywlp summary,#cywlp li,#cywlp label,#cywlp small,#cywlp span,#cywlp b,#cywlp i{font-family:inherit}
 #cywlp h1,#cywlp h2,#cywlp h3{color:inherit;text-transform:none;line-height:1.1;font-weight:700;letter-spacing:normal;margin-top:0}
@@ -469,3 +469,9 @@ html,body{overflow-x:clip}
 #cywlp .lg .rg{grid-row:1/3;width:2.2em;height:2.2em}
 #cywlp .lg b.nm{grid-column:2;margin-bottom:-.3em}
 #cywlp .lg b.q{grid-column:2;justify-self:start;font-size:.56em;padding:.3em .7em}}
+/* Dan, 16 Oct 2026: praise grid shows 6, the rest behind 'Read 4 more' */
+#cywlp .tst.tx{display:none}
+#cywlp .tgrid.open .tst.tx{display:flex}
+#cywlp .tmorebar{text-align:center;margin-top:20px}
+#cywlp .tmore{font:700 16px/1.2 var(--sans);background:#fff;border:1.5px solid var(--cta);color:var(--cta);border-radius:999px;padding:13px 24px;min-height:44px;cursor:pointer}
+#cywlp .tmore:hover,#cywlp .tmore:focus{background:var(--bg2)}
