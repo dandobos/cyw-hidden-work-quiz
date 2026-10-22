@@ -354,6 +354,28 @@
      standalone /quiz/ page (no host theme) these are no-ops.
      ============================================================ */
   body.page-id-3958 { padding-top: 0 !important; }
+  /* Launch QA item 3 (Dan, 22 Oct 2026): WordPress puts class="page" on <body>, so the quiz's own
+     .page rule (660px column, 24px side padding) also hit the body on every quiz screen.
+     That took 48px off a phone and caused the mid-word breaks and the counter overflow.
+     The page-id-3958 guard above names the OLD page id (live is 3785), so it did nothing.
+     body.page matches by element + class, so it works for any page id (also /r/ 4176). */
+  /* Launch QA item 3: phones only; desktop keeps the approved 660px column. */
+  @media (max-width: 700px) { body.page { max-width: none !important; margin: 0 !important; padding: 0 !important; } }
+  /* Launch QA item 1 (Dan, 22 Oct 2026): the reason line under a disabled Continue (Q6, Q28). */
+  #page .hw-req { font-family: var(--hw-sans, var(--sans)); font-size: 14px; color: #3d3d3d; text-align: center; margin: 10px 0 0; line-height: 1.4; }
+  #page .hw-req[hidden] { display: none; }
+  /* Launch QA item 18 (Dan, 22 Oct 2026): near-limit character counter for Q6 / Q28. */
+  #page .hw-cnt { font-family: var(--hw-sans, var(--sans)); font-size: 12px; color: #3d3d3d; text-align: right; margin: 6px 0 0; }
+  #page .textarea-input + .hw-cnt { margin: -18px 0 18px; }
+  #page .hw-cnt.full { color: #B23A2E; font-weight: 700; }
+  #page .hw-cnt[hidden] { display: none; }
+  /* Launch QA item 17 (Dan, 22 Oct 2026): tap targets of at least 44x44 (Apple HIG / WCAG 2.5.5). Q13 arrows were 38x38. */
+  #page .rank-btn, html.hwt #page .rank-btn { width: 44px; height: 44px; }
+  /* Launch QA item 17: the result page "What does N mean?" and "See the N answers" rows were about 20px tall. */
+  html #page details.dx > summary { min-height: 44px; display: flex; align-items: center; box-sizing: border-box; }
+  /* Launch QA item 12 (Dan, 22 Oct 2026): host-theme isolation for the gate's privacy link (the theme colours a, a:hover). */
+  #page .gate-fine a.gate-privacy, #page .gate-fine a.gate-privacy:visited { color: inherit !important; text-decoration: underline !important; text-underline-offset: 2px; white-space: nowrap; }
+  #page .gate-fine a.gate-privacy:hover, #page .gate-fine a.gate-privacy:focus { color: var(--accent) !important; }
   .intro-title       { font-family: var(--heading) !important; font-size: 56px !important; font-weight: 400 !important; line-height: 1.05 !important; }
   .intro-title .inv-title-key { color: var(--accent) !important; font-weight: 700 !important; }
   .gate-title        { font-family: var(--heading) !important; font-size: 40px !important; font-weight: 400 !important; line-height: 1.15 !important; }
@@ -389,9 +411,19 @@
   #page .word-tile, #page .res-dl-btn, #page .sbtn, #page .ghost-btn,
   #page a.wc-cta {
     white-space: normal !important;
+    /* Launch QA item 3 (Dan, 22 Oct 2026): was "word-break: break-word", which acts like overflow-wrap:anywhere
+       and lets flex/grid columns shrink until normal words split ("Energiz|es", "Drain|ed").
+       overflow-wrap:break-word only breaks a word that cannot fit on a line of its own. */
     overflow-wrap: break-word;
-    word-break: break-word;
+    word-break: normal;
+    hyphens: manual;
   }
+  /* Launch QA item 3: on small phones, give the 4 Q7 scale buttons a little more room for whole words. */
+  @media (max-width: 400px) { html.hwt #page .rate-btn { font-size: 11px; padding: 10px 2px; } }
+  /* Launch QA item 3: a long activity name with no spaces (Q6 allows 80 characters) must wrap inside the Q7 card. */
+  #page .rate-label { overflow-wrap: anywhere; min-width: 0; }
+  /* Launch QA item 3: "QUESTION 30 OF 30" kept on one line at 320px. */
+  @media (max-width: 360px) { html.hwt .hwt-bar .step-count { letter-spacing: .04em; margin-left: 8px; } }
   /* Beta (Lisa-Marie): the card CTA is an <a>, so it was missing from the list above;
      the theme's nowrap made its label overflow the card into the source line below. */
 
@@ -958,6 +990,9 @@ html.hwt #page .rank-nudge, html.hwt #page .rc-note, html.hwt #page .res-map-not
 @media (max-width:370px){#page .hwlp nav.topbar.topbar{gap:8px}
 #page .hwlp nav.topbar .lg{font-size:12.5px}
 #page .hwlp nav.topbar .lg .rg{width:2em;height:2em}}
+/* Launch QA item 3 (Dan, 22 Oct 2026): the header button ran off the right edge at 341-400px (386px at 375) and at 401-480px (482px at 430).
+   Three bands: smaller type at 341-400, the stacked phone logo also at 401-520, and a 44px tall button. Mirrored in gen_landing_v12.py. */
+@media (max-width:400px) and (min-width:371px){#page .hwlp nav.topbar.topbar{gap:8px}#page .hwlp nav.topbar .lg{font-size:12.5px}#page .hwlp nav.topbar.topbar a.btn{padding:8px 11px;font-size:12.5px;min-height:44px;box-sizing:border-box}}@media (max-width:370px) and (min-width:341px){#page .hwlp nav.topbar.topbar{gap:6px}#page .hwlp nav.topbar.topbar .lg{font-size:11.5px}#page .hwlp nav.topbar.topbar a.btn{padding:8px 9px;font-size:11.5px;min-height:44px;box-sizing:border-box}}@media (max-width:520px) and (min-width:401px){#page .hwlp nav.topbar .lg{font-size:14px;display:grid;grid-template-columns:auto auto;column-gap:.36em;align-items:center}#page .hwlp nav.topbar .lg .rg{grid-row:1/3;width:2.2em;height:2.2em}#page .hwlp nav.topbar .lg b.nm{grid-column:2;margin-bottom:-.3em}#page .hwlp nav.topbar .lg b.q{grid-column:2;justify-self:start;font-size:.56em;padding:.3em .7em}#page .hwlp nav.topbar.topbar a.btn{min-height:44px;box-sizing:border-box}#page .hwlp nav.topbar.topbar a.btn span{display:none}}
 @media (max-width:340px){#page .hwlp nav.topbar.topbar .lg{font-size:11.5px}}
 #page .hwlp .c.c{padding-left:32px;padding-right:32px}
 @media (max-width:820px){#page .hwlp .c.c{padding-left:16px;padding-right:16px}}

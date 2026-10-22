@@ -366,6 +366,28 @@
      standalone /quiz/ page (no host theme) these are no-ops.
      ============================================================ */
   body.page-id-3958 { padding-top: 0 !important; }
+  /* Launch QA item 3 (Dan, 22 Oct 2026): WordPress puts class="page" on <body>, so the quiz's own
+     .page rule (660px column, 24px side padding) also hit the body on every quiz screen.
+     That took 48px off a phone and caused the mid-word breaks and the counter overflow.
+     The page-id-3958 guard above names the OLD page id (live is 3785), so it did nothing.
+     body.page matches by element + class, so it works for any page id (also /r/ 4176). */
+  /* Launch QA item 3: phones only; desktop keeps the approved 660px column. */
+  @media (max-width: 700px) { body.page { max-width: none !important; margin: 0 !important; padding: 0 !important; } }
+  /* Launch QA item 1 (Dan, 22 Oct 2026): the reason line under a disabled Continue (Q6, Q28). */
+  #page .hw-req { font-family: var(--hw-sans, var(--sans)); font-size: 14px; color: #3d3d3d; text-align: center; margin: 10px 0 0; line-height: 1.4; }
+  #page .hw-req[hidden] { display: none; }
+  /* Launch QA item 18 (Dan, 22 Oct 2026): near-limit character counter for Q6 / Q28. */
+  #page .hw-cnt { font-family: var(--hw-sans, var(--sans)); font-size: 12px; color: #3d3d3d; text-align: right; margin: 6px 0 0; }
+  #page .textarea-input + .hw-cnt { margin: -18px 0 18px; }
+  #page .hw-cnt.full { color: #B23A2E; font-weight: 700; }
+  #page .hw-cnt[hidden] { display: none; }
+  /* Launch QA item 17 (Dan, 22 Oct 2026): tap targets of at least 44x44 (Apple HIG / WCAG 2.5.5). Q13 arrows were 38x38. */
+  #page .rank-btn, html.hwt #page .rank-btn { width: 44px; height: 44px; }
+  /* Launch QA item 17: the result page "What does N mean?" and "See the N answers" rows were about 20px tall. */
+  html #page details.dx > summary { min-height: 44px; display: flex; align-items: center; box-sizing: border-box; }
+  /* Launch QA item 12 (Dan, 22 Oct 2026): host-theme isolation for the gate's privacy link (the theme colours a, a:hover). */
+  #page .gate-fine a.gate-privacy, #page .gate-fine a.gate-privacy:visited { color: inherit !important; text-decoration: underline !important; text-underline-offset: 2px; white-space: nowrap; }
+  #page .gate-fine a.gate-privacy:hover, #page .gate-fine a.gate-privacy:focus { color: var(--accent) !important; }
   .intro-title       { font-family: var(--heading) !important; font-size: 56px !important; font-weight: 400 !important; line-height: 1.05 !important; }
   .intro-title .inv-title-key { color: var(--accent) !important; font-weight: 700 !important; }
   .gate-title        { font-family: var(--heading) !important; font-size: 40px !important; font-weight: 400 !important; line-height: 1.15 !important; }
@@ -401,9 +423,19 @@
   #page .word-tile, #page .res-dl-btn, #page .sbtn, #page .ghost-btn,
   #page a.wc-cta {
     white-space: normal !important;
+    /* Launch QA item 3 (Dan, 22 Oct 2026): was "word-break: break-word", which acts like overflow-wrap:anywhere
+       and lets flex/grid columns shrink until normal words split ("Energiz|es", "Drain|ed").
+       overflow-wrap:break-word only breaks a word that cannot fit on a line of its own. */
     overflow-wrap: break-word;
-    word-break: break-word;
+    word-break: normal;
+    hyphens: manual;
   }
+  /* Launch QA item 3: on small phones, give the 4 Q7 scale buttons a little more room for whole words. */
+  @media (max-width: 400px) { html.hwt #page .rate-btn { font-size: 11px; padding: 10px 2px; } }
+  /* Launch QA item 3: a long activity name with no spaces (Q6 allows 80 characters) must wrap inside the Q7 card. */
+  #page .rate-label { overflow-wrap: anywhere; min-width: 0; }
+  /* Launch QA item 3: "QUESTION 30 OF 30" kept on one line at 320px. */
+  @media (max-width: 360px) { html.hwt .hwt-bar .step-count { letter-spacing: .04em; margin-left: 8px; } }
   /* Beta (Lisa-Marie): the card CTA is an <a>, so it was missing from the list above;
      the theme's nowrap made its label overflow the card into the source line below. */
 
@@ -970,6 +1002,9 @@ html.hwt #page .rank-nudge, html.hwt #page .rc-note, html.hwt #page .res-map-not
 @media (max-width:370px){#page .hwlp nav.topbar.topbar{gap:8px}
 #page .hwlp nav.topbar .lg{font-size:12.5px}
 #page .hwlp nav.topbar .lg .rg{width:2em;height:2em}}
+/* Launch QA item 3 (Dan, 22 Oct 2026): the header button ran off the right edge at 341-400px (386px at 375) and at 401-480px (482px at 430).
+   Three bands: smaller type at 341-400, the stacked phone logo also at 401-520, and a 44px tall button. Mirrored in gen_landing_v12.py. */
+@media (max-width:400px) and (min-width:371px){#page .hwlp nav.topbar.topbar{gap:8px}#page .hwlp nav.topbar .lg{font-size:12.5px}#page .hwlp nav.topbar.topbar a.btn{padding:8px 11px;font-size:12.5px;min-height:44px;box-sizing:border-box}}@media (max-width:370px) and (min-width:341px){#page .hwlp nav.topbar.topbar{gap:6px}#page .hwlp nav.topbar.topbar .lg{font-size:11.5px}#page .hwlp nav.topbar.topbar a.btn{padding:8px 9px;font-size:11.5px;min-height:44px;box-sizing:border-box}}@media (max-width:520px) and (min-width:401px){#page .hwlp nav.topbar .lg{font-size:14px;display:grid;grid-template-columns:auto auto;column-gap:.36em;align-items:center}#page .hwlp nav.topbar .lg .rg{grid-row:1/3;width:2.2em;height:2.2em}#page .hwlp nav.topbar .lg b.nm{grid-column:2;margin-bottom:-.3em}#page .hwlp nav.topbar .lg b.q{grid-column:2;justify-self:start;font-size:.56em;padding:.3em .7em}#page .hwlp nav.topbar.topbar a.btn{min-height:44px;box-sizing:border-box}#page .hwlp nav.topbar.topbar a.btn span{display:none}}
 @media (max-width:340px){#page .hwlp nav.topbar.topbar .lg{font-size:11.5px}}
 #page .hwlp .c.c{padding-left:32px;padding-right:32px}
 @media (max-width:820px){#page .hwlp .c.c{padding-left:16px;padding-right:16px}}
@@ -1282,7 +1317,7 @@ function setProgress() {
   var _pb=document.getElementById('progressbar'); if(_pb){ _pb.setAttribute('aria-valuenow', Math.round(pct)); _pb.style.display = (screen === 'question' || screen === 'gate') ? '' : 'none'; }
 }
 // HWLP START: landing page as the quiz intro. Generated by _testing_now/gen_landing_embed.py; do not edit by hand.
-var HWLP_HTML = "<div class=\"hwlp\"><svg width=\"0\" height=\"0\" style=\"position:absolute\" aria-hidden=\"true\">\n  <symbol id=\"i-HHH\" viewBox=\"0 0 24 24\"><path d=\"M12 2.5l6 7.5-3.5 10h-5L6 10z\"/><path d=\"M12 2.5V12\"/><circle cx=\"12\" cy=\"13.2\" r=\"1.3\"/><path d=\"M9.5 20h5v1.5h-5z\"/></symbol>\n  <symbol id=\"i-HHL\" viewBox=\"0 0 24 24\"><path d=\"M8 3.5h8v5.5a4 4 0 0 1-8 0z\"/><path d=\"M8 5.5H5.5a3 3 0 0 0 3 4.4\"/><path d=\"M16 5.5h2.5a3 3 0 0 1-3 4.4\"/><path d=\"M12 13v3.5\"/><path d=\"M9.5 16.5h5\"/><path d=\"M8 20.5h8\"/><path d=\"M9.5 16.5l-.8 4M14.5 16.5l.8 4\"/></symbol>\n  <symbol id=\"i-HLH\" viewBox=\"0 0 24 24\"><path d=\"M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z\"/><circle cx=\"12\" cy=\"12\" r=\"3.2\"/><circle cx=\"12\" cy=\"12\" r=\".6\" fill=\"currentColor\"/></symbol>\n  <symbol id=\"i-HLL\" viewBox=\"0 0 24 24\"><circle cx=\"17\" cy=\"6.5\" r=\"2.3\"/><path d=\"M2.5 19l6-8.5 4 5 3-3.5 6 7\"/><path d=\"M2.5 19h19\"/><path d=\"M5 21.5h3M11 21.5h7\"/></symbol>\n  <symbol id=\"i-LHH\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M15.8 8.2l-2.3 5.3-5.3 2.3 2.3-5.3z\"/><path d=\"M12 3v1.8M12 19.2V21M3 12h1.8M19.2 12H21\"/></symbol>\n  <symbol id=\"i-LHL\" viewBox=\"0 0 24 24\"><path d=\"M3.5 17a8.5 8.5 0 1 1 17 0\"/><path d=\"M12 17l4.2-5.2\"/><circle cx=\"12\" cy=\"17\" r=\"1.4\"/><path d=\"M6 12.5l1.2.8M12 8.5v1.5M18 12.5l-1.2.8\"/><path d=\"M3.5 20.5h17\"/></symbol>\n  <symbol id=\"i-LLH\" viewBox=\"0 0 24 24\"><path d=\"M12 14.5c-3.8 0-6.3-2.2-6.3-5.2 0-2.2 1.6-3.6 3.2-3.8.6-1.9 1.8-3 3.1-3s2.5 1.1 3.1 3c1.6.2 3.2 1.6 3.2 3.8 0 3-2.5 5.2-6.3 5.2z\"/><path d=\"M12 9v9.5\"/><path d=\"M12 12l-2.2-1.8M12 11l2.2-1.8\"/><path d=\"M4 18.5h16\"/><path d=\"M12 18.5l-3 2.8M12 18.5l3 2.8\"/></symbol>\n  <symbol id=\"i-LLL\" viewBox=\"0 0 24 24\"><path d=\"M12 21.5V12\"/><path d=\"M12 17.5c-3.2 0-4.8-2-4.8-4.3 2.4 0 4.8 1.4 4.8 4.3z\"/><path d=\"M12 12c-2.6 0-3.8-2.6-3.8-5.5 1.4.6 2.7 1.5 3.8 2.8 1.1-1.3 2.4-2.2 3.8-2.8 0 2.9-1.2 5.5-3.8 5.5z\"/><path d=\"M12 9.3V3.5\"/><path d=\"M4.5 21.5h15\"/></symbol>\n</svg>\n<nav class=\"topbar\"><span class=\"lg\" role=\"img\" aria-label=\"The Work Alignment Profile\"><svg class=\"rg\" viewBox=\"0 0 34 34\" aria-hidden=\"true\"><circle cx=\"27.35\" cy=\"12.71\" r=\"4.90\" fill=\"#B23A2E\"/><circle cx=\"27.35\" cy=\"21.29\" r=\"3.00\" fill=\"#C2722F\"/><circle cx=\"21.29\" cy=\"27.35\" r=\"3.00\" fill=\"#B8902F\"/><circle cx=\"12.71\" cy=\"27.35\" r=\"3.00\" fill=\"#3D7A6E\"/><circle cx=\"6.65\" cy=\"21.29\" r=\"3.00\" fill=\"#1E5F8C\"/><circle cx=\"6.65\" cy=\"12.71\" r=\"3.00\" fill=\"#557C9E\"/><circle cx=\"12.71\" cy=\"6.65\" r=\"3.00\" fill=\"#6B6B6B\"/><circle cx=\"21.29\" cy=\"6.65\" r=\"3.00\" fill=\"#A85A3D\"/></svg><b class=\"nm\">Work Al<b class=\"idot\">\u0131</b>gnment</b><b class=\"q\">PROFILE</b></span><a class=\"btn\" href=\"#start\" data-hwlp-cta=\"other\">Discover my Work Personality <span>&rarr;</span></a></nav>\n<header class=\"c hero\">\n  <div class=\"glow\" aria-hidden=\"true\"></div>\n  <h1>You're good<br>at your job.<span class=\"q\">So why does it sometimes<br>feel like the wrong one?</span></h1>\n  <p class=\"sub\">In five minutes, discover why certain work drains you, what kind of work energizes you, and the quick wins you can make this week.</p>\n  <div><a class=\"btn\" id=\"heroCta\" href=\"#start\" data-hwlp-cta=\"hero\">Discover my Work Personality <span>&rarr;</span></a></div>\n  <a class=\"peek\" href=\"#pick\"><span class=\"ics\" id=\"peek\"></span><span>8 Work Personalities. Which one are you? &darr;</span></a>\n  <div class=\"chips\"><span><b>&check;</b>Free</span><span><b>&check;</b>Personalized Report</span><span><b>&check;</b>About 5 minutes</span></div>\n<p class=\"hq\"><q>&ldquo;I was rather floored when everything it said was accurate.&rdquo;</q><small>Lindsey O\u2019Neill &middot; Restless Explorer</small></p>\n</header>\n<section class=\"c lines\">\n  <p class=\"line\">You hit the numbers.</p>\n  <p class=\"line\">You get the praise.</p>\n  <p class=\"line\">People ask for you by name.</p>\n  <p class=\"line hot\">And Monday still feels heavy.</p>\n</section>\n<section class=\"c pick\" id=\"pick\">\n  <div class=\"lab\">8 Work Personalities</div>\n  <h2 class=\"h2\">Tap the one which sounds like you...</h2>\n  <div class=\"g\" id=\"g\"></div>\n  <div class=\"inl\" id=\"inl\" hidden aria-live=\"polite\"></div>\n</section>\n<section class=\"c get\"><div class=\"lab\">What You Get for Free</div><div class=\"get-grid\">\n    <div><svg class=\"gi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"8\" r=\"3.6\"/><path d=\"M4.5 20.5c1.2-4 4.2-6 7.5-6s6.3 2 7.5 6\"/></svg><b>Discover Your Work Personality</b><p>You are one of 8 patterns. Find out which one.</p></div>\n    <div><svg class=\"gi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M3.5 17a8.5 8.5 0 1 1 17 0\"/><path d=\"M12 17l4.2-5.2\"/><circle cx=\"12\" cy=\"17\" r=\"1.4\"/></svg><b>Your Regret Signal</b><p>Are you on the right path?</p></div>\n    <div><svg class=\"gi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 6.5c-2-1.6-5-2.2-8-1.8v13c3-.4 6 .2 8 1.8 2-1.6 5-2.2 8-1.8v-13c-3-.4-6 .2-8 1.8z\"/><path d=\"M12 6.5v13\"/></svg><b>Free Book Chapter</b><p>A free chapter from <i>Choose Your Work</i>, selected based on your work pattern.</p></div>\n    <div><svg class=\"gi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"3.5\" y=\"3.5\" width=\"17\" height=\"17\" rx=\"3.5\"/><path d=\"M8 12.3l2.8 2.8L16.2 9\"/></svg><b>Practical Actions</b><p>One short email per day with an insight that helps you take action.</p></div>\n  </div><div class=\"midcta\"><a class=\"btn\" href=\"#start\" data-hwlp-cta=\"mid\">Discover my Work Personality <span>&rarr;</span></a></div></section>\n<section class=\"c more\"><!-- CONVERSION SLOT: 3 real reader quotes (Reader Messages DB, Promo OK). Never invent them. -->\n  <div class=\"lab\">From people who took it</div>\n    <div class=\"pqs\"><figure class=\"pq1\"><div><h3>&ldquo;Rather floored it was accurate&rdquo;</h3><blockquote>&ldquo;I\u2019ll admit that I wasn\u2019t sure this quiz would understand me, so I was rather floored when everything it said was accurate.&rdquo;</blockquote></div><figcaption><span class=\"av\">LO</span><span>Lindsey O\u2019Neill &middot; Restless Explorer</span></figcaption></figure><figure class=\"pq1\"><div><h3>&ldquo;Genuinely Insightful&rdquo;</h3><blockquote>&ldquo;It was genuinely insightful and subtly made me want to learn more&rdquo;</blockquote></div><figcaption><span class=\"av\">EC</span><span>Erin Cusack &middot; Late Bloomer</span></figcaption></figure><figure class=\"pq1\"><div><h3>&ldquo;One question changed my whole perspective.&rdquo;</h3><blockquote>&ldquo;Thank you for making this free. It felt like a gift \u2013 and I don't say that lightly. It made me feel seen. It forced me to think bigger than my daily to-do list. One question changed my whole perspective.&rdquo;</blockquote></div><figcaption><span class=\"av\">OK</span><span>Owen Keating &middot; Restless Explorer</span></figcaption></figure><figure class=\"pq1 x\"><div><h3>&ldquo;Spot on&rdquo;</h3><blockquote>&ldquo;It feels spot on for where I\u2019m at in my career.&rdquo;</blockquote></div><figcaption><span class=\"av\">FB</span><span>Fiona Brauneisen &middot; Restless Visionary</span></figcaption></figure><figure class=\"pq1 x\"><div><h3>&ldquo;A wake-up call&rdquo;</h3><blockquote>&ldquo;The wake-up call was reading that I pick up my phone as a distraction. This hit home as I realised I often do this in the evening, and sometimes I look at my phone screen, wondering why I picked it up.&rdquo;</blockquote></div><figcaption><span class=\"av\">SL</span><span>Simon Law &middot; Late Bloomer</span></figcaption></figure><figure class=\"pq1 x\"><div><h3>&ldquo;Genuine, premium value&rdquo;</h3><blockquote>&ldquo;It completely avoids the usual \u2018salesy\u2019 clich\u00e9s of online quizzes and instead provides genuine, premium value.&rdquo;</blockquote></div><figcaption><span class=\"av\">LM</span><span>Lisa-Marie Niedrich &middot; True Creator</span></figcaption></figure><figure class=\"pq1 x\"><div><h3>&ldquo;I screenshotted the entire description&rdquo;</h3><blockquote>&ldquo;I screenshotted the entire description as I really liked it. Since then, I have spent more time doing things that put me in flow.&rdquo;</blockquote></div><figcaption><span class=\"av\">CG</span><span>Courtney Gardiner &middot; Awakened Observer</span></figcaption></figure><figure class=\"pq1 x\"><div><h3>&ldquo;Reignited my spark for a career I\u2019ve been thinking about for years&rdquo;</h3><blockquote>&ldquo;It gave me a feeling of purpose and has reignited my spark to go for a new career that I have been thinking about for years. It also helped me create a concrete plan.&rdquo;</blockquote></div><figcaption><span class=\"av\">LO</span><span>Lindsey O\u2019Neill &middot; Restless Explorer</span></figcaption></figure><figure class=\"pq1 x\"><div><h3>&ldquo;Shifted my mindset&rdquo;</h3><blockquote>&ldquo;This whole 7 day course has shifted my mindset and I now feel that I can organize and prioritize things better.&rdquo;</blockquote></div><figcaption><span class=\"av\">AD</span><span>Anna De Beer &middot; True Creator</span></figcaption></figure></div><div class=\"tmorebar\"><button type=\"button\" class=\"tmore\" aria-expanded=\"false\" onclick=\"var g=this.parentNode.previousElementSibling,o=g.classList.toggle('open');this.setAttribute('aria-expanded',o);this.textContent=o?'Show fewer':'Read 6 more';if(o&&window.posthog)posthog.capture('landing_testimonials_more');if(!o)this.scrollIntoView({block:'center'});\">Read 6 more</button></div></section>\n<section class=\"c faq\">\n  <div class=\"lab\">Frequently Asked Questions</div>\n  <details><summary>Is it free?</summary><p>Yes. The quiz, your result, the chapter and the 7-day course are all free.</p></details>\n  <details><summary>How long does it take?</summary><p>About 5 minutes. There are 30 questions, and most take one tap.</p></details>\n  <details><summary>Who is it for?</summary><p>Anyone who works, at any stage: students, early, mid and late career, and people between roles.</p></details>\n  <details><summary>What happens when I finish?</summary><p>You enter your email and your Work Personality appears on screen. Your free chapter and the first of 7 daily emails follow by email.</p></details>\n  <details><summary>Why does it ask for my email?</summary><p>To send your result, your free chapter and the 7-day course. No spam. Unsubscribe anytime.</p></details>\n</section>\n<section class=\"final\" id=\"know\" aria-live=\"polite\"><div class=\"c\">\n  <p class=\"pre\" id=\"pre\"></p>\n  <p class=\"pq\" id=\"pq\"></p>\n  <h2>Know<br><i>for sure.</i></h2>\n  <a class=\"btn\" id=\"finalBtn\" href=\"#start\" data-hwlp-cta=\"closer\">Discover my Work Personality <span>&rarr;</span></a>\n  <div class=\"chips\"><span><b>&check;</b>Free</span><span><b>&check;</b>Personalized Report</span><span><b>&check;</b>About 5 minutes</span></div>\n</div></section>\n<div class=\"dbar\" id=\"dbar\" aria-hidden=\"true\"><b>The Work Alignment Profile</b><a class=\"btn\" href=\"#start\" data-hwlp-cta=\"desktop_bar\" tabindex=\"-1\">Discover my Work Personality <span>&rarr;</span></a></div>\n<div class=\"mcta\" id=\"mcta\"><a class=\"btn\" href=\"#start\" data-hwlp-cta=\"mobile_bar\">Discover my Work Personality <span>&rarr;</span></a></div></div>";
+var HWLP_HTML = "<div class=\"hwlp\"><svg width=\"0\" height=\"0\" style=\"position:absolute\" aria-hidden=\"true\">\n  <symbol id=\"i-HHH\" viewBox=\"0 0 24 24\"><path d=\"M12 2.5l6 7.5-3.5 10h-5L6 10z\"/><path d=\"M12 2.5V12\"/><circle cx=\"12\" cy=\"13.2\" r=\"1.3\"/><path d=\"M9.5 20h5v1.5h-5z\"/></symbol>\n  <symbol id=\"i-HHL\" viewBox=\"0 0 24 24\"><path d=\"M8 3.5h8v5.5a4 4 0 0 1-8 0z\"/><path d=\"M8 5.5H5.5a3 3 0 0 0 3 4.4\"/><path d=\"M16 5.5h2.5a3 3 0 0 1-3 4.4\"/><path d=\"M12 13v3.5\"/><path d=\"M9.5 16.5h5\"/><path d=\"M8 20.5h8\"/><path d=\"M9.5 16.5l-.8 4M14.5 16.5l.8 4\"/></symbol>\n  <symbol id=\"i-HLH\" viewBox=\"0 0 24 24\"><path d=\"M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z\"/><circle cx=\"12\" cy=\"12\" r=\"3.2\"/><circle cx=\"12\" cy=\"12\" r=\".6\" fill=\"currentColor\"/></symbol>\n  <symbol id=\"i-HLL\" viewBox=\"0 0 24 24\"><circle cx=\"17\" cy=\"6.5\" r=\"2.3\"/><path d=\"M2.5 19l6-8.5 4 5 3-3.5 6 7\"/><path d=\"M2.5 19h19\"/><path d=\"M5 21.5h3M11 21.5h7\"/></symbol>\n  <symbol id=\"i-LHH\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M15.8 8.2l-2.3 5.3-5.3 2.3 2.3-5.3z\"/><path d=\"M12 3v1.8M12 19.2V21M3 12h1.8M19.2 12H21\"/></symbol>\n  <symbol id=\"i-LHL\" viewBox=\"0 0 24 24\"><path d=\"M3.5 17a8.5 8.5 0 1 1 17 0\"/><path d=\"M12 17l4.2-5.2\"/><circle cx=\"12\" cy=\"17\" r=\"1.4\"/><path d=\"M6 12.5l1.2.8M12 8.5v1.5M18 12.5l-1.2.8\"/><path d=\"M3.5 20.5h17\"/></symbol>\n  <symbol id=\"i-LLH\" viewBox=\"0 0 24 24\"><path d=\"M12 14.5c-3.8 0-6.3-2.2-6.3-5.2 0-2.2 1.6-3.6 3.2-3.8.6-1.9 1.8-3 3.1-3s2.5 1.1 3.1 3c1.6.2 3.2 1.6 3.2 3.8 0 3-2.5 5.2-6.3 5.2z\"/><path d=\"M12 9v9.5\"/><path d=\"M12 12l-2.2-1.8M12 11l2.2-1.8\"/><path d=\"M4 18.5h16\"/><path d=\"M12 18.5l-3 2.8M12 18.5l3 2.8\"/></symbol>\n  <symbol id=\"i-LLL\" viewBox=\"0 0 24 24\"><path d=\"M12 21.5V12\"/><path d=\"M12 17.5c-3.2 0-4.8-2-4.8-4.3 2.4 0 4.8 1.4 4.8 4.3z\"/><path d=\"M12 12c-2.6 0-3.8-2.6-3.8-5.5 1.4.6 2.7 1.5 3.8 2.8 1.1-1.3 2.4-2.2 3.8-2.8 0 2.9-1.2 5.5-3.8 5.5z\"/><path d=\"M12 9.3V3.5\"/><path d=\"M4.5 21.5h15\"/></symbol>\n</svg>\n<nav class=\"topbar\"><span class=\"lg\" role=\"img\" aria-label=\"The Work Alignment Profile\"><svg class=\"rg\" viewBox=\"0 0 34 34\" aria-hidden=\"true\"><circle cx=\"27.35\" cy=\"12.71\" r=\"4.90\" fill=\"#B23A2E\"/><circle cx=\"27.35\" cy=\"21.29\" r=\"3.00\" fill=\"#C2722F\"/><circle cx=\"21.29\" cy=\"27.35\" r=\"3.00\" fill=\"#B8902F\"/><circle cx=\"12.71\" cy=\"27.35\" r=\"3.00\" fill=\"#3D7A6E\"/><circle cx=\"6.65\" cy=\"21.29\" r=\"3.00\" fill=\"#1E5F8C\"/><circle cx=\"6.65\" cy=\"12.71\" r=\"3.00\" fill=\"#557C9E\"/><circle cx=\"12.71\" cy=\"6.65\" r=\"3.00\" fill=\"#6B6B6B\"/><circle cx=\"21.29\" cy=\"6.65\" r=\"3.00\" fill=\"#A85A3D\"/></svg><b class=\"nm\">Work Al<b class=\"idot\">\u0131</b>gnment</b><b class=\"q\">PROFILE</b></span><a class=\"btn\" href=\"#start\" data-hwlp-cta=\"other\">Discover my Work Personality <span>&rarr;</span></a></nav>\n<header class=\"c hero\">\n  <div class=\"glow\" aria-hidden=\"true\"></div>\n  <h1>You're good<br>at your job.<span class=\"q\">So why does it sometimes<br>feel like the wrong one?</span></h1>\n  <p class=\"sub\">In five minutes, discover why certain work drains you, what kind of work energizes you, and the quick wins you can make this week.</p>\n  <div><a class=\"btn\" id=\"heroCta\" href=\"#start\" data-hwlp-cta=\"hero\">Discover my Work Personality <span>&rarr;</span></a></div>\n  <a class=\"peek\" href=\"#pick\"><span class=\"ics\" id=\"peek\"></span><span>8 Work Personalities. Which one are you? &darr;</span></a>\n  <div class=\"chips\"><span><b>&check;</b>Free</span><span><b>&check;</b>Personalized Report</span><span><b>&check;</b>About 5 minutes</span></div>\n<p class=\"hq\"><q>&ldquo;I was rather floored when everything it said was accurate.&rdquo;</q><small>Lindsey O\u2019Neill &middot; Restless Explorer</small></p>\n</header>\n<section class=\"c lines\">\n  <p class=\"line\">You hit the numbers.</p>\n  <p class=\"line\">You get the praise.</p>\n  <p class=\"line\">People ask for you by name.</p>\n  <p class=\"line hot\">And Monday still feels heavy.</p>\n</section>\n<section class=\"c pick\" id=\"pick\">\n  <div class=\"lab\">8 Work Personalities</div>\n  <h2 class=\"h2\">Tap the one which sounds like you...</h2>\n  <div class=\"g\" id=\"g\"></div>\n  <div class=\"inl\" id=\"inl\" hidden aria-live=\"polite\"></div>\n</section>\n<section class=\"c get\"><div class=\"lab\">What You Get for Free</div><div class=\"get-grid\">\n    <div><svg class=\"gi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"8\" r=\"3.6\"/><path d=\"M4.5 20.5c1.2-4 4.2-6 7.5-6s6.3 2 7.5 6\"/></svg><b>Discover Your Work Personality</b><p>You are one of 8 patterns. Find out which one.</p></div>\n    <div><svg class=\"gi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M3.5 17a8.5 8.5 0 1 1 17 0\"/><path d=\"M12 17l4.2-5.2\"/><circle cx=\"12\" cy=\"17\" r=\"1.4\"/></svg><b>Your Regret Signal</b><p>Are you on the right path?</p></div>\n    <div><svg class=\"gi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 6.5c-2-1.6-5-2.2-8-1.8v13c3-.4 6 .2 8 1.8 2-1.6 5-2.2 8-1.8v-13c-3-.4-6 .2-8 1.8z\"/><path d=\"M12 6.5v13\"/></svg><b>Free Book Chapter</b><p>A free chapter from <i>Choose Your Work</i>, selected based on your work pattern.</p></div>\n    <div><svg class=\"gi\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"3.5\" y=\"3.5\" width=\"17\" height=\"17\" rx=\"3.5\"/><path d=\"M8 12.3l2.8 2.8L16.2 9\"/></svg><b>Practical Actions</b><p>One short email per day with an insight that helps you take action.</p></div>\n  </div><div class=\"midcta\"><a class=\"btn\" href=\"#start\" data-hwlp-cta=\"mid\">Discover my Work Personality <span>&rarr;</span></a></div></section>\n<section class=\"c more\"><!-- CONVERSION SLOT: 3 real reader quotes (Reader Messages DB, Promo OK). Never invent them. -->\n  <div class=\"lab\">From people who took it</div>\n    <div class=\"pqs\"><figure class=\"pq1\"><div><h3>&ldquo;Genuinely Insightful&rdquo;</h3><blockquote>&ldquo;It was genuinely insightful and subtly made me want to learn more&rdquo;</blockquote></div><figcaption><span class=\"av\">EC</span><span>Erin Cusack &middot; Late Bloomer</span></figcaption></figure><figure class=\"pq1\"><div><h3>&ldquo;One question changed my whole perspective.&rdquo;</h3><blockquote>&ldquo;Thank you for making this free. It felt like a gift \u2013 and I don't say that lightly. It made me feel seen. It forced me to think bigger than my daily to-do list. One question changed my whole perspective.&rdquo;</blockquote></div><figcaption><span class=\"av\">OK</span><span>Owen Keating &middot; Restless Explorer</span></figcaption></figure><figure class=\"pq1\"><div><h3>&ldquo;Spot on&rdquo;</h3><blockquote>&ldquo;It feels spot on for where I\u2019m at in my career.&rdquo;</blockquote></div><figcaption><span class=\"av\">FB</span><span>Fiona Brauneisen &middot; Restless Visionary</span></figcaption></figure><figure class=\"pq1 x\"><div><h3>&ldquo;A wake-up call&rdquo;</h3><blockquote>&ldquo;The wake-up call was reading that I pick up my phone as a distraction. This hit home as I realised I often do this in the evening, and sometimes I look at my phone screen, wondering why I picked it up.&rdquo;</blockquote></div><figcaption><span class=\"av\">SL</span><span>Simon Law &middot; Late Bloomer</span></figcaption></figure><figure class=\"pq1 x\"><div><h3>&ldquo;Genuine, premium value&rdquo;</h3><blockquote>&ldquo;It completely avoids the usual \u2018salesy\u2019 clich\u00e9s of online quizzes and instead provides genuine, premium value.&rdquo;</blockquote></div><figcaption><span class=\"av\">LM</span><span>Lisa-Marie Niedrich &middot; True Creator</span></figcaption></figure><figure class=\"pq1 x\"><div><h3>&ldquo;I screenshotted the entire description&rdquo;</h3><blockquote>&ldquo;I screenshotted the entire description as I really liked it. Since then, I have spent more time doing things that put me in flow.&rdquo;</blockquote></div><figcaption><span class=\"av\">CG</span><span>Courtney Gardiner &middot; Awakened Observer</span></figcaption></figure><figure class=\"pq1 x\"><div><h3>&ldquo;Reignited my spark for a career I\u2019ve been thinking about for years&rdquo;</h3><blockquote>&ldquo;It gave me a feeling of purpose and has reignited my spark to go for a new career that I have been thinking about for years. It also helped me create a concrete plan.&rdquo;</blockquote></div><figcaption><span class=\"av\">LO</span><span>Lindsey O\u2019Neill &middot; Restless Explorer</span></figcaption></figure><figure class=\"pq1 x\"><div><h3>&ldquo;Shifted my mindset&rdquo;</h3><blockquote>&ldquo;This whole 7 day course has shifted my mindset and I now feel that I can organize and prioritize things better.&rdquo;</blockquote></div><figcaption><span class=\"av\">AD</span><span>Anna De Beer &middot; True Creator</span></figcaption></figure></div><div class=\"tmorebar\"><button type=\"button\" class=\"tmore\" aria-expanded=\"false\" onclick=\"var g=this.parentNode.previousElementSibling,o=g.classList.toggle('open');this.setAttribute('aria-expanded',o);this.textContent=o?'Show fewer':'Read 5 more';if(o&&window.posthog)posthog.capture('landing_testimonials_more');if(!o)this.scrollIntoView({block:'center'});\">Read 5 more</button></div></section>\n<section class=\"c faq\">\n  <div class=\"lab\">Frequently Asked Questions</div>\n  <details><summary>Is it free?</summary><p>Yes. The quiz, your result, the chapter and the 7-day course are all free.</p></details>\n  <details><summary>How long does it take?</summary><p>About 5 minutes. There are 30 questions, and most take one tap.</p></details>\n  <details><summary>Who is it for?</summary><p>Anyone who works, at any stage: students, early, mid and late career, and people between roles.</p></details>\n  <details><summary>What happens when I finish?</summary><p>You enter your email and your Work Personality appears on screen. Your free chapter and the first of 7 daily emails follow by email.</p></details>\n  <details><summary>Why does it ask for my email?</summary><p>To send your result, your free chapter and the 7-day course. No spam. Unsubscribe anytime.</p></details>\n</section>\n<section class=\"final\" id=\"know\" aria-live=\"polite\"><div class=\"c\">\n  <p class=\"pre\" id=\"pre\"></p>\n  <p class=\"pq\" id=\"pq\"></p>\n  <h2>Know<br><i>for sure.</i></h2>\n  <a class=\"btn\" id=\"finalBtn\" href=\"#start\" data-hwlp-cta=\"closer\">Discover my Work Personality <span>&rarr;</span></a>\n  <div class=\"chips\"><span><b>&check;</b>Free</span><span><b>&check;</b>Personalized Report</span><span><b>&check;</b>About 5 minutes</span></div>\n</div></section>\n<div class=\"dbar\" id=\"dbar\" aria-hidden=\"true\"><b>The Work Alignment Profile</b><a class=\"btn\" href=\"#start\" data-hwlp-cta=\"desktop_bar\" tabindex=\"-1\">Discover my Work Personality <span>&rarr;</span></a></div>\n<div class=\"mcta\" id=\"mcta\"><a class=\"btn\" href=\"#start\" data-hwlp-cta=\"mobile_bar\">Discover my Work Personality <span>&rarr;</span></a></div></div>";
 var HWLP_FONTS = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;700;800;900&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,300;1,6..72,400&display=swap";
 function hwlpIsLanding(){ return screen === 'intro' && !(_invite && ARCH[_invite.key]); }
 function hwlpInit(){
@@ -1404,8 +1439,11 @@ function renderQuestion() {
   } else if (q.type === 'word') {
     body = '<div class="word-grid">' + q.words.map((w, i) => '<button class="word-tile' + ((answers[qIdx] && answers[qIdx].label === w[0]) ? ' selected' : '') + '" onclick="selectWord(' + i + ')">' + w[0] + '</button>').join('') + '</div>';
   } else if (q.type === 'activity_name') {
-    body = [0,1,2].map(i => '<div class="activity-item"><div class="activity-num">Activity ' + (i+1) + '</div><input class="activity-input" type="text" placeholder="Something you\u2019re praised for..." maxlength="80" value="' + esc(activityNames[i]) + '" oninput="updateActivityName(' + i + ', this.value)"/></div>').join('')
-      + '<button class="continue-btn" id="act-name-btn" onclick="selectActivityNames()" ' + (activityNames.every(n=>n.trim())?'':'disabled') + '>Continue</button>';
+    // Launch QA item 5 (Dan, 22 Oct 2026): the field label is the number only ("1", "2", "3"). "Activity" clashed with the hint "skills or personal attributes".
+    body = [0,1,2].map(i => '<div class="activity-item"><div class="activity-num">' + (i+1) + '</div><input class="activity-input" type="text" placeholder="Something you\u2019re praised for..." maxlength="80" value="' + esc(activityNames[i]) + '" enterkeyhint="' + (i<2?'next':'done') + '" onkeydown="hwActKey(event, ' + i + ')" oninput="updateActivityName(' + i + ', this.value)"/>' + hwCntHtml('act-cnt-' + i, activityNames[i], 80) + '</div>').join('')
+      + '<button class="continue-btn" id="act-name-btn" aria-describedby="act-name-req" onclick="selectActivityNames()" ' + (activityNames.every(n=>n.trim())?'':'disabled') + '>Continue</button>'
+      // Launch QA item 1 (Dan, 22 Oct 2026): say why Continue is disabled. Hidden once all 3 boxes have text.
+      + '<p class="hw-req" id="act-name-req"' + (activityNames.every(n=>n.trim())?' hidden':'') + '>Fill in all 3 boxes to continue.</p>';
   } else if (q.type === 'activity_rate') {
     body = [0,1,2].map(i => '<div class="rate-item"><div class="rate-label">' + esc(activityNames[i] || ('Activity ' + (i+1))) + '</div><div class="rate-likert">' + q.likert.map(l => '<button class="rate-btn ' + (activityScores[i]===l[1]?'selected':'') + '" onclick="updateActivityScore(' + i + ', ' + l[1] + ')">' + l[0] + '</button>').join('') + '</div></div>').join('')
       + '<button class="continue-btn" id="act-rate-btn" onclick="selectActivityScores()" ' + (activityScores.every(s=>s!==null)?'':'disabled') + '>Continue</button>';
@@ -1418,8 +1456,10 @@ function renderQuestion() {
       + '<button class="continue-btn" onclick="selectRank()">' + (pending ? 'Yes, this is my order' : 'Continue') + '</button>';
   } else if (q.type === 'freetext') {
     if (answers[qIdx] && typeof answers[qIdx].value === 'string') textVal = answers[qIdx].value;
-    body = '<textarea class="textarea-input" maxlength="300" placeholder="' + q.placeholder + '" oninput="updateFreetext(this.value)">' + esc(textVal) + '</textarea>'
-      + '<button class="continue-btn" id="freetext-btn" onclick="selectFreetext()" ' + (textVal.trim()?'':'disabled') + '>Continue</button>';
+    body = '<textarea class="textarea-input" maxlength="300" placeholder="' + q.placeholder + '" oninput="updateFreetext(this.value)">' + esc(textVal) + '</textarea>' + hwCntHtml('freetext-cnt', textVal, 300)
+      + '<button class="continue-btn" id="freetext-btn" aria-describedby="freetext-req" onclick="selectFreetext()" ' + (textVal.trim()?'':'disabled') + '>Continue</button>'
+      // Launch QA item 1 (Dan, 22 Oct 2026): say why Continue is disabled. Hidden once the box has text.
+      + '<p class="hw-req" id="freetext-req"' + (textVal.trim()?' hidden':'') + '>Write a few words to continue.</p>';
   }
   return (sp.show ? renderStepper(sp.activeIdx) : '')
     + '<h2 class="q-text">' + q.text + '</h2>'
@@ -1433,7 +1473,8 @@ function renderGate() {
     + '<input class="email-input" id="hw-email" type="email" name="email" autocomplete="email" aria-label="Your email address" placeholder="your@email.com" onkeydown="if(event.key===\'Enter\'){event.preventDefault();submitGate();}"/>'
     + '<p id="hw-gate-err" role="alert" style="display:none;font-family:var(--sans);font-size:13px;color:#B23A2E;text-align:left;margin:10px 0 0;">Please enter a valid email address.</p>'
     + '<button class="continue-btn" id="hw-gate-btn" onclick="submitGate()" style="margin: 8px auto 0; width: 100%;">Show me my Work Personality</button>'
-    + '<p class="gate-fine">No spam. Unsubscribe anytime. Your answers stay private.</p>';
+    // Launch QA item 12 (Dan, 22 Oct 2026): a privacy-policy link after "Your answers stay private." (new tab).
+    + '<p class="gate-fine">No spam. Unsubscribe anytime. Your answers stay private. <a class="gate-privacy" href="https://dandobos.com/privacy-policy/" target="_blank" rel="noopener">Privacy policy</a></p>';
 }
 // ================= SCORING ENGINE =================
 // Dimension score = average of that dimension's scored answers (0-100).
@@ -1500,6 +1541,19 @@ const NARR = {
 // The LHH closer ends by pointing at the Next Moves card below it. The email has no
 // card below, so the pointer sentence is stripped from every Kit payload (Dan's ruling,
 // 21 Aug 2026: "for email, remove this: The Next Moves below walk you through it.").
+// Launch QA item 15 (Dan, 22 Oct 2026): drop a "what holds you there" bullet when the reader's
+// own answer says the opposite. Q12 (index 11, title/salary/others): the bullet stays only for
+// "Yes, and at least one of those is my main reason" (value 15). Q19 (index 18, investment):
+// the bullet goes for "What I've put in doesn't trap me" (value 100). The third bullet
+// (other people's expectations) is never dropped, so the list is never empty.
+// Used by the page AND both Kit field builders, so hw_narrative matches the screen.
+function hwNarrFit(narr){
+  if (narr !== NARR.HLL) return narr;
+  var v = function(i){ return answers[i] ? answers[i].value : null; };
+  if (v(11) !== null && v(11) !== 15) narr = narr.replace('\n\u2022 The title, the salary, the status.', '');
+  if (v(18) === 100) narr = narr.replace('\n\u2022 How much you have already invested.', '');
+  return narr;
+}
 function hwEmailNarr(n){ return n.replace(' The Next Moves below walk you through it.', '').split(" See the \u201cNext Moves\u201d section below for more.").join(''); }
 const WHY = {
   HHH: "Your scores are high across all dimensions, so this chapter is about scale, not repair.",
@@ -2395,10 +2449,14 @@ function narrHtml(narr){
   if (inList) html += '</ul>';
   return html;
 }
-function hwTopHtml(key, s){
+function hwTopHtml(key, s, preConfirm){
   var am = _hwAmFlags(key, s);
   var share = am.amDrained ? AM_DRAINED_SHARE : am.amFoothills ? AM_FOOTHILLS_SHARE : SHARE[key];
-  var narr = am.amDrained ? AM_DRAINED_NARR : am.amFoothills ? amFoothillsNarr(s) : ((key === 'LLH' && s.V > 60) ? DS_HIGH_V_NARR : NARR[key]);
+  var narr = hwNarrFit(am.amDrained ? AM_DRAINED_NARR : am.amFoothills ? amFoothillsNarr(s) : ((key === 'LLH' && s.V > 60) ? DS_HIGH_V_NARR : NARR[key]));   // Launch QA item 15
+  // Launch QA item 16 (Dan, 22 Oct 2026): before "Spot on", Next Moves is still hidden, so the pointer
+  // 'See the "Next Moves" section below' is stripped (same cut hwEmailNarr makes for email).
+  // hwConfirm re-renders #hw-top without preConfirm, so the pointer returns once Next Moves shows.
+  if (preConfirm) narr = hwEmailNarr(narr);
   return '<p class="res-eyebrow">Your Work Personality</p>'
     + '<h1 class="res-name">' + ARCH[key].name + '</h1>'
     + '<p class="res-share">' + share + '</p>'
@@ -2524,18 +2582,48 @@ function hwAcc(btn){
 }
 function hwPick(key){ hwConfirm(key); }
 function hwConfirm(key){
+  hwApplyPick(key);
+  _hwScroll(document.getElementById('hw-below'));
+  try { hwCap('fit_confirmed', { archetype_key: key, changed: key !== _hwR.key }); } catch(e){}
+  hwSavePick(key);   // Launch QA item 8
+  hwRepick(key);
+}
+// Launch QA item 8 (Dan, 22 Oct 2026): the DOM part of hwConfirm, shared with the reload restore below.
+function hwApplyPick(key){
   _hwConfirmedKey = key;
   document.getElementById('hw-top').innerHTML = hwTopHtml(key, _hwS);
   document.getElementById('hw-chapter').innerHTML = hwChapterHtml(key, _hwS, _hwR.flag);
   var fm = document.getElementById('hw-firstmoves');
   if (fm) fm.innerHTML = checklistHtml(key, _hwAmFlags(key, _hwS).amDrained);   // re-picked archetype gets its own prompts
+  // Launch QA item 8: the share card, share text, share link slug and book headline were built once
+  // from the scored key, so a re-pick left them on the old type. Rebuild them from the picked key.
+  var sl = document.getElementById('hw-shareloop');
+  if (sl && key !== (_share && _share.key)) {
+    var r2 = Object.assign({}, _hwR, { key: key, archetype: ARCH[key].name });
+    sl.innerHTML = shareLoopHtml(r2, _hwS);              // also resets the global _share to the new key
+    var note = sl.querySelector('.pb-note'); if (note && _shareNote) note.value = _shareNote;   // keep the typed note
+    try { hwRebuildShareLinks(); hwRegisterShortLink(); } catch(e){}   // payload slug changed, so a new short link registers
+  }
+  var bh = document.getElementById('hw-bookhead');
+  if (bh) bh.textContent = BOOK_HEAD[key] || 'Your Result Shows the Pattern. The Book Shows You Step-By-Step How To Change It';
   document.getElementById('hw-ask').hidden = true;
   document.getElementById('hw-chooser').hidden = true;
   document.getElementById('hw-confirmed').hidden = false;
-  var below = document.getElementById('hw-below'); below.hidden = false;
-  _hwScroll(below);
-  try { hwCap('fit_confirmed', { archetype_key: key, changed: key !== _hwR.key }); } catch(e){}
-  hwRepick(key);
+  document.getElementById('hw-below').hidden = false;
+}
+// Launch QA item 8: keep a re-pick across a reload in this browser. Keyed by the result token, so
+// another person's /r/ link on this device never picks it up. Only a DIFFERENT pick is
+// restored; a reader who said "Spot on" sees the page as before (the ask shows again).
+var HW_PICK_KEY = 'hw_repick_v1';
+function hwPickToken(){ return (_fromLink && window.__HW_RESTORE && window.__HW_RESTORE.token) || resultToken() || ''; }
+function hwSavePick(key){ try { var t = hwPickToken(); if (!t) return; if (key === _hwR.key) localStorage.removeItem(HW_PICK_KEY); else localStorage.setItem(HW_PICK_KEY, JSON.stringify({ t: t, key: key })); } catch(e){} }
+function hwRestorePick(){
+  try {
+    var st = JSON.parse(localStorage.getItem(HW_PICK_KEY) || 'null');
+    if (!st || !st.t || st.t !== hwPickToken() || !ARCH[st.key] || st.key === _hwR.key) return;
+    _hwKitKey = st.key;   // Kit was already re-tagged when the reader picked; do not send again
+    hwApplyPick(st.key);
+  } catch(e){}
 }
 // Part 2: when the confirmed archetype changes, re-tag the Kit subscriber's archetype
 // fields so the 7-day sequence (resolved at send time) follows the pick. Goes to the
@@ -2544,7 +2632,7 @@ function hwConfirm(key){
 function hwArchetypeFields(key){
   var s = _hwS, flag = _hwR.flag, am = _hwAmFlags(key, s);
   var share = am.amDrained ? AM_DRAINED_SHARE : am.amFoothills ? AM_FOOTHILLS_SHARE : SHARE[key];
-  var narrative = am.amDrained ? AM_DRAINED_NARR : am.amFoothills ? amFoothillsNarr(s) : ((key === 'LLH' && s.V > 60) ? DS_HIGH_V_NARR : NARR[key]);
+  var narrative = hwNarrFit(am.amDrained ? AM_DRAINED_NARR : am.amFoothills ? amFoothillsNarr(s) : ((key === 'LLH' && s.V > 60) ? DS_HIGH_V_NARR : NARR[key]));   // Launch QA item 15
   var plan = chapterPlan(key, flag);
   var ordered = plan.chapters.slice().sort(function(a,b){ return a - b; });
   var dlkey = ordered.join('_');
@@ -2852,7 +2940,7 @@ function renderResult(){
   const segs = [0,1,2,3].map(i => '<div class="res-regret-seg" style="' + (i <= reg.idx ? 'background:' + reg.color : '') + '"></div>').join('');
 
   return hwEmailedNote()
-    + '<div id="hw-top">' + hwTopHtml(r.key, s) + '</div>'
+    + '<div id="hw-top">' + hwTopHtml(r.key, s, !_fromLink) + '</div>'   // Launch QA item 16
     + '<div class="res-divider"></div>'
     // A restored /r/ view skips the does-this-sound-like-you ask and opens the
     // full result at once: the reader confirmed when they took the quiz
@@ -2876,9 +2964,9 @@ function renderResult(){
       + '<div id="hw-firstmoves">' + checklistHtml(r.key, amDrained) + '</div>'
       + '<div class="res-divider"></div>'
       + '<div id="hw-chapter">' + hwChapterHtml(r.key, s, r.flag) + '</div>'
-      + shareLoopHtml(r, s)
+      + '<div id="hw-shareloop">' + shareLoopHtml(r, s) + '</div>'   // Launch QA item 8: id so a re-pick can rebuild it
       + '<div class="res-divider"></div>'
-      + '<p class="res-book-head">' + (BOOK_HEAD[r.key] || 'Your Result Shows the Pattern. The Book Shows You Step-By-Step How To Change It') + '</p>'
+      + '<p class="res-book-head" id="hw-bookhead">' + (BOOK_HEAD[r.key] || 'Your Result Shows the Pattern. The Book Shows You Step-By-Step How To Change It') + '</p>'
       + '<div class="res-book-row">'
         + '<img class="res-book-cover" src="https://dandobos.com/wp-content/uploads/2025/09/image-3-1.png" alt="Choose Your Work book cover" width="170" loading="lazy">'
         + '<p class="res-book-text">Discover even deeper insights and turn them into practical decisions.</p>'
@@ -2917,6 +3005,7 @@ function resumeQuiz() {
   if (!_resumeTarget) { screen = 'question'; qIdx = 0; }
   else { screen = _resumeTarget.screen; qIdx = _resumeTarget.qIdx || 0; }
   try { hwCap('quiz_resume_confirmed', { screen: screen, index: qIdx + 1 }); } catch(e){}
+  var _st = history.state; if (!(_st && _st.hw && (_st.hw === 'gate' ? screen === 'gate' : _st.i === qIdx))) hwPush();   // Launch QA item 9
   render();
 }
 function startOver() {
@@ -2966,15 +3055,40 @@ function render(keepScroll) {
   // Item 6 (Dan, 25 Sep 2026): a new question starts clean. Drop the tapped button's focus and
   // move focus to the question itself, so iOS shows no carried-over highlight and a keyboard or
   // screen-reader user lands on the new question, not on nothing.
-  if (screen === 'question') { try { var _ae = document.activeElement; if (_ae && _ae !== document.body && _ae.blur) _ae.blur();
+  // Launch QA item 10 (Dan, 22 Oct 2026): only when the question CHANGES. render(true) is an in-place
+  // re-render (a Q7 rating, a Q13 arrow); there the caller puts focus back on the control.
+  if (screen === 'question' && !keepScroll) { try { var _ae = document.activeElement; if (_ae && _ae !== document.body && _ae.blur) _ae.blur();
     var _qt = pageEl.querySelector('.q-text'); if (_qt) { _qt.setAttribute('tabindex', '-1'); _qt.style.outline = 'none'; _qt.focus({ preventScroll: true }); } } catch (e) {} }
-  if (screen === 'complete') hwSwapAddress();
+  if (screen === 'complete') { hwSwapAddress(); hwRestorePick(); }   // Launch QA item 8: restore hwRestorePick
   advancing = false;
   inputReadyAt = Date.now() + 350;
   saveState();
   if (!keepScroll) window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-function startQuiz(src) { clearState(); _submitting=false; _submitted=false; _kitEmail=''; hwTimingStart(); hwCap('quiz_started', { total_questions: TOTAL_Q, entry: (src === 'landing' ? 'landing' : 'intro') }); screen = 'question'; qIdx = 0; render(); }
+function startQuiz(src) { clearState(); _submitting=false; _submitted=false; _kitEmail=''; hwTimingStart(); hwCap('quiz_started', { total_questions: TOTAL_Q, entry: (src === 'landing' ? 'landing' : 'intro') }); screen = 'question'; qIdx = 0; hwPush(); render(); }
+// Launch QA item 9 (Dan, 22 Oct 2026): browser Back steps through the quiz. Each question (and the
+// email gate) gets its own history entry on the SAME url, so Back on Q5 shows Q4 and
+// Back on Q1 shows the landing again. Entries carry { hw, i, n }: hw = 'q' or 'gate',
+// i = question index, n = how many quiz entries sit above the landing entry.
+// On the result page, Back skips every quiz entry and leaves, as it did before.
+function hwPush(){ try { var cur = history.state, n = (cur && cur.hw) ? (cur.n || 0) + 1 : 1;
+  history.pushState(screen === 'gate' ? { hw: 'gate', n: n } : { hw: 'q', i: qIdx, n: n }, ''); } catch(e){} }
+window.addEventListener('popstate', function(e){
+  var st = e.state;
+  if (screen === 'complete') {                       // result: never step back into the quiz
+    if (st && st.hw && st.n) { try { history.go(-(st.n + 1)); } catch(err){} }   // past the landing entry, so Back leaves as before
+    return;
+  }
+  if (screen !== 'question' && screen !== 'gate' && screen !== 'intro') return;   // resume / needquiz: leave alone
+  if (st && st.hw === 'q' && typeof st.i === 'number' && st.i >= 0 && st.i < questions.length) {
+    if (screen === 'question' && st.i < qIdx) hwCap('question_back', { from_index: qIdx + 1, via: 'browser' });
+    screen = 'question'; qIdx = st.i; advancing = false; render();
+  } else if (st && st.hw === 'gate') {
+    if (Object.keys(answers).length >= questions.length) { screen = 'gate'; render(); }
+  } else if (!st || !st.hw) {                          // the landing entry
+    if (screen !== 'intro') { hwCap('quiz_back_to_landing', { from_index: qIdx + 1 }); screen = 'intro'; render(); }
+  }
+});
 function selectChoice(i) {
   if (advancing || Date.now() < inputReadyAt) return;
   const q = questions[qIdx];
@@ -2995,11 +3109,33 @@ function selectWord(i) {
   advancing = true;
   setTimeout(advance, 300);
 }
-function updateActivityName(i, val) { if (activityNames[i] !== val) activityScores[i] = null; activityNames[i] = val; document.getElementById('act-name-btn').disabled = !activityNames.every(n=>n.trim()); saveState(); }
+// Launch QA item 18 (Dan, 22 Oct 2026): a small "n / max" counter appears only near the limit
+// (within HW_CNT_NEAR characters), so the reader is not cut off by a silent maxlength.
+var HW_CNT_NEAR = 50;
+function hwCntHtml(id, v, max){ var n = (v || '').length; return '<p class="hw-cnt" id="' + id + '"' + (n >= max - HW_CNT_NEAR ? '' : ' hidden') + '>' + n + ' / ' + max + '</p>'; }
+function hwCnt(id, v, max){ var el = document.getElementById(id); if (!el) return; var n = (v || '').length; el.hidden = n < max - HW_CNT_NEAR; el.textContent = n + ' / ' + max; el.classList.toggle('full', n >= max); }
+function updateActivityName(i, val) { hwCnt('act-cnt-' + i, val, 80);   // Launch QA item 18
+ if (activityNames[i] !== val) activityScores[i] = null; activityNames[i] = val; document.getElementById('act-name-btn').disabled = !activityNames.every(n=>n.trim());
+  var _rq = document.getElementById('act-name-req'); if (_rq) _rq.hidden = activityNames.every(n=>n.trim());   // Launch QA item 1
+  saveState(); }
+// Launch QA item 6 (Dan, 22 Oct 2026): Enter in a Q6 field moves to the next field. Enter in the last
+// field acts as Continue, but only when Continue is enabled. Before, Enter did nothing.
+function hwActKey(e, i) {
+  if (e.key !== 'Enter' || e.isComposing) return;
+  e.preventDefault();
+  var ins = document.querySelectorAll('#page .activity-input');
+  if (i < ins.length - 1) { ins[i + 1].focus(); return; }
+  var b = document.getElementById('act-name-btn');
+  if (b && !b.disabled) selectActivityNames();
+}
 function selectActivityNames() { answers[qIdx] = { value: activityNames.slice(), label: activityNames.join(', '), section: 'X', unscored: true }; advance(); }
-function updateActivityScore(i, score) { activityScores[i] = score; render(true); }
+function updateActivityScore(i, score) { activityScores[i] = score; render(true);
+  // Launch QA item 10: keep keyboard focus on the button just chosen.
+  try { var _row = document.querySelectorAll('#page .rate-item')[i]; var _b = _row && _row.querySelector('.rate-btn.selected'); if (_b) _b.focus({ preventScroll: true }); } catch (e) {} }
 function selectActivityScores() { const avg = activityScores.reduce((a,b)=>a+b,0)/activityScores.length; answers[qIdx] = { value: avg, label: activityScores.join(','), section: 'V' }; advance(); }
-function rankMove(i, dir) { const items = rankState[qIdx]; const ni = i+dir; if (ni<0||ni>=items.length) return; const t=items[i]; items[i]=items[ni]; items[ni]=t; rankTouched[qIdx]=true; rankConfirmPending[qIdx]=false; render(true); }
+function rankMove(i, dir) { const items = rankState[qIdx]; const ni = i+dir; if (ni<0||ni>=items.length) return; const t=items[i]; items[i]=items[ni]; items[ni]=t; rankTouched[qIdx]=true; rankConfirmPending[qIdx]=false; render(true);
+  // Launch QA item 10: focus follows the moved item: the same arrow on its new row, or the other arrow if that one is now disabled.
+  try { var _btns = document.querySelectorAll('#page .rank-row')[ni].querySelectorAll('.rank-btn'); var _f = _btns[dir < 0 ? 0 : 1]; if (_f.disabled) _f = _btns[dir < 0 ? 1 : 0]; _f.focus({ preventScroll: true }); } catch (e) {} }
 function selectRank() {
   if (!rankTouched[qIdx] && !rankConfirmPending[qIdx]) { rankConfirmPending[qIdx]=true; render(true); return; }
   const items = rankState[qIdx];
@@ -3008,15 +3144,22 @@ function selectRank() {
   answers[qIdx] = { value: score, label: items.join(' > '), section: 'AL' };
   advance();
 }
-function updateFreetext(v) { textVal = v; const b = document.getElementById('freetext-btn'); if (b) b.disabled = !v.trim(); saveState(); }
+function updateFreetext(v) { textVal = v; hwCnt('freetext-cnt', v, 300);   // Launch QA item 18
+ const b = document.getElementById('freetext-btn'); if (b) b.disabled = !v.trim();
+  var _rq = document.getElementById('freetext-req'); if (_rq) _rq.hidden = !!v.trim();   // Launch QA item 1
+  saveState(); }
 function selectFreetext() { answers[qIdx] = { value: textVal, label: textVal, section: 'X', unscored: true }; textVal=''; advance(); }
 function advance() {
   hwTimingStep();
   hwCap('question_answered', { index: qIdx + 1, section: currentSection(), total: TOTAL_Q });
-  if (qIdx < questions.length - 1) { qIdx++; render(); }
-  else { screen='gate'; hwCap('gate_viewed', {}); render(); }
+  if (qIdx < questions.length - 1) { qIdx++; hwPush(); render(); }   // Launch QA item 9: hwPush
+  else { screen='gate'; hwCap('gate_viewed', {}); hwPush(); render(); }
 }
-function goBack() { if (advancing) return; if (qIdx > 0) { hwCap('question_back', { from_index: qIdx + 1 }); qIdx--; render(); } }
+function goBack() { if (advancing) return; if (qIdx > 0) { hwCap('question_back', { from_index: qIdx + 1 });
+  // Launch QA item 9: when the history entry matches this question, the in-page button uses history.back()
+  // so the stack stays in step (the popstate handler renders). Otherwise the old in-memory step.
+  var st = history.state; if (st && st.hw === 'q' && st.i === qIdx) { try { history.back(); return; } catch(e){} }
+  qIdx--; render(); } }
 // ===== KIT WRITE-BACK (gate submit -> Kit form subscribe with all hw_* fields) =====
 // Posts to the public Kit form endpoint (no API secret in the page). The form's automation
 // fires Email 1, enrols the 7-day course, and applies the archetype tag server-side from
@@ -3039,8 +3182,8 @@ function hwFields(){
   const amDrained   = (r.key === 'HHH' && s.C >= 65 && s.AG >= 65 && s.AL >= 75 && s.V < 60);
   const amFoothills = (r.key === 'HHH' && !AM_FULL_REQ(s) && !amDrained);
   const share = amDrained ? AM_DRAINED_SHARE : amFoothills ? AM_FOOTHILLS_SHARE : SHARE[r.key];
-  const narrative = amDrained ? AM_DRAINED_NARR : amFoothills ? amFoothillsNarr(s)
-                    : (r.key === 'LLH' && s.V > 60 ? DS_HIGH_V_NARR : NARR[r.key]);
+  const narrative = hwNarrFit(amDrained ? AM_DRAINED_NARR : amFoothills ? amFoothillsNarr(s)
+                    : (r.key === 'LLH' && s.V > 60 ? DS_HIGH_V_NARR : NARR[r.key]));   // Launch QA item 15
   const reg = r.regret, vit = r.vitality;
   const ordered = r.chapters.slice().sort((a,b)=>a-b);  // ascending => matches hosted bundle filenames
   const dlkey = ordered.join('_');
@@ -3137,14 +3280,17 @@ let _submitting = false, _submitted = false, _kitEmail = '';
 // "We have this reader's email" marker for dandobos.com (Dan, 6 Oct 2026): OptinMonster's popups skip any
 // browser holding the cookie dd_known. Set when the reader gives their email here or a saved result carries one.
 function hwMarkKnown(){ try{ document.cookie = 'dd_known=1; path=/; max-age=63072000; SameSite=Lax; Secure'; }catch(e){} }
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Launch QA item 7 (Dan, 22 Oct 2026): stricter check. Rejects a trailing dot ("a@b.com."), empty labels
+// ("a@b..com") and a 1-letter top-level domain ("a@b.c"). Was /^[^\s@]+@[^\s@]+\.[^\s@]+$/.
+const EMAIL_RE = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)*\.[A-Za-z][A-Za-z0-9-]*[A-Za-z0-9]$/;
 function submitGate(){
   if (_submitting || _submitted) return;                       // double-submit guard
   const input = document.getElementById('hw-email');
   const err   = document.getElementById('hw-gate-err');
   const email = ((input && input.value) || '').trim();
   if (!EMAIL_RE.test(email)){
-    if (err){ err.textContent = 'Please enter a valid email address.'; err.style.display = 'block'; }
+    // Launch QA item 7: an empty field gets its own message; a malformed address keeps the old one.
+    if (err){ err.textContent = email ? 'Please enter a valid email address.' : 'Enter your email address.'; err.style.display = 'block'; }
     if (input) input.focus();
     hwCap('gate_email_invalid', {});
     return;
@@ -3327,7 +3473,13 @@ if (!_resumed && !_invite) {
 try { if (new URLSearchParams(location.search).get('result') === '1' && screen === 'intro') screen = 'needquiz'; } catch(e){}
 hwTimingLoad();
 if (_resumed && !_fromLink) hwCap('quiz_resumed', { screen: screen });
+// Launch QA item 11 (Dan, 22 Oct 2026): on a slow connection the reader can tap a prefilled landing
+// button (href="#start") before this bundle runs. That tap only set #start and the quiz
+// never started. If we boot on the plain landing with #start in the URL, start now.
+// The resume screen and a restored result keep priority (screen is not 'intro' there).
+var _hashStart = (screen === 'intro' && !_invite && location.hash === '#start');
 render();
+if (_hashStart) { try { history.replaceState(null, '', location.pathname + location.search); } catch(e){} hwCap('landing_cta_clicked', { cta: 'early_tap_hash', pick: null }); startQuiz('landing'); }
 </script>
 </body>
 </html>
