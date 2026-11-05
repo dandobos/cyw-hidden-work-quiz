@@ -475,3 +475,7 @@ html,body{overflow-x:clip}
 #cywlp .tmorebar{text-align:center;margin-top:20px}
 #cywlp .tmore{font:700 16px/1.2 var(--sans);background:#fff;border:1.5px solid var(--cta);color:var(--cta);border-radius:999px;padding:13px 24px;min-height:44px;cursor:pointer}
 #cywlp .tmore:hover,#cywlp .tmore:focus{background:var(--bg2)}
+/* 8 Profiles (Dan, 5 Nov 2026): one-line logo with no tag, so the stacked phone layout from 9 Oct goes. */
+@media (max-width:380px){#cywlp .lg{display:inline-flex;font-size:21px}
+#cywlp .lg .rg{grid-row:auto;width:1.667em;height:1.667em}
+#cywlp .lg b.nm{margin-bottom:0}}
