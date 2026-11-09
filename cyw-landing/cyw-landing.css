@@ -197,7 +197,7 @@ html,body{overflow-x:clip}
 #cywlp header.top .c{height:62px}
 #cywlp .mbar{display:none!important}
 #cywlp .wm{font-size:20px}}
-#cywlp #topCta i.dl-long{font-style:normal}
+#cywlp #topCta i.dl-long{font-style:normal;display:contents}
 @media (max-width:420px){#cywlp #topCta i.dl-long{display:none}}
 @media (prefers-reduced-motion:reduce){#cywlp,#cywlp *{transition:none!important}}
 #cywlp h1.big{font-weight:900;font-size:clamp(38px,4.3vw,62px);line-height:1.02;letter-spacing:-.04em;margin:0}
